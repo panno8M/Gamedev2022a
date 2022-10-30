@@ -123,6 +123,12 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!4 &5566247 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4042233797437702665, guid: dbcdc19c2e9d8294a9eb71a49a993fef,
+    type: 3}
+  m_PrefabInstance: {fileID: 4042233797432749358}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &26684109
 GameObject:
   m_ObjectHideFlags: 0
@@ -2568,6 +2574,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1263508475}
   - component: {fileID: 1263508474}
+  - component: {fileID: 1263508476}
   m_Layer: 0
   m_Name: CM vcam2
   m_TagString: Untagged
@@ -2629,6 +2636,21 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1263508476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263508473}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecb06e8f2d019d94eacad394bcae237b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  camFollowOnIdle: {fileID: 5566247}
+  camFollowOnWalk: {fileID: 1387257978}
+  camFollow: {fileID: 182176922}
 --- !u!1 &1268509499
 GameObject:
   m_ObjectHideFlags: 0
@@ -2822,6 +2844,12 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1297578578}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!4 &1387257978 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4042233796066626900, guid: dbcdc19c2e9d8294a9eb71a49a993fef,
+    type: 3}
+  m_PrefabInstance: {fileID: 4042233797432749358}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1438739085
 GameObject:
   m_ObjectHideFlags: 0

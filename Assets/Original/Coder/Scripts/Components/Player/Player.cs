@@ -30,9 +30,6 @@ public class Player : MonoBehaviour
     [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] Damagable damagable;
     [SerializeField] AiVisible aiVisible;
-    [SerializeField] Transform camFollowOnIdle;
-    [SerializeField] Transform camFollowOnWalk;
-    [SerializeField] GameObject camFollow;
 #endregion
     public Damagable Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
@@ -93,13 +90,6 @@ public class Player : MonoBehaviour
 
         OnFlapWhileFalling
             .Subscribe(_ => _isFlapping = true)
-            .AddTo(this);
-
-        // set camera position
-        Control.HorizontalMoveInput
-            .Subscribe(hmi => camFollow.transform.position = hmi == 0
-                       ? camFollowOnIdle.position
-                       : camFollowOnWalk.position)
             .AddTo(this);
 
         Control.HorizontalMoveInput
