@@ -29,11 +29,11 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
             ""actions"": [
                 {
                     ""name"": ""HorizontalMove"",
-                    ""type"": ""PassThrough"",
+                    ""type"": ""Value"",
                     ""id"": ""7775e0fc-c8c4-465e-a256-f8611a9c187a"",
-                    ""expectedControlType"": ""Axis"",
+                    ""expectedControlType"": """",
                     ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": true
                 },
                 {
@@ -42,16 +42,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                     ""id"": ""faa55006-e416-42be-ab5c-918b52485bcf"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""TEST"",
-                    ""type"": ""Value"",
-                    ""id"": ""5a2a02fd-ebd8-41fa-bf70-3fdac0db213a"",
-                    ""expectedControlType"": ""Key"",
-                    ""processors"": """",
-                    ""interactions"": """",
+                    ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": true
                 }
             ],
@@ -93,45 +84,12 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                     ""name"": """",
                     ""id"": ""3c90a5a1-20de-428d-aa3a-e0c2b4009c2c"",
                     ""path"": ""<Keyboard>/space"",
-                    ""interactions"": ""Press"",
+                    ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""GoUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""1D Axis"",
-                    ""id"": ""d294fab7-0143-43d6-b83c-6d0681b96a31"",
-                    ""path"": ""1DAxis"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TEST"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""negative"",
-                    ""id"": ""c42e759c-74c5-4660-b838-84af279f906d"",
-                    ""path"": ""<Keyboard>/1"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TEST"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""positive"",
-                    ""id"": ""9b557414-6ae8-4fba-9177-e2e171d0a6dc"",
-                    ""path"": ""<Keyboard>/2"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""TEST"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
                 }
             ]
         }
@@ -142,7 +100,6 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_HorizontalMove = m_Player.FindAction("HorizontalMove", throwIfNotFound: true);
         m_Player_GoUp = m_Player.FindAction("GoUp", throwIfNotFound: true);
-        m_Player_TEST = m_Player.FindAction("TEST", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -204,14 +161,12 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_HorizontalMove;
     private readonly InputAction m_Player_GoUp;
-    private readonly InputAction m_Player_TEST;
     public struct PlayerActions
     {
         private @InputControl m_Wrapper;
         public PlayerActions(@InputControl wrapper) { m_Wrapper = wrapper; }
         public InputAction @HorizontalMove => m_Wrapper.m_Player_HorizontalMove;
         public InputAction @GoUp => m_Wrapper.m_Player_GoUp;
-        public InputAction @TEST => m_Wrapper.m_Player_TEST;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -227,9 +182,6 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 @GoUp.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGoUp;
                 @GoUp.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGoUp;
                 @GoUp.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGoUp;
-                @TEST.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTEST;
-                @TEST.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTEST;
-                @TEST.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnTEST;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -240,9 +192,6 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 @GoUp.started += instance.OnGoUp;
                 @GoUp.performed += instance.OnGoUp;
                 @GoUp.canceled += instance.OnGoUp;
-                @TEST.started += instance.OnTEST;
-                @TEST.performed += instance.OnTEST;
-                @TEST.canceled += instance.OnTEST;
             }
         }
     }
@@ -251,6 +200,5 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
     {
         void OnHorizontalMove(InputAction.CallbackContext context);
         void OnGoUp(InputAction.CallbackContext context);
-        void OnTEST(InputAction.CallbackContext context);
     }
 }

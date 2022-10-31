@@ -40,43 +40,44 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     void Start() {
-        Player.Instance.OnJump.Subscribe(_ => {
+        var player = Global.Player;
+        player.OnJump.Subscribe(_ => {
             rb.AddForce(_scaleJumpHeight._y_(), ForceMode.Impulse);
         }).AddTo(this);
 
-        Player.Instance.OnFlapWhileFalling.Subscribe(_ => {
+        player.OnFlapWhileFalling.Subscribe(_ => {
             anim.SetBool("Fly", true);
         }).AddTo(this);
 
-        Player.Instance.OnFlap.Subscribe(_ => {
+        player.OnFlap.Subscribe(_ => {
             rb.velocity = new Vector3(
                 rb.velocity.x,
                 _scaleSoarHeight,
                 rb.velocity.z);
         }).AddTo(this);
 
-        Player.Instance.WhileFlying
-            .WithLatestFrom(Player.Control.HorizontalMoveInput, (_, hmi) => hmi)
+        player.WhileFlying
+            .WithLatestFrom(Global.Control.HorizontalMoveInput, (_, hmi) => hmi)
             .Subscribe(hmi => {
                 rb.AddForce(G * _scaleGravity.flying._Y_(), ForceMode.Acceleration);
                 if (hmi == 0){
                     rb.velocity = rb.velocity._y_();
                 } else {
-                    if (Player.Instance.wallCollidingBias != hmi)
+                    if (player.wallCollidingBias != hmi)
                         MoveHorizontal(hmi);
                 }
             }).AddTo(this);
 
-        Player.Instance.WhileNotFlying.Subscribe(_ => {
+        player.WhileNotFlying.Subscribe(_ => {
             rb.AddForce(G * _scaleGravity.normal._Y_(), ForceMode.Acceleration);
         }).AddTo(this);
 
-        Player.Instance.OnLand.Subscribe(_ => {
+        player.OnLand.Subscribe(_ => {
             anim.SetBool("Fly", false);
         }).AddTo(this);
 
-        Player.Instance.WhileLanding
-            .WithLatestFrom(Player.Control.HorizontalMoveInput, (_, hmi) => hmi)
+        player.WhileLanding
+            .WithLatestFrom(Global.Control.HorizontalMoveInput, (_, hmi) => hmi)
             .Subscribe(hmi => {
                 anim.SetBool("Walk", hmi != 0);
                 if (hmi == 0) return;

@@ -3,23 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-[RequireComponent(typeof(PlayerControl))]
-public class Player : MonoBehaviour
-{
-#region singleton
-    static Player instance;
-    static PlayerControl control;
-
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void Init() {
-        instance = null;
-        control = null;
-    }
-
-    public static Player Instance => instance ?? (instance = (Player)FindObjectOfType(typeof(Player)));
-    public static PlayerControl Control => control ?? (control = Instance.GetComponent<PlayerControl>());
-#endregion
-
+public class Player : UniqueBehaviour<Player> {
     enum Direction {Left = -1, Right = 1}
 
 #region forBehaviourControling
@@ -53,10 +37,11 @@ public class Player : MonoBehaviour
 #endregion
 
     void Awake() {
-        OnJump = Control.GoUp
+
+        OnJump = Global.Control.GoUp
             .Where(_ => _isOnGround.Value);
 
-        OnFlap = Control.GoUp
+        OnFlap = Global.Control.GoUp
             .Where(_ => !_isOnGround.Value);
 
         OnFlapWhileFalling = OnFlap
@@ -104,7 +89,7 @@ public class Player : MonoBehaviour
             .Subscribe(_ => _isFlapping = true)
             .AddTo(this);
 
-        Control.HorizontalMoveInput
+        Global.Control.HorizontalMoveInput
             .Select(hmi =>
                     (hmi ==  1) ? Direction.Right :
                     (hmi == -1) ? Direction.Left  :

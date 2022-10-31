@@ -12,8 +12,8 @@ public class FollowPointMover : MonoBehaviour
     CinemachineVirtualCamera vcam;
     void Start() {
         vcam = GetComponent<CinemachineVirtualCamera>();
-        // set camera position
-        Player.Control.HorizontalMoveInput
+
+        Global.Control.HorizontalMoveInput
             .Subscribe(hmi => vcam.Follow.position = hmi == 0
                        ? camFollowOnIdle.position
                        : camFollowOnWalk.position)

@@ -19,20 +19,18 @@ public class DebugUI : MonoBehaviour
     [SerializeField] Text _uiTextPlayerDmg;
 
     void Start() {
-        Player.Instance.Damagable.OnDamage
+        Global.Player.Damagable.OnDamage
             .Scan((total, current) => total + current)
             .Select(x => x.ToString())
             .Subscribe(x => _uiTextPlayerDmg.text = x)
             .AddTo(this);
 
-        Player.Control.HorizontalMoveInput.Subscribe(hmi => {
+        Global.Control.HorizontalMoveInput.Subscribe(hmi => {
             LeftUI.color = (hmi == -1) ? gray : white;
             RightUI.color = (hmi == 1) ? gray : white;
         }).AddTo(this);
 
-        Player.Control.input.Player.GoUp.started +=
-            context => JumpUI.color = context.ReadValue<float>() == 1 ? gray : white;
-        Player.Control.input.Player.GoUp.canceled +=
-            context => JumpUI.color = context.ReadValue<float>() == 1 ? gray : white;
+        Global.Control.GoUpInput.Subscribe(b => JumpUI.color = b ? gray : white).AddTo(this);
+
     }
 }

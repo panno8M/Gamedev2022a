@@ -21,7 +21,7 @@ public class FlameControl : MonoBehaviour
         for (int i = 0; i != maxHealth; i++) {
             Flames[i].SetActive(false);
         }
-        Player.Instance.Damagable.OnDamage
+        Global.Player.Damagable.OnDamage
             .Subscribe(delta => SetHealth(currentHealth - delta))
             .AddTo(this);
 
