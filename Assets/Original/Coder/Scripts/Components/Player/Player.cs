@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     public IObservable<Unit> OnFlapWhileFalling;
     public IObservable<Unit> OnFlap;
     public IObservable<Unit> WhileFlying;
+    public IObservable<Unit> WhileNotFlying;
 
     public IObservable<Unit> OnLand;
     public IObservable<Unit> WhileLanding;
@@ -66,12 +67,15 @@ public class Player : MonoBehaviour
         WhileFlying = this.FixedUpdateAsObservable()
             .Where(_ => _isFlapping);
 
+        WhileNotFlying = this.FixedUpdateAsObservable()
+            .Where(_ => !_isFlapping);
+
         WhileLanding = this.FixedUpdateAsObservable()
             .Where(_ => _isOnGround.Value);
     }
 
     void Start() {
-        this.OnCollisionStay2DAsObservable()
+        this.OnCollisionStayAsObservable()
             .Where(collision => collision.gameObject.CompareTag("Ground"))
             .Subscribe(collision => {
                 foreach (var contact in collision.contacts) {
@@ -82,7 +86,7 @@ public class Player : MonoBehaviour
                     }
                 }
             });
-        this.OnCollisionExit2DAsObservable()
+        this.OnCollisionExitAsObservable()
             .Where(collision => collision.gameObject.CompareTag("Ground"))
             .Subscribe(collision => {
                 _isOnGround.Value = false;
