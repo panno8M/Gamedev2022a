@@ -4,6 +4,8 @@ using UniRx;
 using UniRx.Triggers;
 
 public class Player : UniqueBehaviour<Player> {
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void Init() { instance = null; }
     enum Direction {Left = -1, Right = 1}
 
 #region forBehaviourControling

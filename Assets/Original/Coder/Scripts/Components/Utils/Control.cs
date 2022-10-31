@@ -5,6 +5,8 @@ using UniRx;
 using ReactiveInput;
 
 public class Control: UniqueBehaviour<Control> {
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+    static void Init() { instance = null; }
 
     [Serializable]
     struct Inspector {
