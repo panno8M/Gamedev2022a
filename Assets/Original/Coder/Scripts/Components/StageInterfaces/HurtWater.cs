@@ -12,13 +12,13 @@ public class HurtWater : MonoBehaviour {
         ps = GetComponent<ParticleSystem>();
         ev = new List<ParticleCollisionEvent>();
 
-        this.OnTriggerStay2DAsObservable()
+        this.OnTriggerStayAsObservable()
             .Where(other => other.gameObject.layer == (int)Layer.Damagable)
             .Subscribe(other => other.GetComponent<Damagable>().AddDamage.OnNext(1));
 
         this.OnParticleCollisionAsObservable()
             .Where(other => other.layer == (int)Layer.Damagable)
-            .Sample(TimeSpan.FromSeconds(.2f))
+            .ThrottleFirst(TimeSpan.FromSeconds(.2f))
             .Subscribe(other => {
                 int num = ps.GetCollisionEvents(other, ev);
                 if (num != 0) {

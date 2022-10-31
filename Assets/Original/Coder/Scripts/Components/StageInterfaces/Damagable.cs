@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
+[RequireComponent(typeof(Collider))]
+[RequireComponent(typeof(Rigidbody))]
 public class Damagable : MonoBehaviour
 {
     [SerializeField] float dmgCoolDownDur = 3;
