@@ -3256,9 +3256,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a9cf943560fd1488b93e30193668dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  RightUI: {fileID: 26684109}
-  LeftUI: {fileID: 821312598}
-  JumpUI: {fileID: 644028238}
+  RightUI: {fileID: 26684111}
+  LeftUI: {fileID: 821312600}
+  JumpUI: {fileID: 644028240}
   _uiTextPlayerDmg: {fileID: 1043274340}
 --- !u!1 &1964348689
 GameObject:
