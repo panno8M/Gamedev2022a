@@ -33,20 +33,22 @@ public class Player : MonoBehaviour
 #endregion
     public Damagable Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
+    public float wallCollidingBias => _wallCollidingBias;
 
 #region statements
     [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
     [SerializeField] bool _isFlapping;
+    [SerializeField] float _wallCollidingBias;
 
     public IObservable<Unit> OnJump;
 
     public IObservable<Unit> OnFlapWhileFalling;
     public IObservable<Unit> OnFlap;
-    public IObservable<Unit> WhileFlying;
-    public IObservable<Unit> WhileNotFlying;
-
     public IObservable<Unit> OnLand;
-    public IObservable<Unit> WhileLanding;
+
+    public IObservable<long> WhileFlying;
+    public IObservable<long> WhileNotFlying;
+    public IObservable<long> WhileLanding;
 
 #endregion
 
@@ -64,32 +66,38 @@ public class Player : MonoBehaviour
             .Where(x => x)
             .AsUnitObservable();
 
-        WhileFlying = this.FixedUpdateAsObservable()
+        WhileFlying = Observable
+            .EveryFixedUpdate()
             .Where(_ => _isFlapping);
 
-        WhileNotFlying = this.FixedUpdateAsObservable()
+        WhileNotFlying = Observable
+            .EveryFixedUpdate()
             .Where(_ => !_isFlapping);
 
-        WhileLanding = this.FixedUpdateAsObservable()
+        WhileLanding = Observable
+            .EveryFixedUpdate()
             .Where(_ => _isOnGround.Value);
     }
 
     void Start() {
         this.OnCollisionStayAsObservable()
-            .Where(collision => collision.gameObject.CompareTag("Ground"))
             .Subscribe(collision => {
                 foreach (var contact in collision.contacts) {
-                    if (Vector2.Dot(contact.normal, transform.up) >= Mathf.Cos(groundNormalDegreeThreshold * Mathf.PI / 360f)) {
+                    if (Vector2.Dot(contact.normal, Vector3.up) >= Mathf.Cos(groundNormalDegreeThreshold * Mathf.PI / 360f)) {
                         _isOnGround.Value = true;
                         _isFlapping = false;
-                        return;
+                    } else {
+                        _wallCollidingBias =
+                            (contact.normal.x > 0) ? -1 :
+                            (contact.normal.x < 0) ?  1 :
+                            0;
                     }
                 }
             });
         this.OnCollisionExitAsObservable()
-            .Where(collision => collision.gameObject.CompareTag("Ground"))
             .Subscribe(collision => {
                 _isOnGround.Value = false;
+                _wallCollidingBias = 0;
             });
 
         OnFlapWhileFalling

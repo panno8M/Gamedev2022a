@@ -4,6 +4,8 @@ using UnityEngine;
 
 public static class Vector3SwizzleExtension
 {
+    public static Vector3 _y_(this float v)   {
+        return new Vector3(0,v,0);            }
     public static Vector3 _Y_(this float v)   {
         return new Vector3(0,-v,0);           }
 

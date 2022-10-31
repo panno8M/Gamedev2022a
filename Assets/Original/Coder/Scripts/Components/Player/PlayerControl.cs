@@ -6,7 +6,8 @@ public class PlayerControl : MonoBehaviour
 {
     public InputControl input;
     public ReactiveProperty<float> _horizontalMove = new ReactiveProperty<float>();
-    public IObservable<float> HorizontalMoveInput;
+    public IObservable<float> HorizontalMoveInput => _horizontalMove;
+    public IObservable<float> WhileHorizontalMoving;
 
     Subject<Unit> _goUp = new Subject<Unit>();
     IObservable<Unit> GoUp_internal;
@@ -26,9 +27,10 @@ public class PlayerControl : MonoBehaviour
                 _goUp.OnNext(Unit.Default);
         };
 
-        HorizontalMoveInput = Observable
+        WhileHorizontalMoving = Observable
             .EveryFixedUpdate()
             .WithLatestFrom(_horizontalMove, (_,hmi) => hmi)
             .Share();
+
     }
 }

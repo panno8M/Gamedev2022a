@@ -5,11 +5,10 @@ using UniRx;
 public class PlayerBehaviour : MonoBehaviour
 {
     public static float G = 9.8f;
-    public enum FlyMode{HuwaHuwa, Kirby, Pit}
 
     [System.Serializable]
     public struct GravityScale {
-        public GravityScale(float normal = 5f, float flying = .6f) {
+        public GravityScale(float normal, float flying) {
             this.normal = normal;
             this.flying = flying;
         }
@@ -25,15 +24,11 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] GravityScale _scaleGravity;
 
     void Reset() {
-        _scaleJumpHeight = 20f;
-        _scaleSoarHeight = 6f;
-        _scaleMoveSpeed  = 3f;
-        _scaleGravity  = new GravityScale(5f, .6f);
+        _scaleJumpHeight = 10f;
+        _scaleSoarHeight = 3f;
+        _scaleMoveSpeed  = 3.5f;
+        _scaleGravity  = new GravityScale(1.3f, .1f);
     }
-    #endregion
-
-    #region forPrototyping
-    [SerializeField] FlyMode _flyMode;
     #endregion
 
     #region assets
@@ -46,45 +41,18 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Start() {
         Player.Instance.OnJump.Subscribe(_ => {
-            var jumpForce = Vector3.up * _scaleGravity.normal * _scaleJumpHeight;
-            rb.AddForce(jumpForce, ForceMode.Impulse);
+            rb.AddForce(_scaleJumpHeight._y_(), ForceMode.Impulse);
         }).AddTo(this);
 
         Player.Instance.OnFlapWhileFalling.Subscribe(_ => {
             anim.SetBool("Fly", true);
-            switch(_flyMode) {
-                case FlyMode.HuwaHuwa:
-                    break;
-                case FlyMode.Kirby:
-                    //一瞬慣性を止める
-                    rb.velocity = Vector3.zero;
-                    break;
-                case FlyMode.Pit:
-                    //一瞬慣性を止める
-                    rb.velocity = Vector3.zero;
-                    break;
-            }
         }).AddTo(this);
 
         Player.Instance.OnFlap.Subscribe(_ => {
-            switch(_flyMode) {
-                case FlyMode.HuwaHuwa:
-                    rb.velocity = new Vector3(rb.velocity.x, _scaleGravity.flying * _scaleSoarHeight, rb.velocity.z);
-                    break;
-                case FlyMode.Kirby:
-                    //落下中なら一瞬で上昇開始
-                    if (rb.velocity.y < 0f){
-                        Vector3 verticalStop = rb.velocity;
-                        verticalStop.y = _scaleSoarHeight;
-                        rb.velocity = verticalStop;
-                    }
-
-                    rb.velocity = new Vector3(rb.velocity.x, _scaleGravity.flying * _scaleSoarHeight, rb.velocity.z);
-                    break;
-                case FlyMode.Pit:
-                    rb.velocity = new Vector3(rb.velocity.x, 10f, rb.velocity.z);
-                    break;
-            }
+            rb.velocity = new Vector3(
+                rb.velocity.x,
+                _scaleSoarHeight,
+                rb.velocity.z);
         }).AddTo(this);
 
         Player.Instance.WhileFlying
@@ -94,7 +62,8 @@ public class PlayerBehaviour : MonoBehaviour
                 if (hmi == 0){
                     rb.velocity = rb.velocity._y_();
                 } else {
-                    MoveHorizontal(hmi);
+                    if (Player.Instance.wallCollidingBias != hmi)
+                        MoveHorizontal(hmi);
                 }
             }).AddTo(this);
 
