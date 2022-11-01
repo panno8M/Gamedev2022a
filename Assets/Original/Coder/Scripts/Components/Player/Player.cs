@@ -71,7 +71,7 @@ public class Player : UniqueBehaviour<Player> {
 
         IsBreath = Global.Control.DoBreath;
 
-        MousePosition = Global.Control.MousePos;
+        MousePosition = Global.Control.MousePosInput;
     }
 
     void Start() {
@@ -110,9 +110,7 @@ public class Player : UniqueBehaviour<Player> {
                 lookAt = dir;
                 })
             .AddTo(this);
-    }
 
-    void Updata(){
-        
+
     }
 }

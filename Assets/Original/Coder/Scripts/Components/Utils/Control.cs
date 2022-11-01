@@ -30,7 +30,7 @@ public class Control: UniqueBehaviour<Control> {
     public IObservable<Unit> DoBreath;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
-    public IObservable<Vector2> MousePos;
+    public IObservable<Vector2> MousePos{get {return MousePosInput;}}
 
     void Awake() {
         input = new InputControl();
@@ -58,10 +58,10 @@ public class Control: UniqueBehaviour<Control> {
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
-         MousePos = Observable
-             .EveryFixedUpdate()
-             .WithLatestFrom(MousePosInput, (_,hmi) => hmi)
-             .Share();
+        // MousePos = Observable
+        //     .EveryFixedUpdate()
+        //     .WithLatestFrom(MousePosInput,  (_,hmi) => hmi)
+        //     .Share();
 
         HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
         GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);

@@ -22,12 +22,15 @@ public class PlayerBehaviour : MonoBehaviour
     [SerializeField] float _scaleSoarHeight;
     [SerializeField] float _scaleMoveSpeed;
     [SerializeField] GravityScale _scaleGravity;
+    [SerializeField] Vector3 _mousePos;
+    [SerializeField] int _canHitRayCastLayerNum;
 
     void Reset() {
         _scaleJumpHeight = 10f;
         _scaleSoarHeight = 3f;
         _scaleMoveSpeed  = 3.5f;
         _scaleGravity  = new GravityScale(1.3f, .1f);
+        _canHitRayCastLayerNum = 11;
     }
     #endregion
 
@@ -83,12 +86,16 @@ public class PlayerBehaviour : MonoBehaviour
                 if (hmi == 0) return;
                 MoveHorizontal(hmi);
             }).AddTo(this);
+        
+        Global.Control.MousePos
+            .Subscribe(hmi => {
+                MousePosToWorldPoint(hmi);
+                })
+            .AddTo(this);;
 
         player.IsBreath
-            .Subscribe(_ => {Debug.Log("Fire");}).AddTo(this);
+            .Subscribe(pos => {Debug.Log(_mousePos);}).AddTo(this);
 
-        player.MousePosition
-            .Subscribe(_ => {Debug.Log(Global.Control.MousePosInput);}).AddTo(this);
     }
 
     public void MoveHorizontal(float hmi) {
@@ -96,6 +103,17 @@ public class PlayerBehaviour : MonoBehaviour
             hmi * _scaleMoveSpeed,
             rb.velocity.y,
             0);
+    }
+
+    public void MousePosToWorldPoint(Vector3 hmi){
+        RaycastHit hit;
+        hmi.z = 1f;
+        hmi = Camera.main.ScreenToWorldPoint(hmi);
+        if (Physics.Raycast(Camera.main.transform.position, (hmi - Camera.main.transform.position), out hit, Mathf.Infinity,  1 << _canHitRayCastLayerNum)){
+            Debug.DrawRay(Camera.main.transform.position, (hmi - Camera.main.transform.position) * hit.distance, Color.red);
+            _mousePos = hit.point;
+            _mousePos.z = 0.0f;
+        }
     }
 
 }
