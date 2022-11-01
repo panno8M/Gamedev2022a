@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using UniRx;
@@ -12,10 +10,14 @@ public class HostileDrone : MonoBehaviour
 {
     Context<Unit> droneContext = new Context<Unit>();
 
+    IDisposable cancelBT;
+
+
     [SerializeField] float moveSpeed = 0.1f;
     [SerializeField] float rotateSpeed = 3f;
     [SerializeField] ParticleSystem psWater;
     [SerializeField] AiSight sight;
+    [SerializeField] Damagable damagable;
 
     Layer lVolume = Layer.AiControlVolume;
     [SerializeField] bool rotateTrigger;
@@ -32,9 +34,14 @@ public class HostileDrone : MonoBehaviour
             .Subscribe(_ => psWater.Play()).AddTo(this);
         sight.OnLost
             .Subscribe(_ => psWater.Stop()).AddTo(this);
+        
+        damagable.TotalDamage
+            .Where(total => total == 2)
+            .Delay(TimeSpan.FromSeconds(0.5))
+            .Subscribe(_ => Dead());
 
 
-        BuildBihaviourPipeline(this.FixedUpdateAsObservable());
+        cancelBT = BuildBihaviourPipeline(this.FixedUpdateAsObservable());
 
         this.OnTriggerExitAsObservable()
             .Where(other => (int)lVolume == other.gameObject.layer)
@@ -45,7 +52,7 @@ public class HostileDrone : MonoBehaviour
 
     }
 
-    void BuildBihaviourPipeline<T>(IObservable<T> observable) {
+    IDisposable BuildBihaviourPipeline<T>(IObservable<T> observable) {
         var priority = observable
             // TODO: Brain Subjectに担当させる ↓↓
             .Select(_ => droneContext)
@@ -53,8 +60,7 @@ public class HostileDrone : MonoBehaviour
                 if (context.Status != TaskStatus.Running)
                     context.Status = TaskStatus.Ready;})
             // ------------------------------- ↑↑
-            .Multicast(new NeuroSubject<Unit>())
-            .RefCount();
+            .Multicast(new NeuroSubject<Unit>());
 
         priority
             .Where(context => sight.LastSeen.Value)
@@ -67,11 +73,14 @@ public class HostileDrone : MonoBehaviour
             .Subscribe(context => RotateHalfSlowly(context));
 
         priority
-            .Subscribe(_ => MoveForward());
+            .Subscribe(context => MoveForward(context));
+
+        return priority.Connect();
     }
 
-    void MoveForward() {
+    void MoveForward(Context<Unit> context) {
         transform.position -= transform.right * moveSpeed;
+        context.Status = TaskStatus.Success;
     }
     void RotateHalfSlowly(Context<Unit> context) {
         context.Status = TaskStatus.Running;
@@ -81,5 +90,13 @@ public class HostileDrone : MonoBehaviour
         if (transform.rotation == rotateEnd) {
             context.Status = TaskStatus.Success;
         }
+    }
+
+
+    void Dead() {
+        GetComponent<Rigidbody>().useGravity = true;
+        GetComponent<Rigidbody>().isKinematic = false;
+        cancelBT.Dispose();
+        cancelBT = null;
     }
 }

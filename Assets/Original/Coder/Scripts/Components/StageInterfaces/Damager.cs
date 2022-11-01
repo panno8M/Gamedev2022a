@@ -5,7 +5,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-public class HurtWater : MonoBehaviour {
+public class Damager : MonoBehaviour {
     ParticleSystem ps;
     List<ParticleCollisionEvent> ev;
     void Start() {
