@@ -36,6 +36,10 @@ public class Player : UniqueBehaviour<Player> {
     public IObservable<long> WhileNotFlying;
     public IObservable<long> WhileLanding;
 
+    public IObservable<Unit> IsBreath;
+
+    public IObservable<Vector2> MousePosition;
+
 #endregion
 
     void Awake() {
@@ -64,6 +68,10 @@ public class Player : UniqueBehaviour<Player> {
         WhileLanding = Observable
             .EveryFixedUpdate()
             .Where(_ => _isOnGround.Value);
+
+        IsBreath = Global.Control.DoBreath;
+
+        MousePosition = Global.Control.MousePos;
     }
 
     void Start() {
@@ -102,5 +110,9 @@ public class Player : UniqueBehaviour<Player> {
                 lookAt = dir;
                 })
             .AddTo(this);
+    }
+
+    void Updata(){
+        
     }
 }

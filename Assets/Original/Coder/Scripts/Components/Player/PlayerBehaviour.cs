@@ -83,6 +83,12 @@ public class PlayerBehaviour : MonoBehaviour
                 if (hmi == 0) return;
                 MoveHorizontal(hmi);
             }).AddTo(this);
+
+        player.IsBreath
+            .Subscribe(_ => {Debug.Log("Fire");}).AddTo(this);
+
+        player.MousePosition
+            .Subscribe(_ => {Debug.Log(Global.Control.MousePosInput);}).AddTo(this);
     }
 
     public void MoveHorizontal(float hmi) {
