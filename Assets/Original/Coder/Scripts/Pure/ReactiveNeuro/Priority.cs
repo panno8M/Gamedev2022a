@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UniRx.InternalUtil;
 
@@ -12,7 +11,7 @@ namespace UniRx.ReactiveNeuro {
         Exception lastError;
         IObserver<Context<T>> outObserver = EmptyObserver<Context<T>>.Instance;
 
-        Context<T> _context = new Context<T>();
+        Context<T> _contextCopy;
 
         public bool HasObservers {
             get {
@@ -52,10 +51,8 @@ namespace UniRx.ReactiveNeuro {
         }
 
         public void OnNext(Context<T> value) {
-            //_context = value;
-            _context.Status = value.Status;
-            outObserver.OnNext(_context);
-            value.Status = _context.Status;
+            _contextCopy = value;
+            outObserver.OnNext(value);
         }
 
         public IDisposable Subscribe(IObserver<Context<T>> observer) {
@@ -68,11 +65,11 @@ namespace UniRx.ReactiveNeuro {
                 if (!isStopped) {
                     var listObserver = outObserver as NeuroObserver<T>;
                     if (listObserver != null) {
-                        outObserver = listObserver.Add(observer);
+                        listObserver.Add(observer);
                     }
                     else {
                         var current = outObserver;
-                        outObserver = new PriorityObserver<T>(new ImmutableList<IObserver<Context<T>>>(new[] { current, observer }));
+                        outObserver = new PriorityObserver<T>(new List<IObserver<Context<T>>>(new[] { current, observer }));
                     }
 
                     return new Subscription(this, observer);
@@ -120,12 +117,9 @@ namespace UniRx.ReactiveNeuro {
                 lock (gate) {
                     if (parent == null) { return; }
                     lock (parent.observerLock) {
-                        var listObserver = parent.outObserver as PriorityObserver<T>;
-                        if (unsubscribeTarget == parent._context.TryingExecution) {
-                            parent._context.Status = TaskStatus.Failure;
-                        }
+                        var listObserver = parent.outObserver as NeuroObserver<T>;
                         if (listObserver != null) {
-                            parent.outObserver = listObserver.Remove(unsubscribeTarget);
+                            listObserver.Remove(unsubscribeTarget);
                         }
                         else {
                             parent.outObserver = EmptyObserver<Context<T>>.Instance;
@@ -141,107 +135,70 @@ namespace UniRx.ReactiveNeuro {
 
 
     public class NeuroObserver<T> : IObserver<Context<T>> {
-        protected readonly ImmutableList<IObserver<Context<T>>> _observers;
+        protected readonly List<IObserver<Context<T>>> _observers;
+        protected readonly List<Context<T>> _contexts;
 
-        public virtual NeuroObserver<T> Create(ImmutableList<IObserver<Context<T>>> observers) {
+        public virtual NeuroObserver<T> Create(List<IObserver<Context<T>>> observers) {
             return new NeuroObserver<T>(observers);
         }
 
-        public NeuroObserver(ImmutableList<IObserver<Context<T>>> observers) {
+        public NeuroObserver(List<IObserver<Context<T>>> observers) {
             _observers = observers;
+            _contexts = new List<Context<T>>(observers.Count);
+            for (int i = 0; i != observers.Count; i++) {
+                _contexts.Add(new Context<T>());
+            }
         }
 
         public void OnCompleted() {
-            var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++) {
-                targetObservers[i].OnCompleted();
+            foreach (var observer in _observers) {
+                observer.OnCompleted();
             }
         }
 
         public void OnError(Exception error) {
-            var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++) {
-                targetObservers[i].OnError(error);
+            foreach (var observer in _observers) {
+                observer.OnError(error);
             }
         }
 
         public virtual void OnNext(Context<T> value){}
-        internal IObserver<Context<T>> Add(IObserver<Context<T>> observer) {
-            return Create(_observers.Add(observer));
+        internal void Add(IObserver<Context<T>> observer) {
+            _observers.Add(observer);
+            _contexts.Add(new Context<T>());
         }
 
-        internal IObserver<Context<T>> Remove(IObserver<Context<T>> observer) {
-            var i = Array.IndexOf(_observers.Data, observer);
-            if (i < 0)
-                return this;
-
-            if (_observers.Data.Length == 2) {
-                return _observers.Data[1 - i];
-            }
-            else {
-                return Create(_observers.Remove(observer));
-            }
+        internal void Remove(IObserver<Context<T>> observer) {
+            var idx = _observers.IndexOf(observer);
+            _observers.RemoveAt(idx);
+            _contexts.RemoveAt(idx);
         }
     }
     public class PriorityObserver<T> : NeuroObserver<T> {
-        public PriorityObserver(ImmutableList<IObserver<Context<T>>> observers)
+        public PriorityObserver(List<IObserver<Context<T>>> observers)
             : base(observers) {}
 
-        public override NeuroObserver<T> Create(ImmutableList<IObserver<Context<T>>> observers) {
+        public override NeuroObserver<T> Create(List<IObserver<Context<T>>> observers) {
             return new PriorityObserver<T>(observers) as NeuroObserver<T>;
         }
 
         public override void OnNext(Context<T> value) {
-            if (value.Status == TaskStatus.Running) {
-                value.TryingExecution.OnNext(value);
-                return;
-            }
-            var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++) {
-                value.TryingExecution = targetObservers[i];
-                targetObservers[i].OnNext(value);
-
-                switch (value.Status){
+            if (value.TryContinue()) return;
+            for (int i = 0; i != _observers.Count; i++) {
+                switch(value.Try(_observers[i], _contexts[i])) {
                     case TaskStatus.Ready:
                     case TaskStatus.Failure:
                         break;
                     case TaskStatus.Success:
+                        return;
                     case TaskStatus.Running:
                         return;
                 }
             }
+            value.Status = TaskStatus.Failure;
         }
     }
 
-    public class SequenceObserver<T> : NeuroObserver<T> {
-        public SequenceObserver(ImmutableList<IObserver<Context<T>>> observers)
-            : base(observers) {}
-
-        public override NeuroObserver<T> Create(ImmutableList<IObserver<Context<T>>> observers) {
-            return new SequenceObserver<T>(observers) as NeuroObserver<T>;
-        }
-
-        public override void OnNext(Context<T> value) {
-            if (value.Status == TaskStatus.Running) {
-                value.TryingExecution.OnNext(value);
-                return;
-            }
-            var targetObservers = _observers.Data;
-            for (int i = 0; i < targetObservers.Length; i++) {
-                value.TryingExecution = targetObservers[i];
-                targetObservers[i].OnNext(value);
-
-                switch (value.Status){
-                    case TaskStatus.Ready:
-                    case TaskStatus.Success:
-                        break;
-                    case TaskStatus.Failure:
-                    case TaskStatus.Running:
-                        return;
-                }
-            }
-        }
-    }
 
     public static class NeuroObservableExtensions {
         public static IObservable<Context<T>> ActivateIf<T>(this IObservable<Context<T>> source, Func<Context<T>, bool> predicate) {

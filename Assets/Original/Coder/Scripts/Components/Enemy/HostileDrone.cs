@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 using UniRx;
@@ -28,7 +26,7 @@ public class HostileDrone : MonoBehaviour
             .ThrottleFirst(TimeSpan.FromSeconds(.5f))
             .Share();
 
-        sight.OnSeen
+       sight.OnSeen
             .Subscribe(_ => psWater.Play()).AddTo(this);
         sight.OnLost
             .Subscribe(_ => psWater.Stop()).AddTo(this);
@@ -67,11 +65,12 @@ public class HostileDrone : MonoBehaviour
             .Subscribe(context => RotateHalfSlowly(context));
 
         priority
-            .Subscribe(_ => MoveForward());
+            .Subscribe(context => MoveForward(context));
     }
 
-    void MoveForward() {
+    void MoveForward(Context<Unit> context) {
         transform.position -= transform.right * moveSpeed;
+        context.Status = TaskStatus.Success;
     }
     void RotateHalfSlowly(Context<Unit> context) {
         context.Status = TaskStatus.Running;
