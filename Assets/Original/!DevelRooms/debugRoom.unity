@@ -3024,6 +3024,18 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.99999994, y: 0.99999994, z: 0.99999994}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1583424650 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 9026324072695872059, guid: e0eb512d7ebcdf84fa30f68ed01cd06b,
+    type: 3}
+  m_PrefabInstance: {fileID: 1634693420}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c82ed3c60f7a494180f9a668c74e8df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1594909219 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 928d50fb18217c640af5021d70ef8134,
@@ -3096,6 +3108,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1210545985916033635, guid: e0eb512d7ebcdf84fa30f68ed01cd06b,
+        type: 3}
+      propertyPath: damagable
+      value: 
+      objectReference: {fileID: 1583424650}
+    - target: {fileID: 4896414494138056336, guid: e0eb512d7ebcdf84fa30f68ed01cd06b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e0eb512d7ebcdf84fa30f68ed01cd06b, type: 3}
@@ -3257,6 +3279,7 @@ MonoBehaviour:
     horizontalMove: 0
     goUp: 0
     doBreath: 0
+    notBreath: 0
     mousePos: {x: 0, y: 0}
 --- !u!4 &1856155465
 Transform:

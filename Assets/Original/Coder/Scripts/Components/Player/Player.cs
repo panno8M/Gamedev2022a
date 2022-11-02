@@ -37,8 +37,9 @@ public class Player : UniqueBehaviour<Player> {
     public IObservable<long> WhileLanding;
 
     public IObservable<Unit> IsBreath;
-
+    public IObservable<Unit> NotBreath;
     public IObservable<Vector2> MousePosition;
+    public ParticleSystem breathFire;
 
 #endregion
 
@@ -70,6 +71,7 @@ public class Player : UniqueBehaviour<Player> {
             .Where(_ => _isOnGround.Value);
 
         IsBreath = Global.Control.DoBreath;
+        NotBreath = Global.Control.NotBreath;
 
         MousePosition = Global.Control.MousePosInput;
     }
@@ -110,7 +112,5 @@ public class Player : UniqueBehaviour<Player> {
                 lookAt = dir;
                 })
             .AddTo(this);
-
-
     }
 }

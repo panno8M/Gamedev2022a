@@ -13,6 +13,7 @@ public class Control: UniqueBehaviour<Control> {
         public float horizontalMove;
         public bool goUp;
         public bool doBreath;
+        public bool notBreath;
         public Vector2 mousePos;
     }
     [SerializeField]
@@ -27,7 +28,10 @@ public class Control: UniqueBehaviour<Control> {
     public IObservable<Unit> GoUp;
 
     public ReadOnlyReactiveProperty<bool> DoBreathInput;
+    public ReadOnlyReactiveProperty<bool> NotBreathInput;
+
     public IObservable<Unit> DoBreath;
+    public IObservable<Unit> NotBreath;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
     public IObservable<Vector2> MousePos{get {return MousePosInput;}}
@@ -39,6 +43,7 @@ public class Control: UniqueBehaviour<Control> {
         HorizontalMoveInput = input.Player.HorizontalMove.AsAxis();
         GoUpInput = input.Player.GoUp.AsButton();
         DoBreathInput = input.Player.DoBreath.AsButton();
+        NotBreathInput = input.Player.DoBreath.AsButton();
         MousePosInput = input.Player.MousePos.AsPos();
 
         WhileHorizontalMoving = Observable
@@ -58,6 +63,12 @@ public class Control: UniqueBehaviour<Control> {
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
+        NotBreath = NotBreathInput
+            .Where(x => !x)
+            .AsUnitObservable()
+            .BatchFrame(0, FrameCountType.FixedUpdate)
+            .Share();
+
         // MousePos = Observable
         //     .EveryFixedUpdate()
         //     .WithLatestFrom(MousePosInput,  (_,hmi) => hmi)
@@ -66,6 +77,7 @@ public class Control: UniqueBehaviour<Control> {
         HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
         GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);
         DoBreathInput.Subscribe(x => inspector.doBreath = x).AddTo(this);
+        NotBreathInput.Subscribe(x => inspector.notBreath = x).AddTo(this);
         MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
     }
 }
@@ -79,7 +91,6 @@ namespace ReactiveInput {
                 .Select(x => x.ReadValueAsButton())
                 .ToReadOnlyReactiveProperty(false);
         }
-
         public static ReadOnlyReactiveProperty<float> AsAxis(this InputAction inputAction) {
             return Observable.FromEvent<InputAction.CallbackContext>(
                 h => inputAction.performed += h,

@@ -44,6 +44,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Start() {
         var player = Global.Player;
+        var breathFire = player.breathFire;
         player.OnJump.Subscribe(_ => {
             rb.AddForce(_scaleJumpHeight._y_(), ForceMode.Impulse);
         }).AddTo(this);
@@ -90,11 +91,19 @@ public class PlayerBehaviour : MonoBehaviour
         Global.Control.MousePos
             .Subscribe(hmi => {
                 MousePosToWorldPoint(hmi);
+                breathFire.transform.LookAt(_mousePos);
                 })
             .AddTo(this);;
 
         player.IsBreath
-            .Subscribe(pos => {Debug.Log(_mousePos);}).AddTo(this);
+            .Subscribe(pos => {
+                breathFire.Play();
+        }).AddTo(this);
+        
+        player.NotBreath
+            .Subscribe(pos => {
+                breathFire.Stop();
+        }).AddTo(this);
 
     }
 
@@ -107,7 +116,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void MousePosToWorldPoint(Vector3 hmi){
         RaycastHit hit;
-        hmi.z = 1f;
+        hmi.z = 1.0f;
         hmi = Camera.main.ScreenToWorldPoint(hmi);
         if (Physics.Raycast(Camera.main.transform.position, (hmi - Camera.main.transform.position), out hit, Mathf.Infinity,  1 << _canHitRayCastLayerNum)){
             Debug.DrawRay(Camera.main.transform.position, (hmi - Camera.main.transform.position) * hit.distance, Color.red);
