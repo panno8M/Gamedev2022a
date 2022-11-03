@@ -5064,7 +5064,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anim: {fileID: 4042233797150928057}
   breathFire: {fileID: 1059547643}
-  _scaleJumpHeight: 10
+  _scaleJumpHeight: 5
   _scaleSoarHeight: 3
   _scaleMoveSpeed: 3.5
   _scaleGravity:

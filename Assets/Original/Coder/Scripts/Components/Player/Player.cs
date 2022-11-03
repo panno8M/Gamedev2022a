@@ -20,6 +20,8 @@ public class Player : UniqueBehaviour<Player> {
     public Damagable Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
     public float wallCollidingBias => _wallCollidingBias;
+    public bool isFlapping => _isFlapping;
+    public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
 
 #region statements
     [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
@@ -51,18 +53,6 @@ public class Player : UniqueBehaviour<Player> {
         OnLand = _isOnGround
             .Where(x => x)
             .AsUnitObservable();
-
-        WhileFlying = Observable
-            .EveryFixedUpdate()
-            .Where(_ => _isFlapping);
-
-        WhileNotFlying = Observable
-            .EveryFixedUpdate()
-            .Where(_ => !_isFlapping);
-
-        WhileLanding = Observable
-            .EveryFixedUpdate()
-            .Where(_ => _isOnGround.Value);
     }
 
     void Start() {
