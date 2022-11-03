@@ -6,7 +6,7 @@ using UniRx;
 
 [Flags]
 public enum DamageKind {
-    Any       = 0,
+    None      = 0,
     Fire      = 1 << 0,
     Water     = 1 << 1,
     Explosion = 1 << 2,
@@ -25,7 +25,7 @@ public struct DamageUnit {
         this.scale = 1;
     }
 
-    public static DamageUnit None = new DamageUnit(DamageKind.Any);
+    public static DamageUnit None = new DamageUnit(DamageKind.None);
     public static DamageUnit Fire = new DamageUnit(DamageKind.Fire);
     public static DamageUnit Water = new DamageUnit(DamageKind.Water);
     public static DamageUnit Explosion = new DamageUnit(DamageKind.Explosion);
@@ -66,6 +66,8 @@ public class Damagable : MonoBehaviour
         OnBroken = TotalDamage
             .Where(scl => scl == stamina)
             .AsUnitObservable();
+
+        OnBroken.Subscribe(_ => _addDamage.OnCompleted());
 
         OnDamage
             .Where(dmg => dmg.kind.HasFlag(DamageKind.Fire))

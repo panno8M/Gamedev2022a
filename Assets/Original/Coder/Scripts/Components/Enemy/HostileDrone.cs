@@ -25,7 +25,6 @@ public class HostileDrone : MonoBehaviour
     Quaternion rotateEnd;
 
     void Start() {
-        psWater.Stop();
         var slowupdate = this
             .UpdateAsObservable()
             .ThrottleFirst(TimeSpan.FromSeconds(.5f))
@@ -37,8 +36,8 @@ public class HostileDrone : MonoBehaviour
             .Subscribe(_ => psWater.Stop()).AddTo(this);
         
         damagable.TotalDamage
-            .Delay(TimeSpan.FromSeconds(0.5))
             .Where(total => total == 1)
+            .Delay(TimeSpan.FromSeconds(0.5))
             .Subscribe(_ => psBurnUp.Play());
 
         damagable.OnBroken

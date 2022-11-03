@@ -8,6 +8,17 @@ public class PlayerBehaviour : MonoBehaviour
     public static float G = -9.8f;
 
     [System.Serializable]
+    public struct BehaviourScale {
+        public BehaviourScale(float jumpHeight, float soarHeight, float moveSpeed) {
+            this.jumpHeight = jumpHeight;
+            this.soarHeight = soarHeight;
+            this.moveSpeed = moveSpeed;
+        }
+        public float jumpHeight;
+        public float soarHeight;
+        public float moveSpeed;
+    }
+    [System.Serializable]
     public struct GravityScale {
         public GravityScale(float normal, float flying) {
             this.normal = normal;
@@ -20,15 +31,11 @@ public class PlayerBehaviour : MonoBehaviour
     #region editable params
     [SerializeField] Animator anim;
     [SerializeField] ParticleSystem breathFire;
-    [SerializeField] float _scaleJumpHeight;
-    [SerializeField] float _scaleSoarHeight;
-    [SerializeField] float _scaleMoveSpeed;
+    [SerializeField] BehaviourScale _scaleBehaviour;
     [SerializeField] GravityScale _scaleGravity;
 
     void Reset() {
-        _scaleJumpHeight = 5f;
-        _scaleSoarHeight = 3f;
-        _scaleMoveSpeed  = 3.5f;
+        _scaleBehaviour  = new BehaviourScale(5f, 3f, 3.5f);
         _scaleGravity  = new GravityScale(1.3f, .1f);
     }
     #endregion
@@ -49,12 +56,12 @@ public class PlayerBehaviour : MonoBehaviour
             });
 
         player.OnJump.Subscribe(_ => {
-            rb.AddForce(_scaleJumpHeight._y_(), ForceMode.Impulse);
+            rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
         }).AddTo(this);
 
         player.OnFlapWhileFalling.Subscribe(_ => {
             rb.velocity = rb.velocity.x_z();
-            rb.AddForce(_scaleJumpHeight._y_(), ForceMode.Impulse);
+            rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
         }).AddTo(this);
 
         this.FixedUpdateAsObservable()
@@ -85,11 +92,16 @@ public class PlayerBehaviour : MonoBehaviour
             }).AddTo(this);
 
 
+        player.Damagable.OnBroken
+            .Subscribe(_ => Debug.Log("PLAYER DEAD"))
+            .AddTo(this);
+
+
     }
 
     void MoveHorizontal(float hmi) {
         rb.velocity = new Vector3(
-            hmi * _scaleMoveSpeed,
+            hmi * _scaleBehaviour.moveSpeed,
             rb.velocity.y,
             0);
     }
