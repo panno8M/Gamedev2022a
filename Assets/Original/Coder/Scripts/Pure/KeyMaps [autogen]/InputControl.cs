@@ -44,6 +44,24 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Press(behavior=2)"",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""DoBreath"",
+                    ""type"": ""Button"",
+                    ""id"": ""edb2f69e-80ba-472e-9ab7-85c799a31b3b"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MousePos"",
+                    ""type"": ""Value"",
+                    ""id"": ""8c1554bb-e126-48cd-84cb-9f1fdf025220"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -90,6 +108,28 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                     ""action"": ""GoUp"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""164f4a85-c878-4e9f-9db5-5866d3db73ab"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""DoBreath"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""81ad133f-19ed-4ff8-9bd0-dc1f801c6e51"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MousePos"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -100,6 +140,8 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_HorizontalMove = m_Player.FindAction("HorizontalMove", throwIfNotFound: true);
         m_Player_GoUp = m_Player.FindAction("GoUp", throwIfNotFound: true);
+        m_Player_DoBreath = m_Player.FindAction("DoBreath", throwIfNotFound: true);
+        m_Player_MousePos = m_Player.FindAction("MousePos", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -161,12 +203,16 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_HorizontalMove;
     private readonly InputAction m_Player_GoUp;
+    private readonly InputAction m_Player_DoBreath;
+    private readonly InputAction m_Player_MousePos;
     public struct PlayerActions
     {
         private @InputControl m_Wrapper;
         public PlayerActions(@InputControl wrapper) { m_Wrapper = wrapper; }
         public InputAction @HorizontalMove => m_Wrapper.m_Player_HorizontalMove;
         public InputAction @GoUp => m_Wrapper.m_Player_GoUp;
+        public InputAction @DoBreath => m_Wrapper.m_Player_DoBreath;
+        public InputAction @MousePos => m_Wrapper.m_Player_MousePos;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -182,6 +228,12 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 @GoUp.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGoUp;
                 @GoUp.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGoUp;
                 @GoUp.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnGoUp;
+                @DoBreath.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDoBreath;
+                @DoBreath.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDoBreath;
+                @DoBreath.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDoBreath;
+                @MousePos.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
+                @MousePos.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
+                @MousePos.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMousePos;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -192,6 +244,12 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
                 @GoUp.started += instance.OnGoUp;
                 @GoUp.performed += instance.OnGoUp;
                 @GoUp.canceled += instance.OnGoUp;
+                @DoBreath.started += instance.OnDoBreath;
+                @DoBreath.performed += instance.OnDoBreath;
+                @DoBreath.canceled += instance.OnDoBreath;
+                @MousePos.started += instance.OnMousePos;
+                @MousePos.performed += instance.OnMousePos;
+                @MousePos.canceled += instance.OnMousePos;
             }
         }
     }
@@ -200,5 +258,7 @@ public partial class @InputControl : IInputActionCollection2, IDisposable
     {
         void OnHorizontalMove(InputAction.CallbackContext context);
         void OnGoUp(InputAction.CallbackContext context);
+        void OnDoBreath(InputAction.CallbackContext context);
+        void OnMousePos(InputAction.CallbackContext context);
     }
 }

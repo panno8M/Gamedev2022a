@@ -18,6 +18,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     #region editable params
     [SerializeField] Animator anim;
+    [SerializeField] ParticleSystem breathFire;
     [SerializeField] float _scaleJumpHeight;
     [SerializeField] float _scaleSoarHeight;
     [SerializeField] float _scaleMoveSpeed;
@@ -83,13 +84,23 @@ public class PlayerBehaviour : MonoBehaviour
                 if (hmi == 0) return;
                 MoveHorizontal(hmi);
             }).AddTo(this);
+        
+        Global.Control.MousePosStage
+            .Subscribe(breathFire.transform.LookAt)
+            .AddTo(this);
+
+        Global.Control.DoBreath
+            .Subscribe(b => {
+                if (b){ breathFire.Play(); }
+                else  { breathFire.Stop(); }
+            }).AddTo(this);
+        
     }
 
-    public void MoveHorizontal(float hmi) {
+    void MoveHorizontal(float hmi) {
         rb.velocity = new Vector3(
             hmi * _scaleMoveSpeed,
             rb.velocity.y,
             0);
     }
-
 }

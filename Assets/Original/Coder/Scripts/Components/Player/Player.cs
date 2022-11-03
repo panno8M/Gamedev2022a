@@ -35,7 +35,6 @@ public class Player : UniqueBehaviour<Player> {
     public IObservable<long> WhileFlying;
     public IObservable<long> WhileNotFlying;
     public IObservable<long> WhileLanding;
-
 #endregion
 
     void Awake() {
