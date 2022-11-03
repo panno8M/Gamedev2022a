@@ -41,6 +41,7 @@ public class Damagable : MonoBehaviour
         public int TotalDamageWater;
         public int TotalDamageExplosion;
     }
+    [SerializeField] int stamina = -1;
     [SerializeField] float dmgCoolDownDur = 3;
     [SerializeField] bool allowDamage = true;
     [SerializeField] DamageKind allowDamageSource = DamageKind.All;
@@ -49,6 +50,7 @@ public class Damagable : MonoBehaviour
     public IObserver<DamageUnit> AddDamage => _addDamage;
     public IObservable<DamageUnit> OnDamage;
     public ReadOnlyReactiveProperty<int> TotalDamage;
+    public IObservable<Unit> OnBroken;
 
     void Awake() {
         OnDamage = _addDamage
@@ -60,6 +62,10 @@ public class Damagable : MonoBehaviour
             .Select(dmg => dmg.scale)
             .Scan((o,n)=>o+n)
             .ToReadOnlyReactiveProperty();
+
+        OnBroken = TotalDamage
+            .Where(scl => scl == stamina)
+            .AsUnitObservable();
 
         OnDamage
             .Where(dmg => dmg.kind.HasFlag(DamageKind.Fire))

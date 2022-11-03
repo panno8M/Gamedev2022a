@@ -83,7 +83,8 @@ public class PlayerBehaviour : MonoBehaviour
                 if (b){ breathFire.Play(); }
                 else  { breathFire.Stop(); }
             }).AddTo(this);
-        
+
+
     }
 
     void MoveHorizontal(float hmi) {

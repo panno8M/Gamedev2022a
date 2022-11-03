@@ -40,9 +40,9 @@ public class HostileDrone : MonoBehaviour
             .Delay(TimeSpan.FromSeconds(0.5))
             .Where(total => total == 1)
             .Subscribe(_ => psBurnUp.Play());
-        damagable.TotalDamage
+
+        damagable.OnBroken
             .Delay(TimeSpan.FromSeconds(0.5))
-            .Where(total => total == 2)
             .Subscribe(_ => Dead());
 
 

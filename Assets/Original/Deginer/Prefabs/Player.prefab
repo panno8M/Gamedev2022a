@@ -5241,6 +5241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c82ed3c60f7a494180f9a668c74e8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  stamina: 3
   dmgCoolDownDur: 3
   allowDamage: 1
   allowDamageSource: 2
