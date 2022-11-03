@@ -7,6 +7,7 @@ using UniRx.Triggers;
 
 public class Damager : MonoBehaviour {
     [SerializeField] LayerMask lmDamagable = new Layers(Layer.Damagable);
+    [SerializeField] DamageUnit _damageUnit;
     ParticleSystem ps;
     List<ParticleCollisionEvent> ev;
     void Start() {
@@ -15,7 +16,7 @@ public class Damager : MonoBehaviour {
 
         this.OnTriggerStayAsObservable()
             .Where(other => (lmDamagable & 1<<other.gameObject.layer) != 0)
-            .Subscribe(other => other.GetComponent<Damagable>().AddDamage.OnNext(1));
+            .Subscribe(other => other.GetComponent<Damagable>().AddDamage.OnNext(_damageUnit));
 
         this.OnParticleCollisionAsObservable()
             .Where(other => (lmDamagable & 1<<other.layer) != 0)
@@ -23,7 +24,7 @@ public class Damager : MonoBehaviour {
             .Subscribe(other => {
                 int num = ps.GetCollisionEvents(other, ev);
                 if (num != 0) {
-                    other.GetComponent<Damagable>().AddDamage.OnNext(1);
+                    other.GetComponent<Damagable>().AddDamage.OnNext(_damageUnit);
                 }
             }).AddTo(this);
     }

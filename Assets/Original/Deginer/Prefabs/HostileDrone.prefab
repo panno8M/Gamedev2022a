@@ -5566,6 +5566,9 @@ MonoBehaviour:
   lmDamagable:
     serializedVersion: 2
     m_Bits: 1024
+  _damageUnit:
+    kind: 2
+    scale: 1
 --- !u!198 &1825453273
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -15369,8 +15372,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dmgCoolDownDur: 1
+  allowDamage: 1
+  allowDamageSource: 1
   inspector:
-    totalDamage: 0
+    TotalDamageFire: 0
+    TotalDamageWater: 0
+    TotalDamageExplosion: 0
 --- !u!1001 &6437639485364842027
 PrefabInstance:
   m_ObjectHideFlags: 0

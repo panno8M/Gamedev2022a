@@ -19,8 +19,7 @@ public class DebugUI : MonoBehaviour
     [SerializeField] Text _uiTextPlayerDmg;
 
     void Start() {
-        Global.Player.Damagable.OnDamage
-            .Scan((total, current) => total + current)
+        Global.Player.Damagable.TotalDamage
             .Select(x => x.ToString())
             .Subscribe(x => _uiTextPlayerDmg.text = x)
             .AddTo(this);

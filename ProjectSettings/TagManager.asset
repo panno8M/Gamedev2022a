@@ -17,8 +17,8 @@ TagManager:
   - AiControlVolume
   - AiVisible
   - Damagable
-  - CanHitMouseRaycast
-  - FireDamagable
+  - ScreenToStageConverter
+  - DamagableFromPlayer
   - 
   - 
   - 
