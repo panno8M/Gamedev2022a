@@ -36,8 +36,8 @@ public class HostileDrone : MonoBehaviour
             .Subscribe(_ => psWater.Stop()).AddTo(this);
         
         damagable.TotalDamage
-            .Delay(TimeSpan.FromSeconds(0.5))
             .Where(total => total == 1)
+            .Delay(TimeSpan.FromSeconds(0.5))
             .Subscribe(_ => psBurnUp.Play());
 
         damagable.OnBroken
