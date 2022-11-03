@@ -25,7 +25,6 @@ public class HostileDrone : MonoBehaviour
     Quaternion rotateEnd;
 
     void Start() {
-        psWater.Stop();
         var slowupdate = this
             .UpdateAsObservable()
             .ThrottleFirst(TimeSpan.FromSeconds(.5f))

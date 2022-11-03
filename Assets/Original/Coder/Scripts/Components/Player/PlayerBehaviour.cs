@@ -85,6 +85,11 @@ public class PlayerBehaviour : MonoBehaviour
             }).AddTo(this);
 
 
+        player.Damagable.OnBroken
+            .Subscribe(_ => Debug.Log("PLAYER DEAD"))
+            .AddTo(this);
+
+
     }
 
     void MoveHorizontal(float hmi) {

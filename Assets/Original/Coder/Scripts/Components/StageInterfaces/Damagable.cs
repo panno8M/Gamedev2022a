@@ -67,6 +67,8 @@ public class Damagable : MonoBehaviour
             .Where(scl => scl == stamina)
             .AsUnitObservable();
 
+        OnBroken.Subscribe(_ => _addDamage.OnCompleted());
+
         OnDamage
             .Where(dmg => dmg.kind.HasFlag(DamageKind.Fire))
             .Select(dmg => dmg.scale)
