@@ -16,6 +16,7 @@ public class HostileDrone : MonoBehaviour
     [SerializeField] float moveSpeed = 0.1f;
     [SerializeField] float rotateSpeed = 3f;
     [SerializeField] ParticleSystem psWater;
+    [SerializeField] ParticleSystem psBurnUp;
     [SerializeField] AiSight sight;
     [SerializeField] Damagable damagable;
 
@@ -39,6 +40,11 @@ public class HostileDrone : MonoBehaviour
             .Where(total => total == 2)
             .Delay(TimeSpan.FromSeconds(0.5))
             .Subscribe(_ => Dead());
+
+        damagable.TotalDamage
+            .Where(total => total == 1)
+            .Delay(TimeSpan.FromSeconds(0.5))
+            .Subscribe(_ => psBurnUp.Play());
 
 
         cancelBT = BuildBihaviourPipeline(this.FixedUpdateAsObservable());
