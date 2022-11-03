@@ -1,16 +1,18 @@
 using System.ComponentModel;
+using UnityEngine;
 public enum Layer {
-    [Description("Default")]         Default,
-    [Description("TransparentFX")]   TransparentFX,
-    [Description("Ignore Raycast")]  IgnoreRaycast,
-    [Description("Player")]          Player,
-    [Description("Water")]           Water,
-    [Description("UI")]              UI,
-    [Description("Stage")]           Stage,
-    [Description("Enemy")]           Enemy,
-    [Description("AiControlVolume")] AiControlVolume,
-    [Description("AiVisible")]       AiVisible,
-    [Description("Damagable")]       Damagable,
+    [Description("Default")]                Default,
+    [Description("TransparentFX")]          TransparentFX,
+    [Description("Ignore Raycast")]         IgnoreRaycast,
+    [Description("Player")]                 Player,
+    [Description("Water")]                  Water,
+    [Description("UI")]                     UI,
+    [Description("Stage")]                  Stage,
+    [Description("Enemy")]                  Enemy,
+    [Description("AiControlVolume")]        AiControlVolume,
+    [Description("AiVisible")]              AiVisible,
+    [Description("Damagable")]              Damagable,
+    [Description("ScreenToStageConverter")] ScreenToStageConverter,
     }
 
 public struct Layers {
@@ -22,6 +24,9 @@ public struct Layers {
         }
     }
     public static implicit operator int(Layers layers) {
+        return layers.value;
+    }
+    public static implicit operator LayerMask(Layers layers) {
         return layers.value;
     }
 }

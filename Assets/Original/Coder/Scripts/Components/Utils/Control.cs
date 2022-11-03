@@ -13,7 +13,6 @@ public class Control: UniqueBehaviour<Control> {
         public float horizontalMove;
         public bool goUp;
         public bool doBreath;
-        public bool notBreath;
         public Vector2 mousePos;
     }
     [SerializeField]
@@ -28,13 +27,10 @@ public class Control: UniqueBehaviour<Control> {
     public IObservable<Unit> GoUp;
 
     public ReadOnlyReactiveProperty<bool> DoBreathInput;
-    public ReadOnlyReactiveProperty<bool> NotBreathInput;
-
-    public IObservable<Unit> DoBreath;
-    public IObservable<Unit> NotBreath;
+    public IObservable<bool> DoBreath;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
-    public IObservable<Vector2> MousePos{get {return MousePosInput;}}
+    public ReadOnlyReactiveProperty<Vector3> MousePosStage;
 
     void Awake() {
         input = new InputControl();
@@ -43,8 +39,7 @@ public class Control: UniqueBehaviour<Control> {
         HorizontalMoveInput = input.Player.HorizontalMove.AsAxis();
         GoUpInput = input.Player.GoUp.AsButton();
         DoBreathInput = input.Player.DoBreath.AsButton();
-        NotBreathInput = input.Player.DoBreath.AsButton();
-        MousePosInput = input.Player.MousePos.AsPos();
+        MousePosInput = input.Player.MousePos.As2dAxis();
 
         WhileHorizontalMoving = Observable
             .EveryFixedUpdate()
@@ -58,27 +53,39 @@ public class Control: UniqueBehaviour<Control> {
             .Share();
 
         DoBreath = DoBreathInput
-            .Where(x => x)
             .AsUnitObservable()
             .BatchFrame(0, FrameCountType.FixedUpdate)
+            .Select(_ => DoBreathInput.Value)
             .Share();
 
-        NotBreath = NotBreathInput
-            .Where(x => !x)
-            .AsUnitObservable()
-            .BatchFrame(0, FrameCountType.FixedUpdate)
-            .Share();
+        MousePosStage = MousePosInput
+            .Select(pos => MousePos_ScreenToGameStage(pos, out Vector3 stagePos)
+                    ? stagePos
+                    : MousePosStage.Value)
+            .ToReadOnlyReactiveProperty();
 
-        // MousePos = Observable
-        //     .EveryFixedUpdate()
-        //     .WithLatestFrom(MousePosInput,  (_,hmi) => hmi)
-        //     .Share();
 
         HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
         GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);
         DoBreathInput.Subscribe(x => inspector.doBreath = x).AddTo(this);
-        NotBreathInput.Subscribe(x => inspector.notBreath = x).AddTo(this);
         MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
+    }
+
+    static LayerMask stsc = new Layers(Layer.ScreenToStageConverter);
+    public static bool MousePos_ScreenToGameStage(Vector3 screenPos, out Vector3 stagePos){
+        screenPos.z = 1.0f;
+        var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
+        var camPos = Camera.main.transform.position;
+        if (Physics.Raycast(camPos, (worldPos - camPos), out RaycastHit hit, 100f, stsc)){
+            Debug.DrawRay(camPos, hit.point, Color.red);
+            stagePos = hit.point;
+            stagePos.z = 0.0f;
+            return true;
+        }
+        else {
+            stagePos = Vector3.zero;
+            return false;
+        }
     }
 }
 
@@ -98,12 +105,12 @@ namespace ReactiveInput {
                 .Select(x => x.ReadValue<float>())
                 .ToReadOnlyReactiveProperty(0f);
         }
-        public static ReadOnlyReactiveProperty<Vector2> AsPos(this InputAction inputAction) {
+        public static ReadOnlyReactiveProperty<Vector2> As2dAxis(this InputAction inputAction) {
             return Observable.FromEvent<InputAction.CallbackContext>(
                 h => inputAction.performed += h,
                 h => inputAction.performed -= h)
                 .Select(x => x.ReadValue<Vector2>())
-                .ToReadOnlyReactiveProperty();
+                .ToReadOnlyReactiveProperty(Vector2.zero);
         }
     }
 }

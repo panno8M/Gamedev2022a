@@ -18,19 +18,17 @@ public class PlayerBehaviour : MonoBehaviour
 
     #region editable params
     [SerializeField] Animator anim;
+    [SerializeField] ParticleSystem breathFire;
     [SerializeField] float _scaleJumpHeight;
     [SerializeField] float _scaleSoarHeight;
     [SerializeField] float _scaleMoveSpeed;
     [SerializeField] GravityScale _scaleGravity;
-    [SerializeField] Vector3 _mousePos;
-    [SerializeField] int _canHitRayCastLayerNum;
 
     void Reset() {
         _scaleJumpHeight = 10f;
         _scaleSoarHeight = 3f;
         _scaleMoveSpeed  = 3.5f;
         _scaleGravity  = new GravityScale(1.3f, .1f);
-        _canHitRayCastLayerNum = 11;
     }
     #endregion
 
@@ -44,7 +42,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Start() {
         var player = Global.Player;
-        var breathFire = player.breathFire;
         player.OnJump.Subscribe(_ => {
             rb.AddForce(_scaleJumpHeight._y_(), ForceMode.Impulse);
         }).AddTo(this);
@@ -88,41 +85,22 @@ public class PlayerBehaviour : MonoBehaviour
                 MoveHorizontal(hmi);
             }).AddTo(this);
         
-        Global.Control.MousePos
-            .Subscribe(hmi => {
-                MousePosToWorldPoint(hmi);
-                breathFire.transform.LookAt(_mousePos);
-                })
-            .AddTo(this);;
+        Global.Control.MousePosStage
+            .Subscribe(breathFire.transform.LookAt)
+            .AddTo(this);
 
-        player.IsBreath
-            .Subscribe(pos => {
-                breathFire.Play();
-        }).AddTo(this);
+        Global.Control.DoBreath
+            .Subscribe(b => {
+                if (b){ breathFire.Play(); }
+                else  { breathFire.Stop(); }
+            }).AddTo(this);
         
-        player.NotBreath
-            .Subscribe(pos => {
-                breathFire.Stop();
-        }).AddTo(this);
-
     }
 
-    public void MoveHorizontal(float hmi) {
+    void MoveHorizontal(float hmi) {
         rb.velocity = new Vector3(
             hmi * _scaleMoveSpeed,
             rb.velocity.y,
             0);
     }
-
-    public void MousePosToWorldPoint(Vector3 hmi){
-        RaycastHit hit;
-        hmi.z = 1.0f;
-        hmi = Camera.main.ScreenToWorldPoint(hmi);
-        if (Physics.Raycast(Camera.main.transform.position, (hmi - Camera.main.transform.position), out hit, Mathf.Infinity,  1 << _canHitRayCastLayerNum)){
-            Debug.DrawRay(Camera.main.transform.position, (hmi - Camera.main.transform.position) * hit.distance, Color.red);
-            _mousePos = hit.point;
-            _mousePos.z = 0.0f;
-        }
-    }
-
 }

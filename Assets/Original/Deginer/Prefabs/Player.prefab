@@ -5038,7 +5038,6 @@ MonoBehaviour:
     value: 0
   _isFlapping: 0
   _wallCollidingBias: 0
-  breathFire: {fileID: 832719023}
 --- !u!114 &4042233797003262913
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5052,6 +5051,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   anim: {fileID: 4042233797150928057}
+  breathFire: {fileID: 832719023}
   _scaleJumpHeight: 10
   _scaleSoarHeight: 3
   _scaleMoveSpeed: 3.5
