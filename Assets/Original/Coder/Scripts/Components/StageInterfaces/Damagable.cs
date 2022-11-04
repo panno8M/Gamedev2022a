@@ -37,6 +37,8 @@ public class Damagable : MonoBehaviour
 {
     [Serializable]
     struct Inspector {
+        public bool IsBroken;
+        public int TotalDamageAllowed;
         public int TotalDamageFire;
         public int TotalDamageWater;
         public int TotalDamageExplosion;
@@ -69,8 +71,10 @@ public class Damagable : MonoBehaviour
             .AsUnitObservable());
 
     void Awake() {
-        OnBroken.Subscribe(_ => _addDamage.OnCompleted());
-
+        OnBroken
+            .Subscribe(x => inspector.IsBroken = true);
+        TotalDamage
+            .Subscribe(x => inspector.TotalDamageAllowed = x);
         OnDamage
             .Where(dmg => dmg.kind.HasFlag(DamageKind.Fire))
             .Select(dmg => dmg.scale)
