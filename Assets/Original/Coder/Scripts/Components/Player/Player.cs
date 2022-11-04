@@ -8,7 +8,7 @@ public class Player : UniqueBehaviour<Player> {
     static void Init() { instance = null; }
     public enum Direction {Left = -1, Right = 1}
 
-#region forBehaviourControling
+#region forBehaviourControlling
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 #endregion
 
@@ -28,10 +28,10 @@ public class Player : UniqueBehaviour<Player> {
     [SerializeField] bool _isFlapping;
     [SerializeField] float _wallCollidingBias;
 
-    public IObservable<Unit> _onJump;
-    public IObservable<Unit> _onFlapWhileFalling;
-    public IObservable<Unit> _onFlap;
-    public IObservable<Unit> _onLand;
+    IObservable<Unit> _onJump;
+    IObservable<Unit> _onFlapWhileFalling;
+    IObservable<Unit> _onFlap;
+    IObservable<Unit> _onLand;
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
