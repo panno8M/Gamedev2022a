@@ -208,7 +208,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rbs: []
-  degThreshold: 20
+  degThreshold: 40
 --- !u!65 &1210545985916033644
 BoxCollider:
   m_ObjectHideFlags: 0
