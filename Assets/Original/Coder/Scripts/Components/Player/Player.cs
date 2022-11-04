@@ -6,10 +6,10 @@ using UniRx.Triggers;
 public class Player : UniqueBehaviour<Player> {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
-    enum Direction {Left = -1, Right = 1}
+    public enum Direction {Left = -1, Right = 1}
 
 #region forBehaviourControling
-    Direction lookAt = Direction.Right;
+    public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 #endregion
 
 #region params
@@ -82,11 +82,11 @@ public class Player : UniqueBehaviour<Player> {
             .Select(hmi =>
                     (hmi ==  1) ? Direction.Right :
                     (hmi == -1) ? Direction.Left  :
-                    lookAt)
-            .Where(dir => dir != lookAt)
+                    LookDir.Value)
+            .Where(dir => dir != LookDir.Value)
             .Subscribe(dir => {
                 transform.localScale *= new Vector2(-1, 1);
-                lookAt = dir;
+                LookDir.Value = dir;
                 })
             .AddTo(this);
     }
