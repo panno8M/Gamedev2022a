@@ -28,32 +28,26 @@ public class Player : UniqueBehaviour<Player> {
     [SerializeField] bool _isFlapping;
     [SerializeField] float _wallCollidingBias;
 
-    public IObservable<Unit> OnJump;
+    public IObservable<Unit> _onJump;
+    public IObservable<Unit> _onFlapWhileFalling;
+    public IObservable<Unit> _onFlap;
+    public IObservable<Unit> _onLand;
 
-    public IObservable<Unit> OnFlapWhileFalling;
-    public IObservable<Unit> OnFlap;
-    public IObservable<Unit> OnLand;
-
-    public IObservable<long> WhileLanding;
-#endregion
-
-    void Awake() {
-
-        OnJump = Global.Control.GoUp
-            .Where(_ => _isOnGround.Value);
-
-        OnFlap = Global.Control.GoUp
-            .Where(_ => !_isOnGround.Value);
-
-        OnFlapWhileFalling = OnFlap
-            .Where(_ => !_isFlapping);
-
-        OnLand = _isOnGround
+    public IObservable<Unit> OnJump => _onJump ??
+        (_onJump = Global.Control.GoUp
+            .Where(_ => _isOnGround.Value));
+    public IObservable<Unit> OnFlapWhileFalling => _onFlapWhileFalling ??
+        (_onFlapWhileFalling = OnFlap
+            .Where(_ => !_isFlapping));
+    public IObservable<Unit> OnFlap => _onFlap ??
+        (_onFlap = Global.Control.GoUp
+            .Where(_ => !_isOnGround.Value));
+    public IObservable<Unit> OnLand => _onLand ??
+        (_onLand = _isOnGround
             .Where(x => x)
-            .AsUnitObservable();
+            .AsUnitObservable());
 
-    }
-
+#endregion
     void Start() {
         this.OnCollisionStayAsObservable()
             .Subscribe(collision => {
