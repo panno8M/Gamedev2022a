@@ -93,7 +93,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 
         player.Damagable.OnBroken
-            .Subscribe(_ => Debug.Log("PLAYER DEAD"))
+            .Subscribe(_ => Global.PlayerRespawn.RespawnRequest.OnNext(Unit.Default))
             .AddTo(this);
 
 
