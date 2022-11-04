@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using UniRx;
 using ReactiveInput;
 
-public class Control: UniqueBehaviour<Control> {
+public class InputControl: UniqueBehaviour<InputControl> {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
 
@@ -18,7 +18,7 @@ public class Control: UniqueBehaviour<Control> {
     [SerializeField]
     Inspector inspector;
 
-    public InputControl input;
+    public InputSystem input;
 
     public ReadOnlyReactiveProperty<float> HorizontalMoveInput;
     public IObservable<float> WhileHorizontalMoving;
@@ -33,7 +33,7 @@ public class Control: UniqueBehaviour<Control> {
     public ReadOnlyReactiveProperty<Vector3> MousePosStage;
 
     void Awake() {
-        input = new InputControl();
+        input = new InputSystem();
         input.Enable();
 
         HorizontalMoveInput = input.Player.HorizontalMove.AsAxis();
