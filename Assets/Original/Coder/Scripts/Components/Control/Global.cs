@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public static class Global {
-    public static Control Control => Control.Instance;
+    public static InputControl Control => InputControl.Instance;
     public static Player Player => Player.Instance;
+    public static PlayerRespawnMgr PlayerRespawn => PlayerRespawnMgr.Instance;
 }
 
 public abstract class UniqueBehaviour<T> : MonoBehaviour
