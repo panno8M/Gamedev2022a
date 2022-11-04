@@ -51,6 +51,7 @@ public class Player : UniqueBehaviour<Player> {
         OnLand = _isOnGround
             .Where(x => x)
             .AsUnitObservable();
+
     }
 
     void Start() {

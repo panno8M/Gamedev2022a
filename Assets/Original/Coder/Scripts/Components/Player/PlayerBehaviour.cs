@@ -90,14 +90,6 @@ public class PlayerBehaviour : MonoBehaviour
                 if (b){ breathFire.Play(); }
                 else  { breathFire.Stop(); }
             }).AddTo(this);
-
-
-        player.Damagable.OnBroken
-            .Subscribe(_ => Global.PlayerRespawn.RespawnRequest.OnNext(Unit.Default))
-            .AddTo(this);
-
-
-
     }
 
     void MoveHorizontal(float hmi) {
