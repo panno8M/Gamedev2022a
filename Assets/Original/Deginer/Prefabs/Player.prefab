@@ -175,7 +175,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4042233797003262917}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.34, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -197,6 +197,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 386d6a5f9f86c7f4b9f4adce074cb809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LookDir:
+    value: 1
   groundNormalDegreeThreshold: 50
   damagable: {fileID: 4042233797364988407}
   aiVisible: {fileID: 4042233797005500142}
