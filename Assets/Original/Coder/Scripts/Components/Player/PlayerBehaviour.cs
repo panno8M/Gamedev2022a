@@ -73,8 +73,8 @@ public class PlayerBehaviour : MonoBehaviour
         this.FixedUpdateAsObservable()
             .Where(_ => player.isOnGround.Value)
             .WithLatestFrom(Global.Control.HorizontalMoveInput, (_, hmi) => hmi)
+            .Where(hmi => hmi != 0)
             .Subscribe(hmi => {
-                anim.SetBool("Walk", hmi != 0);
                 MoveHorizontal(hmi);
             }).AddTo(this);
         
@@ -90,6 +90,14 @@ public class PlayerBehaviour : MonoBehaviour
                 if (b){ breathFire.Play(); }
                 else  { breathFire.Stop(); }
             }).AddTo(this);
+
+        Global.Control.HorizontalMoveInput
+            .Where(hmi => hmi == 0)
+            .Subscribe(_ => MoveHorizontal(0))
+            .AddTo(this);
+        Global.Control.HorizontalMoveInput
+            .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
+            .AddTo(this);
     }
 
     void MoveHorizontal(float hmi) {
