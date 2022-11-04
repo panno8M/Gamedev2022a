@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 333109833103839658}
   - component: {fileID: 333109833103839659}
+  - component: {fileID: 2544326560853072376}
   m_Layer: 0
   m_Name: PlayerMgr
   m_TagString: GameController
@@ -51,6 +52,21 @@ MonoBehaviour:
     goUp: 0
     doBreath: 0
     mousePos: {x: 0, y: 0}
+--- !u!114 &2544326560853072376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333109833103839668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c112e9acebd65c45a362d0e8c09b160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _prefPlayer: {fileID: 4042233797003262917, guid: dbcdc19c2e9d8294a9eb71a49a993fef,
+    type: 3}
+  activeSpawnPoint: {fileID: 7946698944128784196}
 --- !u!1 &6156693094528624745
 GameObject:
   m_ObjectHideFlags: 0

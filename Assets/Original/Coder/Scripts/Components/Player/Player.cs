@@ -34,8 +34,6 @@ public class Player : UniqueBehaviour<Player> {
     public IObservable<Unit> OnFlap;
     public IObservable<Unit> OnLand;
 
-    public IObservable<long> WhileFlying;
-    public IObservable<long> WhileNotFlying;
     public IObservable<long> WhileLanding;
 #endregion
 

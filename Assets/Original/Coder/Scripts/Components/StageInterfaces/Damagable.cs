@@ -47,26 +47,28 @@ public class Damagable : MonoBehaviour
     [SerializeField] DamageKind allowDamageSource = DamageKind.All;
     [SerializeField] Inspector inspector;
     public Subject<DamageUnit> _addDamage = new Subject<DamageUnit>();
-    public IObserver<DamageUnit> AddDamage => _addDamage;
-    public IObservable<DamageUnit> OnDamage;
-    public ReadOnlyReactiveProperty<int> TotalDamage;
-    public IObservable<Unit> OnBroken;
+    public IObservable<DamageUnit> _onDamage;
+    public ReadOnlyReactiveProperty<int> _totalDamage;
+    public IObservable<Unit> _onBroken;
 
-    void Awake() {
-        OnDamage = _addDamage
+    public IObserver<DamageUnit> AddDamage => _addDamage;
+    public IObservable<DamageUnit> OnDamage => _onDamage ??
+        (_onDamage = _addDamage
             .Where(_ => allowDamage)
             .ThrottleFirst(TimeSpan.FromSeconds(dmgCoolDownDur))
-            .Share();
-        TotalDamage = OnDamage
+            .Share());
+    public ReadOnlyReactiveProperty<int> TotalDamage => _totalDamage ??
+        (_totalDamage = OnDamage
             .Where(dmg => (dmg.kind & allowDamageSource) > 0)
             .Select(dmg => dmg.scale)
             .Scan((o,n)=>o+n)
-            .ToReadOnlyReactiveProperty();
-
-        OnBroken = TotalDamage
+            .ToReadOnlyReactiveProperty());
+    public IObservable<Unit> OnBroken => _onBroken ??
+        (_onBroken = TotalDamage
             .Where(scl => scl == stamina)
-            .AsUnitObservable();
+            .AsUnitObservable());
 
+    void Awake() {
         OnBroken.Subscribe(_ => _addDamage.OnCompleted());
 
         OnDamage

@@ -46,9 +46,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Awake() {
         rb = GetComponent<Rigidbody>();
-    }
-
-    void Start() {
         var player = Global.Player;
         this.FixedUpdateAsObservable()
             .Subscribe(_ => {
