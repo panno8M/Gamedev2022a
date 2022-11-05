@@ -39,10 +39,10 @@ public class PlayerRespawnMgr : UniqueBehaviour<PlayerRespawnMgr> {
         pool = new PlayerPool(_prefPlayer, activeSpawnPoint);
         this.OnDestroyAsObservable()
             .Subscribe(_ => pool.Dispose());
+        Respawn();
     }
 
     void Start() {
-        Respawn();
 
         Global.Player.Damagable.OnBroken
             .Delay(TimeSpan.FromSeconds(0.5f))
