@@ -155,7 +155,7 @@ MonoBehaviour:
   uiPlayerPivot: {fileID: 1256143563915048016}
   uiRightArrow: {fileID: 4538140618525938402}
   uiLeftArrow: {fileID: 8651187251470456590}
-  moveDelta: 50
+  moveDelta: 100
 --- !u!1001 &1256143563964599923
 PrefabInstance:
   m_ObjectHideFlags: 0

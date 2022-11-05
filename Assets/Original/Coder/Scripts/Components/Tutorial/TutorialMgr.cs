@@ -37,7 +37,7 @@ public class TutorialMgr : MonoBehaviour
         player.OnDisableAsObservable()
             .Subscribe(_ => uiPlayerPivot.SetActive(false)).AddTo(this);
 
-        this.UpdateAsObservable()
+        this.FixedUpdateAsObservable()
             .Select(_ => Global.Control.HorizontalMoveInput.Value)
             .Subscribe(hmi => {
                 easeR = Mathf.Lerp(easeR, (hmi == -1 ? 0 : hmi), 0.1f);
@@ -47,8 +47,6 @@ public class TutorialMgr : MonoBehaviour
 
                 uiRightArrow.transform.localPosition = new Vector3(posR.x + moveDelta*easeR,posR.y,posR.z);
                 uiLeftArrow.transform.localPosition = new Vector3(posL.x + moveDelta*easeL,posL.y,posL.z);
-
-                if (playerTrans.position == playerPositionLast) { return; }
 
                 uiPlayerPivot.transform.position = Camera.main.WorldToScreenPoint(playerTrans.position);
                 playerPositionLast = playerTrans.position;

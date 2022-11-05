@@ -10,8 +10,6 @@ using UniRx.Triggers;
 public class DebugUI : MonoBehaviour
 {
 
-    public Image RightUI;
-    public Image LeftUI;
     public Image JumpUI;
 
     Color white = new Color(1f, 1f, 1f);
@@ -23,11 +21,6 @@ public class DebugUI : MonoBehaviour
             .Select(x => x.ToString())
             .Subscribe(x => _uiTextPlayerDmg.text = x)
             .AddTo(this);
-
-        Global.Control.HorizontalMoveInput.Subscribe(hmi => {
-            LeftUI.color = (hmi == -1) ? gray : white;
-            RightUI.color = (hmi == 1) ? gray : white;
-        }).AddTo(this);
 
         Global.Control.GoUpInput.Subscribe(b => JumpUI.color = b ? gray : white).AddTo(this);
 
