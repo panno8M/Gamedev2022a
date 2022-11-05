@@ -58,7 +58,8 @@ public class InputControl: UniqueBehaviour<InputControl> {
             .Select(_ => DoBreathInput.Value)
             .Share();
 
-        MousePosStage = MousePosInput
+        MousePosStage = Camera.main.transform.ObserveEveryValueChanged(x => x.position)
+            .Select(_ => MousePosInput.Value)
             .Select(pos => MousePos_ScreenToGameStage(pos, out Vector3 stagePos)
                     ? stagePos
                     : MousePosStage.Value)

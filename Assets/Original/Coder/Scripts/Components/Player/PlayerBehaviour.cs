@@ -81,9 +81,6 @@ public class PlayerBehaviour : MonoBehaviour
         Global.Control.MousePosStage
             .Subscribe(breathFire.transform.LookAt)
             .AddTo(this);
-        player.LookDir
-            .Subscribe(_ => breathFire.transform.LookAt(Global.Control.MousePosStage.Value))
-            .AddTo(this);
 
         Global.Control.DoBreath
             .Subscribe(b => {
