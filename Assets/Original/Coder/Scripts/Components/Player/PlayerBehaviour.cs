@@ -77,10 +77,12 @@ public class PlayerBehaviour : MonoBehaviour
             .Subscribe(hmi => {
                 MoveHorizontal(hmi);
             }).AddTo(this);
-        
-        Global.Control.MousePosStage
-            .Subscribe(breathFire.transform.LookAt)
-            .AddTo(this);
+
+        this.FixedUpdateAsObservable()
+            .Where(_ => Global.Control.DoBreathInput.Value)
+            .Subscribe(_ => {
+                breathFire.transform.LookAt(Global.Control.MousePosStage.Value);
+            }).AddTo(this);
 
         Global.Control.DoBreath
             .Subscribe(b => {
