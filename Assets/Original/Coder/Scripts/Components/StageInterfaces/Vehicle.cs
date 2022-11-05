@@ -8,6 +8,7 @@ using UniRx.Triggers;
 public class Vehicle : MonoBehaviour {
     [SerializeField] List<Rigidbody> _rbs = new List<Rigidbody>(1);
     [SerializeField] float degThreshold = 20;
+    [SerializeField] float getoffDistanceThreshold = 2;
 
     void Awake() {
         this.FixedUpdateAsObservable()
@@ -16,8 +17,12 @@ public class Vehicle : MonoBehaviour {
             .Select(p=>p.Current - p.Previous)
             .Where(_ => _rbs.Count != 0)
             .Subscribe(delta => {
-                foreach (var rb in _rbs) {
-                    rb.MovePosition(rb.position + delta);
+                for (int i = _rbs.Count-1; i != -1; i--) {
+                    if ((_rbs[i].position - transform.position).sqrMagnitude > (getoffDistanceThreshold * getoffDistanceThreshold)) {
+                        _rbs.RemoveAt(i);
+                        continue;
+                    }
+                    _rbs[i].MovePosition(_rbs[i].position + delta);
                 }
             }).AddTo(this);
     }
