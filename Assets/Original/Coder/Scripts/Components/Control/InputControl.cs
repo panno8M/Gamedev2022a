@@ -14,6 +14,7 @@ public class InputControl: UniqueBehaviour<InputControl> {
         public bool goUp;
         public bool doBreath;
         public Vector2 mousePos;
+        public bool interact;
     }
     [SerializeField]
     Inspector inspector;
@@ -27,10 +28,14 @@ public class InputControl: UniqueBehaviour<InputControl> {
     public IObservable<Unit> GoUp;
 
     public ReadOnlyReactiveProperty<bool> DoBreathInput;
-    public IObservable<bool> DoBreath;
+    public IObservable<Unit> DoBreathStart;
+    public IObservable<Unit> DoBreathEnd;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage;
+
+    public ReadOnlyReactiveProperty<bool> InteractInput;
+    public IObservable<Unit> Interact;
 
     void Awake() {
         input = new InputSystem();
@@ -40,6 +45,7 @@ public class InputControl: UniqueBehaviour<InputControl> {
         GoUpInput = input.Player.GoUp.AsButton();
         DoBreathInput = input.Player.DoBreath.AsButton();
         MousePosInput = input.Player.MousePos.As2dAxis();
+        InteractInput = input.Player.Interact.AsButton();
 
         WhileHorizontalMoving = Observable
             .EveryFixedUpdate()
@@ -52,10 +58,16 @@ public class InputControl: UniqueBehaviour<InputControl> {
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
-        DoBreath = DoBreathInput
+        DoBreathStart = DoBreathInput
+            .Where(x => x)
             .AsUnitObservable()
             .BatchFrame(0, FrameCountType.FixedUpdate)
-            .Select(_ => DoBreathInput.Value)
+            .Share();
+
+        DoBreathEnd = DoBreathInput
+            .Where(x => !x)
+            .AsUnitObservable()
+            .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
         MousePosStage = Observable
@@ -67,11 +79,18 @@ public class InputControl: UniqueBehaviour<InputControl> {
                     : MousePosStage.Value)
             .ToReadOnlyReactiveProperty();
 
+        Interact = InteractInput
+            .Where(x => x)
+            .AsUnitObservable()
+            .BatchFrame(0, FrameCountType.FixedUpdate)
+            .Share();
+
 
         HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
         GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);
         DoBreathInput.Subscribe(x => inspector.doBreath = x).AddTo(this);
         MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
+        InteractInput.Subscribe(x => inspector.interact = x).AddTo(this);
     }
 
     static LayerMask stsc = new Layers(Layer.ScreenToStageConverter);

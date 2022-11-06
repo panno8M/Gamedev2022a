@@ -11,6 +11,7 @@ public class TutorialMgr : MonoBehaviour
     [SerializeField] GameObject uiPlayerPivot;
     [SerializeField] GameObject uiRightArrow;
     [SerializeField] GameObject uiLeftArrow;
+    [SerializeField] GameObject uiQuestion;
 
     Vector3 posR;
     Vector3 posL;
@@ -36,6 +37,11 @@ public class TutorialMgr : MonoBehaviour
             .Subscribe(_ => uiPlayerPivot.SetActive(true)).AddTo(this);
         player.OnDisableAsObservable()
             .Subscribe(_ => uiPlayerPivot.SetActive(false)).AddTo(this);
+
+        player.Interactor.Interactable
+            .Subscribe(x => uiQuestion.SetActive(x));
+        player.Interactor.OnReacted
+            .Subscribe(x => uiQuestion.SetActive(false));
 
         this.FixedUpdateAsObservable()
             .Select(_ => Global.Control.HorizontalMoveInput.Value)

@@ -31,6 +31,7 @@ public class PlayerBehaviour : MonoBehaviour
     #region editable params
     [SerializeField] Animator anim;
     [SerializeField] ParticleSystem breathFire;
+    [SerializeField] Transform holdAt;
     [SerializeField] BehaviourScale _scaleBehaviour;
     [SerializeField] GravityScale _scaleGravity;
 
@@ -77,16 +78,22 @@ public class PlayerBehaviour : MonoBehaviour
             .Subscribe(hmi => {
                 MoveHorizontal(hmi);
             }).AddTo(this);
-        
-        Global.Control.MousePosStage
-            .Subscribe(breathFire.transform.LookAt)
-            .AddTo(this);
 
-        Global.Control.DoBreath
-            .Subscribe(b => {
-                if (b){ breathFire.Play(); }
-                else  { breathFire.Stop(); }
+        this.FixedUpdateAsObservable()
+            .Where(_ => Global.Control.DoBreathInput.Value)
+            .Subscribe(_ => {
+                breathFire.transform.LookAt(Global.Control.MousePosStage.Value);
             }).AddTo(this);
+
+        #region breath
+        Global.Control.DoBreathStart
+            .Where(_ => !player.Interactor.HoldingItem.Value)
+            .Subscribe(_ => breathFire.Play()).AddTo(this);
+        Global.Control.DoBreathEnd
+            .Subscribe(_ => breathFire.Stop()).AddTo(this);
+        player.Interactor.OnHoldRequested
+            .Subscribe(_ => breathFire.Stop()).AddTo(this);
+        #endregion
 
         Global.Control.HorizontalMoveInput
             .Where(hmi => hmi == 0)
@@ -95,6 +102,19 @@ public class PlayerBehaviour : MonoBehaviour
         Global.Control.HorizontalMoveInput
             .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
             .AddTo(this);
+
+        #region hold
+        player.Interactor.OnHoldRequested
+            .Subscribe(item => item.useGravity = false)
+            .AddTo(this);
+        this.FixedUpdateAsObservable()
+            .Select(_ => player.Interactor.HoldingItem.Value)
+            .Where(item => item)
+            .Subscribe(item => item.MovePosition(holdAt.transform.position));
+        player.Interactor.OnReleaseRequested
+            .Subscribe(item => item.useGravity = true)
+            .AddTo(this);
+        #endregion
     }
 
     void MoveHorizontal(float hmi) {
