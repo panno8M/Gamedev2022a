@@ -97,6 +97,9 @@ public class PlayerBehaviour : MonoBehaviour
         Global.Control.HorizontalMoveInput
             .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
             .AddTo(this);
+
+        Global.Control.Interact
+            .Subscribe(_ => player.Interactor.Interact());
     }
 
     void MoveHorizontal(float hmi) {

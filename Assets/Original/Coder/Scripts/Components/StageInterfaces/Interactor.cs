@@ -7,12 +7,12 @@ using UniRx.Triggers;
 
 public class Interactor : MonoBehaviour {
     // TODO: AiSight等と統合できないか？
-    public ReactiveProperty<GameObject> Interactable;
-    public IObservable<GameObject> OnFind;
-    public IObservable<GameObject> OnLost;
+    public ReactiveProperty<Interactable> Interactable;
+    public IObservable<Interactable> OnFind;
+    public IObservable<Interactable> OnLost;
     void Awake() {
         this.OnTriggerEnterAsObservable()
-            .Subscribe(other => Interactable.Value = other.gameObject);
+            .Subscribe(other => Interactable.Value = other.GetComponent<Interactable>());
         this.OnTriggerExitAsObservable()
             .Subscribe(other => Interactable.Value = null);
 
@@ -24,6 +24,11 @@ public class Interactor : MonoBehaviour {
             .Where(x => !x.Current)
             .Select(x => x.Previous)
             .Share();
+    }
 
+    public void Interact() {
+        if (Interactable.Value) {
+            Interactable.Value.Interact(this);
+        }
     }
 }
