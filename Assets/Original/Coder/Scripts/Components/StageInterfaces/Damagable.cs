@@ -31,9 +31,6 @@ public class Damagable : MonoBehaviour
     ReadOnlyReactiveProperty<int> _totalDamage;
     IObservable<Unit> _onBroken;
 
-    public IObserver<DamageUnit> Affect => _affect;
-    public IObserver<Unit> Repair => _repair;
-
     public IObservable<Unit> OnRepaired => _repair;
     public IObservable<DamageUnit> OnAffected => _onAffected ??
         (_onAffected = _affect
@@ -52,6 +49,11 @@ public class Damagable : MonoBehaviour
             .Where(_ => stamina > 0)
             .Where(total => total >= stamina)
             .AsUnitObservable());
+
+    public void Affect(DamageUnit du) { _affect.OnNext(du); }
+    public void Repair() { _repair.OnNext(Unit.Default); }
+
+
 
     void Awake() {
         Inspect();

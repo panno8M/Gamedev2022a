@@ -17,7 +17,7 @@ public class Damager : MonoBehaviour {
 
         this.OnTriggerStayAsObservable()
             .Where(other => (lmDamagable & 1<<other.gameObject.layer) != 0)
-            .Subscribe(other => other.GetComponent<Damagable>().Affect.OnNext(_damageUnit));
+            .Subscribe(other => other.GetComponent<Damagable>().Affect(_damageUnit));
 
         this.OnParticleCollisionAsObservable()
             .Where(other => (lmDamagable & 1<<other.layer) != 0)
@@ -25,7 +25,7 @@ public class Damager : MonoBehaviour {
             .Subscribe(other => {
                 int num = ps.GetCollisionEvents(other, ev);
                 if (num != 0) {
-                    other.GetComponent<Damagable>().Affect.OnNext(_damageUnit);
+                    other.GetComponent<Damagable>().Affect(_damageUnit);
                 }
             }).AddTo(this);
     }

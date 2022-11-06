@@ -21,7 +21,7 @@ public class PlayerPool : ObjectPool<Player> {
     }
     protected override void OnBeforeRent(Player instance) {
         base.OnBeforeRent(instance);
-        instance.Damagable.Repair.OnNext(Unit.Default);
+        instance.Damagable.Repair();
         instance.transform.position = spawnAt.position;
     }
 }
