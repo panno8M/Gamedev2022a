@@ -16,9 +16,11 @@ public class Player : UniqueBehaviour<Player> {
     [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] Damagable damagable;
     [SerializeField] AiVisible aiVisible;
+    [SerializeField] Interactor interactor;
 #endregion
     public Damagable Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
+    public Interactor Interactor => interactor;
     public float wallCollidingBias => _wallCollidingBias;
     public bool isFlapping => _isFlapping;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
