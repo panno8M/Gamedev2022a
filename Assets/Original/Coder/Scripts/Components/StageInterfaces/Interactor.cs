@@ -18,12 +18,19 @@ public class Interactor : MonoBehaviour {
     void Awake() {
         GetComponent<Collider>().isTrigger = true;
         this.OnTriggerEnterAsObservable()
-            .Subscribe(other => Interactable.Value = other.GetComponent<Interactable>());
+            .Subscribe(other => {
+                Interactable.Value = other.GetComponent<Interactable>();
+            });
         this.OnTriggerExitAsObservable()
             .Subscribe(other => Interactable.Value = null);
 
+        Observable.EveryUpdate()
+            .Where(_ => Interactable.Value && !Interactable.Value.isActive)
+            .Subscribe(_ => Interactable.Value = null)
+            .AddTo(this);
+
         OnFind = Interactable
-            .Where(x =>  x)
+            .Where(x => x)
             .Share();
         OnLost = Interactable
             .Pairwise()

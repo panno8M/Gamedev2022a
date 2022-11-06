@@ -5,7 +5,10 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
+[RequireComponent(typeof(Collider))]
 public class Interactable : MonoBehaviour {
+    public bool isActive = true;
+
     Subject<Interactor> _onInteracted = new Subject<Interactor>();
     public IObservable<Interactor> OnInteracted => _onInteracted;
 
@@ -14,12 +17,8 @@ public class Interactable : MonoBehaviour {
     }
 
     public void Interact(Interactor interactor) {
-        if (interactor) {
+        if (isActive && interactor) {
             _onInteracted.OnNext(interactor);
         }
-    }
-
-    public void Disable() {
-
     }
 }
