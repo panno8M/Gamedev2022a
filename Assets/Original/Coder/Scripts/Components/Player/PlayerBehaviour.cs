@@ -31,7 +31,6 @@ public class PlayerBehaviour : MonoBehaviour
     #region editable params
     [SerializeField] Animator anim;
     [SerializeField] ParticleSystem breathFire;
-    [SerializeField] Transform holdAt;
     [SerializeField] BehaviourScale _scaleBehaviour;
     [SerializeField] GravityScale _scaleGravity;
 
@@ -99,7 +98,7 @@ public class PlayerBehaviour : MonoBehaviour
         this.FixedUpdateAsObservable()
             .Select(_ => player.Interactor.HoldingItem.Value)
             .Where(item => item)
-            .Subscribe(item => item.MovePosition(holdAt.transform.position));
+            .Subscribe(item => item.MovePosition(player.Interactor.transform.position));
         player.Interactor.OnReleaseRequested
             .Subscribe(item => item.useGravity = true)
             .AddTo(this);
