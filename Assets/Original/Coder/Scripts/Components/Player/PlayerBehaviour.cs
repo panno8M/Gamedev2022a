@@ -103,10 +103,6 @@ public class PlayerBehaviour : MonoBehaviour
             .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
             .AddTo(this);
 
-        Global.Control.Interact
-            .Subscribe(_ => player.Interactor.Interact())
-            .AddTo(this);
-
         #region hold
         player.Interactor.OnHoldRequested
             .Subscribe(item => item.useGravity = false)

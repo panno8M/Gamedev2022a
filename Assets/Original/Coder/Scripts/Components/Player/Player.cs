@@ -86,5 +86,13 @@ public class Player : UniqueBehaviour<Player> {
                 LookDir.Value = dir;
                 })
             .AddTo(this);
+
+        Damagable.OnBroken
+            .Subscribe(_ => Interactor.HoldingItem.Value = null);
+
+        Global.Control.Interact
+            .Subscribe(_ => Interactor.Interact())
+            .AddTo(this);
+
     }
 }
