@@ -18,4 +18,8 @@ public class Interactable : MonoBehaviour {
             _onInteracted.OnNext(interactor);
         }
     }
+
+    public void Disable() {
+
+    }
 }

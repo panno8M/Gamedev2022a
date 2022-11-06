@@ -5,6 +5,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
+[RequireComponent(typeof(Collider))]
 public class Interactor : MonoBehaviour {
     // TODO: AiSight等と統合できないか？
     public ReactiveProperty<Interactable> Interactable;
@@ -15,6 +16,7 @@ public class Interactor : MonoBehaviour {
     public IObservable<Interactable> OnReacted => _react;
 
     void Awake() {
+        GetComponent<Collider>().isTrigger = true;
         this.OnTriggerEnterAsObservable()
             .Subscribe(other => Interactable.Value = other.GetComponent<Interactable>());
         this.OnTriggerExitAsObservable()

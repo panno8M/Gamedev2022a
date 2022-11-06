@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
-public class Holdable : MonoBehaviour {
+public class OnlyHoldable : MonoBehaviour {
     [SerializeField] Interactable _interactable;
     Rigidbody rb;
     void Awake() {
