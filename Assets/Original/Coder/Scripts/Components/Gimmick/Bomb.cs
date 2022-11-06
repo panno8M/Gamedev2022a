@@ -22,8 +22,10 @@ public class Bomb : MonoBehaviour
         _mesh = GetComponent<MeshRenderer>();
 
         _damagable.OnBroken
-            .Subscribe(_ => _interactable.isActive = false)
-            .AddTo(this);
+            .Subscribe(_ => {
+                _interactable.Interactor.Value?.ReleaseIfeq(_rb);
+                _interactable.isActive = false;
+            }).AddTo(this);
 
         _damagable.OnBroken
             .Delay(TimeSpan.FromSeconds(0.5))

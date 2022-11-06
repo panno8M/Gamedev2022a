@@ -22,7 +22,10 @@ public class Interactor : MonoBehaviour {
                 Interactable.Value = other.GetComponent<Interactable>();
             });
         this.OnTriggerExitAsObservable()
-            .Subscribe(other => Interactable.Value = null);
+            .Subscribe(other => {
+                Interactable.Value = null;
+            });
+
 
         Observable.EveryUpdate()
             .Where(_ => Interactable.Value && !Interactable.Value.isActive)
@@ -37,6 +40,7 @@ public class Interactor : MonoBehaviour {
             .Where(x => !x.Current)
             .Select(x => x.Previous)
             .Share();
+
     }
 
     public void Interact() {
@@ -62,6 +66,10 @@ public class Interactor : MonoBehaviour {
     }
     public void Release() {
         HoldingItem.Value = null;
+    }
+    public void ReleaseIfeq(Rigidbody item) {
+        if (HoldingItem.Value != item) { return; }
+        Release();
     }
     #endregion
 
