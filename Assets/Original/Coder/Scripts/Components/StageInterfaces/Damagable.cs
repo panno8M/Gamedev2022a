@@ -3,33 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using DamageTraits;
 
-[Flags]
-public enum DamageKind {
-    None      = 0,
-    Fire      = 1 << 0,
-    Water     = 1 << 1,
-    Explosion = 1 << 2,
-    All = Fire|Water|Explosion
-}
-[Serializable]
-public struct DamageUnit {
-    public DamageKind kind;
-    public int scale;
-    public DamageUnit(DamageKind kind, int scale) {
-        this.kind = kind;
-        this.scale = scale;
-    }
-    public DamageUnit(DamageKind kind){
-        this.kind = kind;
-        this.scale = 1;
-    }
-
-    public static DamageUnit None = new DamageUnit(DamageKind.None);
-    public static DamageUnit Fire = new DamageUnit(DamageKind.Fire);
-    public static DamageUnit Water = new DamageUnit(DamageKind.Water);
-    public static DamageUnit Explosion = new DamageUnit(DamageKind.Explosion);
-}
 
 [RequireComponent(typeof(Collider))]
 [RequireComponent(typeof(Rigidbody))]

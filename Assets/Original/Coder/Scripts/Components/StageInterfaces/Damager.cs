@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using DamageTraits;
 
 public class Damager : MonoBehaviour {
     [SerializeField] LayerMask lmDamagable = new Layers(Layer.Damagable);
