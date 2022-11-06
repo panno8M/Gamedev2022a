@@ -41,11 +41,11 @@ public class Damagable : MonoBehaviour
             .ThrottleFirst(TimeSpan.FromSeconds(dmgCoolDownDur)));
     public ReadOnlyReactiveProperty<int> TotalDamage => _totalDamage ??
         (_totalDamage = Observable.Merge(
-            OnRepaired.Select(_ => 0),
+            OnRepaired.Select(_ => -_totalDamage.Value),
             OnAffected
             .Where(dmg => (dmg.kind & allowDamageSource) > 0)
-            .Select(dmg => dmg.scale)
-            .Scan((o,n)=>o+n))
+            .Select(dmg => dmg.scale))
+         .Scan((o,n)=>o+n)
          .ToReadOnlyReactiveProperty());
     public IObservable<Unit> OnBroken => _onBroken ??
         (_onBroken = TotalDamage
