@@ -9,19 +9,10 @@ namespace DamageTraits.UnityBridge {
     [RequireComponent(typeof(Rigidbody))]
     public class DamagableWrapper : MonoBehaviour
     {
-        [Serializable]
-        struct Inspector {
-            public bool IsBroken;
-            public int TotalDamageAllowed;
-            public int TotalDamageFire;
-            public int TotalDamageWater;
-            public int TotalDamageExplosion;
-        }
         Damagable _damagable;
         Damagable damagable => _damagable ?? (_damagable = new DamageTraits.Damagable(param));
 
         [SerializeField] DamagableParams param;
-        [SerializeField] Inspector inspector;
 
         public IObservable<Unit> OnRepaired => damagable.OnRepaired;
         public IObservable<DamageUnit> OnAffected => damagable.OnAffected;
@@ -31,6 +22,16 @@ namespace DamageTraits.UnityBridge {
         public void Affect(DamageUnit du) { damagable.Affect(du); }
         public void Repair() { damagable.Repair(); }
 
+        #if DEBUG
+        [Serializable]
+        struct Inspector {
+            public bool IsBroken;
+            public int TotalDamageAllowed;
+            public int TotalDamageFire;
+            public int TotalDamageWater;
+            public int TotalDamageExplosion;
+        }
+        [SerializeField] Inspector inspector;
         void Awake() {
             Inspect();
         }
@@ -58,5 +59,6 @@ namespace DamageTraits.UnityBridge {
 
             OnRepaired.Subscribe(_ => inspector = new Inspector());
         }
+        #endif
     }
 }

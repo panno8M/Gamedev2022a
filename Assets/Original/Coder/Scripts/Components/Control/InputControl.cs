@@ -8,17 +8,6 @@ public class InputControl: UniqueBehaviour<InputControl> {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
 
-    [Serializable]
-    struct Inspector {
-        public float horizontalMove;
-        public bool goUp;
-        public bool breath;
-        public Vector2 mousePos;
-        public bool interact;
-    }
-    [SerializeField]
-    Inspector inspector;
-
     public InputSystem input;
 
     public ReadOnlyReactiveProperty<float> HorizontalMoveInput;
@@ -38,6 +27,13 @@ public class InputControl: UniqueBehaviour<InputControl> {
     public IObservable<Unit> Interact;
 
     void Awake() {
+        Initialize();
+        #if DEBUG
+        Inspect();
+        #endif
+    }
+
+    void Initialize() {
         input = new InputSystem();
         input.Enable();
 
@@ -84,14 +80,28 @@ public class InputControl: UniqueBehaviour<InputControl> {
             .AsUnitObservable()
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
+    }
 
+    #if DEBUG
+    [Serializable]
+    struct Inspector {
+        public float horizontalMove;
+        public bool goUp;
+        public bool breath;
+        public Vector2 mousePos;
+        public bool interact;
+    }
+    [SerializeField]
+    Inspector inspector;
 
+    void Inspect() {
         HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
         GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);
         BreathInput.Subscribe(x => inspector.breath = x).AddTo(this);
         MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
         InteractInput.Subscribe(x => inspector.interact = x).AddTo(this);
     }
+    #endif
 
     static LayerMask stsc = new Layers(Layer.ScreenToStageConverter);
     public static bool MousePos_ScreenToGameStage(Vector3 screenPos, out Vector3 stagePos){
