@@ -1,7 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+
+using Assembly.Components.Senses;
 
 public class OnlyHoldable : MonoBehaviour {
     [SerializeField] Interactable _interactable;

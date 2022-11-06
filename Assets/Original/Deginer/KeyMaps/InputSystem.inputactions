@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "DoBreath",
+                    "name": "Breath",
                     "type": "Button",
                     "id": "edb2f69e-80ba-472e-9ab7-85c799a31b3b",
                     "expectedControlType": "Button",
@@ -103,7 +103,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DoBreath",
+                    "action": "Breath",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

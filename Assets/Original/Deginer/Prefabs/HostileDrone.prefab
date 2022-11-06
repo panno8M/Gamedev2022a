@@ -209,6 +209,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _rbs: []
   degThreshold: 40
+  getoffDistanceThreshold: 2
 --- !u!65 &1210545985916033644
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -10565,10 +10566,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c82ed3c60f7a494180f9a668c74e8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stamina: 2
-  dmgCoolDownDur: 1
-  allowDamage: 1
-  allowDamageSource: 1
+  param:
+    stamina: 2
+    secCoolDownToNextDamage: 2
+    allowDamageSource: 1
+    damageDisabled: 0
   inspector:
     IsBroken: 0
     TotalDamageAllowed: 0
