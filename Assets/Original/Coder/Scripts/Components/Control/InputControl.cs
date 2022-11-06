@@ -28,7 +28,8 @@ public class InputControl: UniqueBehaviour<InputControl> {
     public IObservable<Unit> GoUp;
 
     public ReadOnlyReactiveProperty<bool> DoBreathInput;
-    public IObservable<bool> DoBreath;
+    public IObservable<Unit> DoBreathStart;
+    public IObservable<Unit> DoBreathEnd;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage;
@@ -57,10 +58,16 @@ public class InputControl: UniqueBehaviour<InputControl> {
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
-        DoBreath = DoBreathInput
+        DoBreathStart = DoBreathInput
+            .Where(x => x)
             .AsUnitObservable()
             .BatchFrame(0, FrameCountType.FixedUpdate)
-            .Select(_ => DoBreathInput.Value)
+            .Share();
+
+        DoBreathEnd = DoBreathInput
+            .Where(x => !x)
+            .AsUnitObservable()
+            .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
         MousePosStage = Observable

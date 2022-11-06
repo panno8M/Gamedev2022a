@@ -85,11 +85,15 @@ public class PlayerBehaviour : MonoBehaviour
                 breathFire.transform.LookAt(Global.Control.MousePosStage.Value);
             }).AddTo(this);
 
-        Global.Control.DoBreath
-            .Subscribe(b => {
-                if (b){ breathFire.Play(); }
-                else  { breathFire.Stop(); }
-            }).AddTo(this);
+        #region breath
+        Global.Control.DoBreathStart
+            .Where(_ => !player.Interactor.HoldingItem.Value)
+            .Subscribe(_ => breathFire.Play()).AddTo(this);
+        Global.Control.DoBreathEnd
+            .Subscribe(_ => breathFire.Stop()).AddTo(this);
+        player.Interactor.OnHoldRequested
+            .Subscribe(_ => breathFire.Stop()).AddTo(this);
+        #endregion
 
         Global.Control.HorizontalMoveInput
             .Where(hmi => hmi == 0)
