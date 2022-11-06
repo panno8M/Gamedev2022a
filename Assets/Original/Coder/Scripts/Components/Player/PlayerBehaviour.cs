@@ -54,21 +54,17 @@ public class PlayerBehaviour : MonoBehaviour
         player.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
 
         this.FixedUpdateAsObservable()
+            .Select(_ => Global.Control.HorizontalMoveInput.Value)
+            .Where(hmi => hmi != 0)
             .Where(_ => player.isFlapping)
-            .WithLatestFrom(Global.Control.HorizontalMoveInput, (_, hmi) => hmi)
-            .Subscribe(hmi => {
-                if (hmi == 0 || player.wallCollidingBias != hmi) {
-                    MoveHorizontal(hmi);
-                }
-            });
+            .Where(hmi => hmi != player.wallCollidingBias)
+            .Subscribe(MoveHorizontal);
 
         this.FixedUpdateAsObservable()
-            .Where(_ => player.isOnGround.Value)
-            .WithLatestFrom(Global.Control.HorizontalMoveInput, (_, hmi) => hmi)
+            .Select(_ => Global.Control.HorizontalMoveInput.Value)
             .Where(hmi => hmi != 0)
-            .Subscribe(hmi => {
-                MoveHorizontal(hmi);
-            }).AddTo(this);
+            .Where(_ => player.isOnGround.Value)
+            .Subscribe(MoveHorizontal).AddTo(this);
 
         this.FixedUpdateAsObservable()
             .Where(_ => Global.Control.BreathInput.Value)
@@ -85,7 +81,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         Global.Control.HorizontalMoveInput
             .Where(hmi => hmi == 0)
-            .Subscribe(_ => MoveHorizontal(0))
+            .Subscribe(MoveHorizontal)
             .AddTo(this);
         Global.Control.HorizontalMoveInput
             .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
@@ -113,6 +109,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     void Jump() {
+        rb.velocity = rb.velocity.x_z();
         rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
     }
 
