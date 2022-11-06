@@ -41,11 +41,18 @@ public class Interactor : MonoBehaviour {
 
     #region reactions
 
-    #region hold
+    #region hold/release
     public ReactiveProperty<Rigidbody> HoldingItem = new ReactiveProperty<Rigidbody>();
     public IObservable<Rigidbody> OnHoldRequested => HoldingItem.Where(x=>x);
+    public IObservable<Rigidbody> OnReleaseRequested => HoldingItem
+        .Pairwise()
+        .Where(x=>!x.Current)
+        .Select(x=>x.Previous);
     public void Hold(Rigidbody item) {
         HoldingItem.Value = item;
+    }
+    public void Release() {
+        HoldingItem.Value = null;
     }
     #endregion
 

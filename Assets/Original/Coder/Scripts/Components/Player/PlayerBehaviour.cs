@@ -111,6 +111,9 @@ public class PlayerBehaviour : MonoBehaviour
             .Select(_ => player.Interactor.HoldingItem.Value)
             .Where(item => item)
             .Subscribe(item => item.MovePosition(holdAt.transform.position));
+        player.Interactor.OnReleaseRequested
+            .Subscribe(item => item.useGravity = true)
+            .AddTo(this);
         #endregion
     }
 

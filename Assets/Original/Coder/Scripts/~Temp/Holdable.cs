@@ -8,8 +8,17 @@ public class Holdable : MonoBehaviour {
     Rigidbody rb;
     void Awake() {
         rb = GetComponent<Rigidbody>();
-        _interactable.OnInteracted
-            .Where(interactor => interactor.gameObject.CompareTag("Player"))
-            .Subscribe(interactor => interactor.Hold(rb));
+        var playerInteract = _interactable.OnInteracted
+            .Where(interactor => interactor.gameObject.CompareTag("Player"));
+
+        playerInteract
+            .Subscribe(interactor => {
+                if (interactor.HoldingItem.Value == rb) {
+                    interactor.Release();
+                }
+                else {
+                    interactor.Hold(rb);
+                }
+            });
     }
 }
