@@ -15,12 +15,12 @@ TagManager:
   - Physics/Stage
   - Enemy
   - AiControlVolume
-  - AiVisible
-  - Damagable
+  - Senses/AiVisible
+  - Senses/Damagable
   - ScreenToStageConverter
-  - DamagableFromPlayer
-  - Interactable
-  - Interactor
+  - Senses/DamagableFromPlayer
+  - Senses/Interactable
+  - Senses/Interactor
   - 
   - 
   - 
