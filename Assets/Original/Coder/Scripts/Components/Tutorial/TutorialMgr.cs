@@ -40,6 +40,8 @@ public class TutorialMgr : MonoBehaviour
 
         player.Interactor.Interactable
             .Subscribe(x => uiQuestion.SetActive(x));
+        player.Interactor.OnReacted
+            .Subscribe(x => uiQuestion.SetActive(false));
 
         this.FixedUpdateAsObservable()
             .Select(_ => Global.Control.HorizontalMoveInput.Value)

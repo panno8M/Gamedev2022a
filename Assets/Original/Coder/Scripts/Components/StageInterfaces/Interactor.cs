@@ -11,6 +11,9 @@ public class Interactor : MonoBehaviour {
     public IObservable<Interactable> OnFind;
     public IObservable<Interactable> OnLost;
 
+    Subject<Interactable> _react = new Subject<Interactable>();
+    public IObservable<Interactable> OnReacted => _react;
+
     void Awake() {
         this.OnTriggerEnterAsObservable()
             .Subscribe(other => Interactable.Value = other.GetComponent<Interactable>());
@@ -31,6 +34,9 @@ public class Interactor : MonoBehaviour {
         if (Interactable.Value) {
             Interactable.Value.Interact(this);
         }
+    }
+    public void React(Interactable interactable) {
+        _react.OnNext(interactable);
     }
 
     #region reactions
