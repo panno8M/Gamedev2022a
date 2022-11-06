@@ -3,6 +3,8 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
+using DamageTraits.UnityBridge;
+
 public class Player : UniqueBehaviour<Player> {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
@@ -45,7 +47,7 @@ public class Player : UniqueBehaviour<Player> {
 
     #region editable params
     [SerializeField] float groundNormalDegreeThreshold;
-    [SerializeField] Damagable damagable;
+    [SerializeField] DamagableWrapper damagable;
     [SerializeField] AiVisible aiVisible;
     [SerializeField] Interactor interactor;
     #endregion
@@ -57,7 +59,7 @@ public class Player : UniqueBehaviour<Player> {
     #endregion
 
     #region accessors
-    public Damagable Damagable => damagable;
+    public DamagableWrapper Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
     public Interactor Interactor => interactor;
     public float wallCollidingBias => _wallCollidingBias;

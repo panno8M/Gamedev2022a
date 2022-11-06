@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 
+using DamageTraits.UnityBridge;
+
 public class Campfire : MonoBehaviour
 {
-    [SerializeField] Damagable damagable;
+    [SerializeField] DamagableWrapper damagable;
     [SerializeField] ParticleSystem psBurnUp;
 
     void Start() {

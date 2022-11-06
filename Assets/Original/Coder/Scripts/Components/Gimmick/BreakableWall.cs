@@ -4,17 +4,14 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
+using DamageTraits.UnityBridge;
+
 public class BreakableWall : MonoBehaviour
 {
-    [SerializeField] Damagable damagable;
+    [SerializeField] DamagableWrapper damagable;
 
     void Start()
     {
-        var slowupdate = this
-            .UpdateAsObservable()
-            .ThrottleFirst(TimeSpan.FromSeconds(.5f))
-            .Share();
-
         damagable.OnBroken
             .Delay(TimeSpan.FromSeconds(0.5))
             .Subscribe(_ => Break())

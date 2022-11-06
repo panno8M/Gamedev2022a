@@ -4,13 +4,14 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
+using DamageTraits.UnityBridge;
 
 public class Bomb : MonoBehaviour
 {
 
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
-    [SerializeField] Damagable _damagable;
+    [SerializeField] DamagableWrapper _damagable;
     [SerializeField] Interactable _interactable;
     [SerializeField] float secExplosionDelay = 4;
 

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+
 using DamageTraits;
+using DamageTraits.UnityBridge;
 
 public class Damager : MonoBehaviour {
     [SerializeField] LayerMask lmDamagable = new Layers(Layer.Damagable);
@@ -17,7 +19,7 @@ public class Damager : MonoBehaviour {
 
         this.OnTriggerStayAsObservable()
             .Where(other => (lmDamagable & 1<<other.gameObject.layer) != 0)
-            .Subscribe(other => other.GetComponent<Damagable>().Affect(_damageUnit));
+            .Subscribe(other => other.GetComponent<DamagableWrapper>().Affect(_damageUnit));
 
         this.OnParticleCollisionAsObservable()
             .Where(other => (lmDamagable & 1<<other.layer) != 0)
@@ -25,7 +27,7 @@ public class Damager : MonoBehaviour {
             .Subscribe(other => {
                 int num = ps.GetCollisionEvents(other, ev);
                 if (num != 0) {
-                    other.GetComponent<Damagable>().Affect(_damageUnit);
+                    other.GetComponent<DamagableWrapper>().Affect(_damageUnit);
                 }
             }).AddTo(this);
     }

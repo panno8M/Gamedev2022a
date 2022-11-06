@@ -5,6 +5,7 @@ using UniRx;
 using UniRx.Triggers;
 using UniRx.ReactiveNeuro;
 
+using DamageTraits.UnityBridge;
 
 public class HostileDrone : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class HostileDrone : MonoBehaviour
     [SerializeField] ParticleSystem psWater;
     [SerializeField] ParticleSystem psBurnUp;
     [SerializeField] AiSight sight;
-    [SerializeField] Damagable damagable;
+    [SerializeField] DamagableWrapper damagable;
 
     Layer lVolume = Layer.AiControlVolume;
     [SerializeField] bool rotateTrigger;
