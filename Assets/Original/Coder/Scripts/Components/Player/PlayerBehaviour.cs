@@ -31,6 +31,7 @@ public class PlayerBehaviour : MonoBehaviour
     #region editable params
     [SerializeField] Animator anim;
     [SerializeField] ParticleSystem breathFire;
+    [SerializeField] Transform holdAt;
     [SerializeField] BehaviourScale _scaleBehaviour;
     [SerializeField] GravityScale _scaleGravity;
 
@@ -99,7 +100,18 @@ public class PlayerBehaviour : MonoBehaviour
             .AddTo(this);
 
         Global.Control.Interact
-            .Subscribe(_ => player.Interactor.Interact());
+            .Subscribe(_ => player.Interactor.Interact())
+            .AddTo(this);
+
+        #region hold
+        player.Interactor.OnHoldRequested
+            .Subscribe(item => item.useGravity = false)
+            .AddTo(this);
+        this.FixedUpdateAsObservable()
+            .Select(_ => player.Interactor.HoldingItem.Value)
+            .Where(item => item)
+            .Subscribe(item => item.MovePosition(holdAt.transform.position));
+        #endregion
     }
 
     void MoveHorizontal(float hmi) {

@@ -10,6 +10,7 @@ public class Interactor : MonoBehaviour {
     public ReactiveProperty<Interactable> Interactable;
     public IObservable<Interactable> OnFind;
     public IObservable<Interactable> OnLost;
+
     void Awake() {
         this.OnTriggerEnterAsObservable()
             .Subscribe(other => Interactable.Value = other.GetComponent<Interactable>());
@@ -31,4 +32,16 @@ public class Interactor : MonoBehaviour {
             Interactable.Value.Interact(this);
         }
     }
+
+    #region reactions
+
+    #region hold
+    public ReactiveProperty<Rigidbody> HoldingItem = new ReactiveProperty<Rigidbody>();
+    public IObservable<Rigidbody> OnHoldRequested => HoldingItem.Where(x=>x);
+    public void Hold(Rigidbody item) {
+        HoldingItem.Value = item;
+    }
+    #endregion
+
+    #endregion
 }

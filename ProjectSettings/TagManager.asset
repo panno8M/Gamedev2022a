@@ -9,10 +9,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - Physics/Dynamic
   - Water
   - UI
-  - Stage
+  - Physics/Stage
   - Enemy
   - AiControlVolume
   - AiVisible

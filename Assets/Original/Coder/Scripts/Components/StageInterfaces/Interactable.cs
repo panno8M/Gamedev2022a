@@ -14,8 +14,4 @@ public class Interactable : MonoBehaviour {
             _onInteracted.OnNext(interactor);
         }
     }
-
-    void Awake() {
-        OnInteracted.Subscribe(interactor => Debug.Log("INTERACTED BY " + interactor.gameObject.name));
-    }
 }
