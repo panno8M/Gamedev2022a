@@ -9,31 +9,15 @@ public class Player : UniqueBehaviour<Player> {
     public enum Direction {Left = -1, Right = 1}
 
 #region forBehaviourControlling
-    public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
-#endregion
-
-#region params
-    [SerializeField] float groundNormalDegreeThreshold;
-    [SerializeField] Damagable damagable;
-    [SerializeField] AiVisible aiVisible;
-    [SerializeField] Interactor interactor;
-#endregion
-    public Damagable Damagable => damagable;
-    public AiVisible AiVisible => aiVisible;
-    public Interactor Interactor => interactor;
-    public float wallCollidingBias => _wallCollidingBias;
-    public bool isFlapping => _isFlapping;
-    public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
-
-#region statements
-    [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
-    [SerializeField] bool _isFlapping;
-    [SerializeField] float _wallCollidingBias;
-
     IObservable<Unit> _onJump;
     IObservable<Unit> _onFlapWhileFalling;
     IObservable<Unit> _onFlap;
     IObservable<Unit> _onLand;
+
+    IObservable<Unit> _onBreathStart;
+    IObservable<Unit> _onBreathStop;
+
+    public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
@@ -49,7 +33,39 @@ public class Player : UniqueBehaviour<Player> {
             .Where(x => x)
             .AsUnitObservable());
 
+    public IObservable<Unit> OnBreathStart => _onBreathStart ??
+        (_onBreathStart = Global.Control.BreathPress
+            .Where(_ => !Interactor.HoldingItem.Value));
+
+    public IObservable<Unit> OnBreathStop => _onBreathStop ??
+        (_onBreathStop = Observable.Merge(
+            Global.Control.BreathRelease,
+            Interactor.OnHoldRequested.AsUnitObservable()));
 #endregion
+
+    #region editable params
+    [SerializeField] float groundNormalDegreeThreshold;
+    [SerializeField] Damagable damagable;
+    [SerializeField] AiVisible aiVisible;
+    [SerializeField] Interactor interactor;
+    #endregion
+
+    #region behaviour statements
+    [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
+    [SerializeField] bool _isFlapping;
+    [SerializeField] float _wallCollidingBias;
+    #endregion
+
+    #region accessors
+    public Damagable Damagable => damagable;
+    public AiVisible AiVisible => aiVisible;
+    public Interactor Interactor => interactor;
+    public float wallCollidingBias => _wallCollidingBias;
+    public bool isFlapping => _isFlapping;
+    public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
+    #endregion
+
+
     void Awake() {
         this.OnCollisionStayAsObservable()
             .Subscribe(collision => {

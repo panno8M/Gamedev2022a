@@ -12,7 +12,7 @@ public class InputControl: UniqueBehaviour<InputControl> {
     struct Inspector {
         public float horizontalMove;
         public bool goUp;
-        public bool doBreath;
+        public bool breath;
         public Vector2 mousePos;
         public bool interact;
     }
@@ -27,9 +27,9 @@ public class InputControl: UniqueBehaviour<InputControl> {
     public ReadOnlyReactiveProperty<bool> GoUpInput;
     public IObservable<Unit> GoUp;
 
-    public ReadOnlyReactiveProperty<bool> DoBreathInput;
-    public IObservable<Unit> DoBreathStart;
-    public IObservable<Unit> DoBreathEnd;
+    public ReadOnlyReactiveProperty<bool> BreathInput;
+    public IObservable<Unit> BreathPress;
+    public IObservable<Unit> BreathRelease;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage;
@@ -43,7 +43,7 @@ public class InputControl: UniqueBehaviour<InputControl> {
 
         HorizontalMoveInput = input.Player.HorizontalMove.AsAxis();
         GoUpInput = input.Player.GoUp.AsButton();
-        DoBreathInput = input.Player.DoBreath.AsButton();
+        BreathInput = input.Player.Breath.AsButton();
         MousePosInput = input.Player.MousePos.As2dAxis();
         InteractInput = input.Player.Interact.AsButton();
 
@@ -58,13 +58,13 @@ public class InputControl: UniqueBehaviour<InputControl> {
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
-        DoBreathStart = DoBreathInput
+        BreathPress = BreathInput
             .Where(x => x)
             .AsUnitObservable()
             .BatchFrame(0, FrameCountType.FixedUpdate)
             .Share();
 
-        DoBreathEnd = DoBreathInput
+        BreathRelease = BreathInput
             .Where(x => !x)
             .AsUnitObservable()
             .BatchFrame(0, FrameCountType.FixedUpdate)
@@ -88,7 +88,7 @@ public class InputControl: UniqueBehaviour<InputControl> {
 
         HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
         GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);
-        DoBreathInput.Subscribe(x => inspector.doBreath = x).AddTo(this);
+        BreathInput.Subscribe(x => inspector.breath = x).AddTo(this);
         MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
         InteractInput.Subscribe(x => inspector.interact = x).AddTo(this);
     }

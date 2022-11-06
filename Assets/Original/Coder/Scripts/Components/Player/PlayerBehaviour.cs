@@ -48,19 +48,11 @@ public class PlayerBehaviour : MonoBehaviour
     void Awake() {
         rb = GetComponent<Rigidbody>();
         var player = Global.Player;
-        this.FixedUpdateAsObservable()
-            .Subscribe(_ => {
-                rb.AddForce((G*_scaleGravity.normal)._y_(), ForceMode.Acceleration);
-            });
 
-        player.OnJump.Subscribe(_ => {
-            rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
-        }).AddTo(this);
+        sbsc_AddGravity();
 
-        player.OnFlapWhileFalling.Subscribe(_ => {
-            rb.velocity = rb.velocity.x_z();
-            rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
-        }).AddTo(this);
+        player.OnJump.Subscribe(_ => Jump()).AddTo(this);
+        player.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
 
         this.FixedUpdateAsObservable()
             .Where(_ => player.isFlapping)
@@ -80,18 +72,15 @@ public class PlayerBehaviour : MonoBehaviour
             }).AddTo(this);
 
         this.FixedUpdateAsObservable()
-            .Where(_ => Global.Control.DoBreathInput.Value)
+            .Where(_ => Global.Control.BreathInput.Value)
             .Subscribe(_ => {
                 breathFire.transform.LookAt(Global.Control.MousePosStage.Value);
             }).AddTo(this);
 
         #region breath
-        Global.Control.DoBreathStart
-            .Where(_ => !player.Interactor.HoldingItem.Value)
+        player.OnBreathStart
             .Subscribe(_ => breathFire.Play()).AddTo(this);
-        Global.Control.DoBreathEnd
-            .Subscribe(_ => breathFire.Stop()).AddTo(this);
-        player.Interactor.OnHoldRequested
+        player.OnBreathStop
             .Subscribe(_ => breathFire.Stop()).AddTo(this);
         #endregion
 
@@ -116,6 +105,18 @@ public class PlayerBehaviour : MonoBehaviour
             .AddTo(this);
         #endregion
     }
+
+    void sbsc_AddGravity() {
+        this.FixedUpdateAsObservable()
+            .Subscribe(_ => {
+                rb.AddForce((G*_scaleGravity.normal)._y_(), ForceMode.Acceleration);
+            });
+    }
+
+    void Jump() {
+        rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
+    }
+
 
     void MoveHorizontal(float hmi) {
         rb.velocity = new Vector3(
