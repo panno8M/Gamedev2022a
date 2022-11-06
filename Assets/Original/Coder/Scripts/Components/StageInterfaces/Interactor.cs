@@ -59,7 +59,7 @@ public class Interactor : MonoBehaviour {
     public IObservable<Rigidbody> OnHoldRequested => HoldingItem.Where(x=>x);
     public IObservable<Rigidbody> OnReleaseRequested => HoldingItem
         .Pairwise()
-        .Where(x=>!x.Current)
+        .Where(x=>!x.Current && x.Previous)
         .Select(x=>x.Previous);
     public void Hold(Rigidbody item) {
         HoldingItem.Value = item;
