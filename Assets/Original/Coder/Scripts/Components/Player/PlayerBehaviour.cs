@@ -56,7 +56,7 @@ public class PlayerBehaviour : MonoBehaviour
         this.FixedUpdateAsObservable()
             .Select(_ => Global.Control.HorizontalMoveInput.Value)
             .Where(hmi => hmi != 0)
-            .Where(_ => player.isFlapping)
+            .Where(_ => !player.isOnGround.Value)
             .Where(hmi => hmi != player.wallCollidingBias)
             .Subscribe(MoveHorizontal);
 
