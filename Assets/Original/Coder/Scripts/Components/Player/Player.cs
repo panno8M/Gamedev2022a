@@ -50,7 +50,7 @@ public class Player : UniqueBehaviour<Player> {
             .AsUnitObservable());
 
 #endregion
-    void Start() {
+    void Awake() {
         this.OnCollisionStayAsObservable()
             .Subscribe(collision => {
                 foreach (var contact in collision.contacts) {
