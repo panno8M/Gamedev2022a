@@ -9,7 +9,6 @@ namespace Assembly.Components.UI
   {
     Player player;
     Transform playerTrans;
-    Vector3 playerPositionLast;
     [SerializeField] GameObject uiPlayerPivot;
     [SerializeField] GameObject uiRightArrow;
     [SerializeField] GameObject uiLeftArrow;
@@ -30,12 +29,6 @@ namespace Assembly.Components.UI
       posR = uiRightArrow.transform.localPosition;
       posL = uiLeftArrow.transform.localPosition;
 
-
-      Global.Control.HorizontalMoveInput
-          .Subscribe(hmi =>
-          {
-          });
-
       player.OnEnableAsObservable()
           .Subscribe(_ => uiPlayerPivot.SetActive(true)).AddTo(this);
       player.OnDisableAsObservable()
@@ -46,22 +39,23 @@ namespace Assembly.Components.UI
       player.Interactor.OnReacted
           .Subscribe(x => uiQuestion.SetActive(false));
 
-      this.FixedUpdateAsObservable()
-          .Select(_ => Global.Control.HorizontalMoveInput.Value)
-          .Subscribe(hmi =>
-          {
-            easeR = Mathf.Lerp(easeR, (hmi == -1 ? 0 : hmi), 0.1f);
-            easeL = Mathf.Lerp(easeL, (hmi == 1 ? 0 : hmi), 0.1f);
+      Observable.EveryUpdate()
+        .Select(_ => Global.Control.HorizontalMoveInput.Value)
+        .Subscribe(hmi =>
+        {
+          easeR = Mathf.Lerp(easeR, (hmi == -1 ? 0 : hmi), 0.1f);
+          easeL = Mathf.Lerp(easeL, (hmi == 1 ? 0 : hmi), 0.1f);
 
-            if (!player.gameObject.activeSelf) { return; }
+          if (!player.gameObject.activeSelf) { return; }
 
-            uiRightArrow.transform.localPosition = new Vector3(posR.x + moveDelta * easeR, posR.y, posR.z);
-            uiLeftArrow.transform.localPosition = new Vector3(posL.x + moveDelta * easeL, posL.y, posL.z);
+          uiRightArrow.transform.localPosition = new Vector3(posR.x + moveDelta * easeR, posR.y, posR.z);
+          uiLeftArrow.transform.localPosition = new Vector3(posL.x + moveDelta * easeL, posL.y, posL.z);
+        }).AddTo(this);
 
-            uiPlayerPivot.transform.position = Camera.main.WorldToScreenPoint(playerTrans.position);
-            playerPositionLast = playerTrans.position;
-          });
     }
-
+    void LateUpdate()
+    {
+      uiPlayerPivot.transform.position = Camera.main.WorldToScreenPoint(playerTrans.position);
+    }
   }
 }
