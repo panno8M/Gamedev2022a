@@ -9,18 +9,18 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Player
+  - Physics/Dynamic
   - Water
   - UI
-  - Stage
+  - Physics/Stage
   - Enemy
   - AiControlVolume
-  - AiVisible
-  - Damagable
+  - Senses/AiVisible
+  - Senses/Damagable
   - ScreenToStageConverter
-  - DamagableFromPlayer
-  - 
-  - 
+  - Senses/DamagableFromPlayer
+  - Senses/Interactable
+  - Senses/Interactor
   - 
   - 
   - 

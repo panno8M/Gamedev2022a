@@ -32,6 +32,80 @@ Transform:
   m_Father: {fileID: 4042233798038024404}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &981942915
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 981942916}
+  - component: {fileID: 981942917}
+  - component: {fileID: 1305584510}
+  - component: {fileID: 4864222122978153979}
+  m_Layer: 14
+  m_Name: Tactile
+  m_TagString: Player
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &981942916
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981942915}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1, y: 1.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4042233798038024404}
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &981942917
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981942915}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 2
+  m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &1305584510
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981942915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e7575fc93abff741953c405d7881771, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  modules: []
+  _holder: {fileID: 4864222122978153979}
+--- !u!114 &4864222122978153979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981942915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 571b2995c5ea1434d83f20991e71ba9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactor: {fileID: 1305584510}
 --- !u!1 &4042233796002486148
 GameObject:
   m_ObjectHideFlags: 0
@@ -202,6 +276,7 @@ MonoBehaviour:
   groundNormalDegreeThreshold: 50
   damagable: {fileID: 4042233797364988407}
   aiVisible: {fileID: 4042233797005500142}
+  _interactor: {fileID: 1305584510}
   _isOnGround:
     value: 0
   _isFlapping: 0
@@ -395,11 +470,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c82ed3c60f7a494180f9a668c74e8df, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stamina: 3
-  dmgCoolDownDur: 3
-  allowDamage: 1
-  allowDamageSource: 2
+  param:
+    stamina: 3
+    secCoolDownToNextDamage: 3
+    allowDamageSource: 2
+    damageDisabled: 0
   inspector:
+    IsBroken: 0
+    TotalDamageAllowed: 0
     TotalDamageFire: 0
     TotalDamageWater: 0
     TotalDamageExplosion: 0
@@ -498,6 +576,7 @@ Transform:
   - {fileID: 4042233796066626900}
   - {fileID: 4042233797005500048}
   - {fileID: 139709256}
+  - {fileID: 981942916}
   m_Father: {fileID: 4042233797003262914}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5328,7 +5407,7 @@ PrefabInstance:
     - target: {fileID: -7900961956126493135, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: -0.0027999878
+      value: -0.0028002262
       objectReference: {fileID: 0}
     - target: {fileID: -7900961956126493135, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
@@ -5348,7 +5427,7 @@ PrefabInstance:
     - target: {fileID: -7027036487277808772, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.10852009
+      value: 0.10851997
       objectReference: {fileID: 0}
     - target: {fileID: -7027036487277808772, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
@@ -5358,7 +5437,7 @@ PrefabInstance:
     - target: {fileID: -7027036487277808772, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
       propertyPath: m_Bounds.m_Extent.y
-      value: 0.44647998
+      value: 0.44647986
       objectReference: {fileID: 0}
     - target: {fileID: -3849552340829065520, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
@@ -5508,7 +5587,7 @@ PrefabInstance:
     - target: {fileID: 1293457163012386169, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}
       propertyPath: m_Bounds.m_Center.y
-      value: 0.000000059604645
+      value: -0.00000017881393
       objectReference: {fileID: 0}
     - target: {fileID: 1293457163012386169, guid: a34c76b6530528b469feeb00e14eba60,
         type: 3}

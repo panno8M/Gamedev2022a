@@ -1,5 +1,5 @@
 {
-    "name": "InputControl",
+    "name": "InputSystem",
     "maps": [
         {
             "name": "Player",
@@ -24,7 +24,7 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "DoBreath",
+                    "name": "Breath",
                     "type": "Button",
                     "id": "edb2f69e-80ba-472e-9ab7-85c799a31b3b",
                     "expectedControlType": "Button",
@@ -40,6 +40,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
+                },
+                {
+                    "name": "Interact",
+                    "type": "Button",
+                    "id": "499bbab2-db13-4711-865b-6964b103a775",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "Press(behavior=2)",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -94,7 +103,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "DoBreath",
+                    "action": "Breath",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -106,6 +115,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "MousePos",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "28430218-1929-4df3-902a-6b42bb4ba6f0",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Interact",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
