@@ -9,8 +9,8 @@ namespace UniRx.Ex.InteractionTraits.Core
   public class Interactor : MonoBehaviour
   {
     // TODO: AiSight等と統合できないか？
-    List<InteractableModuleBase> _interactables = new List<InteractableModuleBase>();
-    public List<InteractableModuleBase> interactables => _interactables;
+    List<Interactable> _interactables = new List<Interactable>();
+    public List<Interactable> interactables => _interactables;
 
     Subject<Unit> _OnForget = new Subject<Unit>();
     public IObservable<Unit> OnForget => _OnForget;
@@ -20,20 +20,35 @@ namespace UniRx.Ex.InteractionTraits.Core
       _interactables.Clear();
     }
 
+    #region buffers
+    [SerializeField] HolderModule _holder;
+    public HolderModule holder => _holder;
+    #endregion
+
     void Awake()
     {
       GetComponent<Collider>().isTrigger = true;
       this.OnTriggerEnterAsObservable()
           .Subscribe(other =>
           {
-            _interactables.Add(other.GetComponent<InteractableModuleBase>());
+            _interactables.Add(other.GetComponent<Interactable>());
           });
       this.OnTriggerExitAsObservable()
           .Subscribe(other =>
           {
-            _interactables.Remove(other.GetComponent<InteractableModuleBase>());
+            _interactables.Remove(other.GetComponent<Interactable>());
           });
 
+    }
+
+    void Reset()
+    {
+      SetDefaultComponent();
+    }
+
+    void SetDefaultComponent()
+    {
+      _holder = GetComponent<HolderModule>();
     }
 
   }

@@ -20,9 +20,11 @@ namespace UniRx.Ex.InteractionTraits
             RequestRelease.Select(_ => (HoldableModule)null)
         ).ToReadOnlyReactiveProperty());
 
-    void Awake() {
+    void Awake()
+    {
       interactor.OnForget
-        .Subscribe(_ => {
+        .Subscribe(_ =>
+        {
           ReleaseForce();
         });
     }
@@ -58,8 +60,7 @@ namespace UniRx.Ex.InteractionTraits
     {
       foreach (var interactable in _interactables)
       {
-        var holdable = interactable as HoldableModule;
-        if (Hold(holdable))
+        if (Hold(interactable.holdable))
         {
           return;
         }

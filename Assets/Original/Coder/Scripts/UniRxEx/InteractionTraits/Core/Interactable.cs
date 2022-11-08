@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace UniRx.Ex.InteractionTraits.Core
@@ -12,6 +13,9 @@ namespace UniRx.Ex.InteractionTraits.Core
     Subject<Interactor> _onInteracted = new Subject<Interactor>();
     public IObservable<Interactor> OnInteracted => _onInteracted;
 
+    [SerializeField] HoldableModule _holdable;
+    public HoldableModule holdable => _holdable;
+
     public void Interact(Interactor interactor)
     {
       if (isActive && interactor)
@@ -19,6 +23,15 @@ namespace UniRx.Ex.InteractionTraits.Core
         Interactor.Value = interactor;
         _onInteracted.OnNext(interactor);
       }
+    }
+    void Reset()
+    {
+      SetDefaultComponent();
+    }
+
+    void SetDefaultComponent()
+    {
+      _holdable = GetComponent<HoldableModule>();
     }
   }
 }

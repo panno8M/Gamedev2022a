@@ -41,12 +41,12 @@ namespace Assembly.Components.Actors
 
     public IObservable<Unit> OnBreathStart => _onBreathStart ??
         (_onBreathStart = Global.Control.BreathPress
-            .Where(_ => !_holder.HoldingItem.Value));
+            .Where(_ => !_interactor.holder.HoldingItem.Value));
 
     public IObservable<Unit> OnBreathStop => _onBreathStop ??
         (_onBreathStop = Observable.Merge(
             Global.Control.BreathRelease,
-            _holder.RequestHold.AsUnitObservable()));
+            _interactor.holder.RequestHold.AsUnitObservable()));
     #endregion
 
     #region editable params
@@ -54,7 +54,6 @@ namespace Assembly.Components.Actors
     [SerializeField] DamagableWrapper damagable;
     [SerializeField] AiVisible aiVisible;
     [SerializeField] Interactor _interactor;
-    [SerializeField] HolderModule _holder;
     #endregion
 
     #region behaviour statements
@@ -67,7 +66,6 @@ namespace Assembly.Components.Actors
     public DamagableWrapper Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
     public Interactor interactor => _interactor;
-    public HolderModule holder => _holder;
     public float wallCollidingBias => _wallCollidingBias;
     public bool isFlapping => _isFlapping;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
@@ -125,7 +123,7 @@ namespace Assembly.Components.Actors
       Global.Control.Interact
           .Subscribe(_ =>
           {
-            _holder.Interact();
+            _interactor.holder.Interact();
           }).AddTo(this);
 
     }

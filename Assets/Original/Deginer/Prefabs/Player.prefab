@@ -91,6 +91,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e7575fc93abff741953c405d7881771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  modules: []
+  _holder: {fileID: 4864222122978153979}
 --- !u!114 &4864222122978153979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -275,7 +277,6 @@ MonoBehaviour:
   damagable: {fileID: 4042233797364988407}
   aiVisible: {fileID: 4042233797005500142}
   _interactor: {fileID: 1305584510}
-  _holder: {fileID: 4864222122978153979}
   _isOnGround:
     value: 0
   _isFlapping: 0
