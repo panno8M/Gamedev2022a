@@ -7,7 +7,7 @@ namespace UniRx.Ex.InteractionTraits.Core
   public abstract class InteractorModuleBase : MonoBehaviour
   {
     [SerializeField] Interactor _interactor;
-    public Interactor Interactor => _interactor;
+    public Interactor interactor => _interactor;
 
     protected List<InteractableModuleBase> _interactables => _interactor.interactables;
 

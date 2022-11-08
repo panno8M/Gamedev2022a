@@ -19,6 +19,14 @@ namespace UniRx.Ex.InteractionTraits
             RequestHold,
             RequestRelease.Select(_ => (HoldableModule)null)
         ).ToReadOnlyReactiveProperty());
+
+    void Awake() {
+      interactor.OnForget
+        .Subscribe(_ => {
+          ReleaseForce();
+        });
+    }
+
     public void HoldForce(HoldableModule item)
     {
       _RequestHold.OnNext(item);

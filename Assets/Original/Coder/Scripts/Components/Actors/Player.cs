@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits;
+using UniRx.Ex.InteractionTraits.Core;
 using Assembly.Components.Senses;
 
 namespace Assembly.Components.Actors
@@ -52,6 +53,7 @@ namespace Assembly.Components.Actors
     [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] DamagableWrapper damagable;
     [SerializeField] AiVisible aiVisible;
+    [SerializeField] Interactor _interactor;
     [SerializeField] HolderModule _holder;
     #endregion
 
@@ -64,6 +66,7 @@ namespace Assembly.Components.Actors
     #region accessors
     public DamagableWrapper Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
+    public Interactor interactor => _interactor;
     public HolderModule holder => _holder;
     public float wallCollidingBias => _wallCollidingBias;
     public bool isFlapping => _isFlapping;
@@ -117,7 +120,7 @@ namespace Assembly.Components.Actors
           .AddTo(this);
 
       Damagable.OnBroken
-          .Subscribe(_ => _holder.ReleaseForce());
+          .Subscribe(_ => _interactor.Forget());
 
       Global.Control.Interact
           .Subscribe(_ =>

@@ -12,6 +12,14 @@ namespace UniRx.Ex.InteractionTraits.Core
     List<InteractableModuleBase> _interactables = new List<InteractableModuleBase>();
     public List<InteractableModuleBase> interactables => _interactables;
 
+    Subject<Unit> _OnForget = new Subject<Unit>();
+    public IObservable<Unit> OnForget => _OnForget;
+
+    public void Forget() {
+      _OnForget.OnNext(Unit.Default);
+      _interactables.Clear();
+    }
+
     void Awake()
     {
       GetComponent<Collider>().isTrigger = true;
