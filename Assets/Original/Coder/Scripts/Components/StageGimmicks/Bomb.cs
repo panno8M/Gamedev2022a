@@ -39,6 +39,19 @@ namespace Assembly.Components.StageGimmicks
           .Delay(TimeSpan.FromSeconds(secExplosionDelay))
           .Subscribe(_ => { Explode(); Destroy(gameObject, 1); })
           .AddTo(this);
+
+      _interactable.holdable.OnHold
+          .Subscribe(_ =>
+          {
+            _rb.useGravity = false;
+            _rb.isKinematic = true;
+          });
+      _interactable.holdable.OnRelease
+          .Subscribe(_ =>
+          {
+            _rb.useGravity = true;
+            _rb.isKinematic = false;
+          });
     }
 
     void Explode()
