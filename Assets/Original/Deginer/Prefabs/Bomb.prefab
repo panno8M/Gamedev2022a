@@ -4900,6 +4900,7 @@ GameObject:
   - component: {fileID: 7171335578749921161}
   - component: {fileID: 9110998129134979112}
   - component: {fileID: 7171335578221915799}
+  - component: {fileID: 8913918585577264786}
   m_Layer: 13
   m_Name: Interactable
   m_TagString: Untagged
@@ -4950,6 +4951,20 @@ MonoBehaviour:
   Interactor:
     value: {fileID: 0}
   isActive: 1
+--- !u!114 &8913918585577264786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171335578749921160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3fdf8968f7948e04699a37dd74466a08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _rb: {fileID: 7171335578761235706}
+  _interactable: {fileID: 7171335578221915799}
 --- !u!1 &7171335578761235701
 GameObject:
   m_ObjectHideFlags: 0
@@ -5034,7 +5049,7 @@ MonoBehaviour:
   _psBurnUp: {fileID: 6118583701548417970}
   _psExplosion: {fileID: 7171335578431579851}
   _damagable: {fileID: 7171335579413191722}
-  _interactable: {fileID: 7171335578221915799}
+  _holdable: {fileID: 8913918585577264786}
   secExplosionDelay: 4
 --- !u!33 &8100924280566219774
 MeshFilter:

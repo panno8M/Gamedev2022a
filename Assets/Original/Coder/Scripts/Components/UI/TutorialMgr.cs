@@ -34,11 +34,6 @@ namespace Assembly.Components.UI
       player.OnDisableAsObservable()
           .Subscribe(_ => uiPlayerPivot.SetActive(false)).AddTo(this);
 
-      player.Interactor.Interactable
-          .Subscribe(x => uiQuestion.SetActive(x));
-      player.Interactor.OnReacted
-          .Subscribe(x => uiQuestion.SetActive(false));
-
       Observable.EveryUpdate()
         .Select(_ => Global.Control.HorizontalMoveInput.Value)
         .Subscribe(hmi =>

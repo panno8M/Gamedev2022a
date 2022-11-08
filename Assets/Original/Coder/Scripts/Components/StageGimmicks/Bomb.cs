@@ -12,7 +12,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
     [SerializeField] DamagableWrapper _damagable;
-    [SerializeField] Interactable _interactable;
+    [SerializeField] HoldableModule _holdable;
     [SerializeField] float secExplosionDelay = 4;
 
     Rigidbody _rb;
@@ -26,8 +26,8 @@ namespace Assembly.Components.StageGimmicks
       _damagable.OnBroken
           .Subscribe(_ =>
           {
-            _interactable.Interactor.Value?.ReleaseIfeq(_rb);
-            _interactable.isActive = false;
+            _holdable.ReleaseMe();
+            _holdable.enabled = false;
           }).AddTo(this);
 
       _damagable.OnBroken
@@ -39,20 +39,6 @@ namespace Assembly.Components.StageGimmicks
           .Delay(TimeSpan.FromSeconds(secExplosionDelay))
           .Subscribe(_ => { Explode(); Destroy(gameObject, 1); })
           .AddTo(this);
-
-      _interactable.OnInteracted
-          .Where(interactor => interactor.gameObject.CompareTag("Player"))
-          .Subscribe(interactor =>
-          {
-            if (interactor.HoldingItem.Value == _rb)
-            {
-              interactor.Release();
-            }
-            else
-            {
-              interactor.Hold(_rb);
-            }
-          });
     }
 
     void Explode()

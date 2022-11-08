@@ -13,12 +13,6 @@ namespace Assembly.Components.Senses
     Subject<Interactor> _onInteracted = new Subject<Interactor>();
     public IObservable<Interactor> OnInteracted => _onInteracted;
 
-    void Awake()
-    {
-      OnInteracted
-          .Subscribe(interactor => interactor.React(this));
-    }
-
     public void Interact(Interactor interactor)
     {
       if (isActive && interactor)
