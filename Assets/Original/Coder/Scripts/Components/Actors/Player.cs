@@ -39,12 +39,12 @@ namespace Assembly.Components.Actors
 
     public IObservable<Unit> OnBreathStart => _onBreathStart ??
         (_onBreathStart = Global.Control.BreathPress
-            .Where(_ => !Interactor.HoldingItem.Value));
+            .Where(_ => !Interactor.HoldingItem.Value && isOnGround.Value));
 
     public IObservable<Unit> OnBreathStop => _onBreathStop ??
         (_onBreathStop = Observable.Merge(
             Global.Control.BreathRelease,
-            Interactor.OnHoldRequested.AsUnitObservable()));
+            Interactor.OnHoldRequested.AsUnitObservable(),OnJump));
     #endregion
 
     #region editable params
