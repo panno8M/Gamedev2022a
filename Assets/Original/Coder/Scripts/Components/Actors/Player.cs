@@ -33,6 +33,7 @@ namespace Assembly.Components.Actors
             .Where(_ => !_isFlapping));
     public IObservable<Unit> OnFlap => _onFlap ??
         (_onFlap = Global.Control.GoUp
+            .Where(_ => !_interactor.holder.hasItem)
             .Where(_ => !_isOnGround.Value));
     public IObservable<Unit> OnLand => _onLand ??
         (_onLand = _isOnGround
