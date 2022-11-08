@@ -9,15 +9,38 @@ namespace UniRx.Ex.InteractionTraits.Core
   public class Interactor : MonoBehaviour
   {
     // TODO: AiSight等と統合できないか？
-    List<Interactable> _interactables = new List<Interactable>();
-    public List<Interactable> interactables => _interactables;
+    ReactiveCollection<Interactable> _interactables = new ReactiveCollection<Interactable>();
+    public ReactiveCollection<Interactable> interactables => _interactables;
 
     Subject<Unit> _OnForget = new Subject<Unit>();
     public IObservable<Unit> OnForget => _OnForget;
 
-    public void Forget() {
+    public void Forget()
+    {
       _OnForget.OnNext(Unit.Default);
       _interactables.Clear();
+    }
+
+
+    public void Process()
+    {
+      if (isInteractable)
+      {
+        Interact();
+      }
+      else
+      {
+        Discard();
+      }
+    }
+    public bool isInteractable => (interactables.Count != 0) && (_holder?.isInteractable ?? false);
+    public void Discard()
+    {
+      _holder?.Discard();
+    }
+    public void Interact()
+    {
+      _holder?.Interact();
     }
 
     #region buffers

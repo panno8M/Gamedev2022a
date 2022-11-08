@@ -67,13 +67,20 @@ namespace UniRx.Ex.InteractionTraits
 
     public bool hasItem => HoldingItem.Value != null;
 
-    public override void Interact()
+    
+    public override bool isInteractable => !hasItem;
+
+    public override void Discard()
     {
       if (hasItem)
       {
         ReleaseForce();
       }
-      else
+    }
+
+    public override void Interact()
+    {
+      if (!hasItem)
       {
         AttemptToHold();
       }

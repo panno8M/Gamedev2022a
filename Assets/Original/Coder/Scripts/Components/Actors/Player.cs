@@ -123,7 +123,7 @@ namespace Assembly.Components.Actors
       Global.Control.Interact
           .Subscribe(_ =>
           {
-            _interactor.holder.Interact();
+            _interactor.Process();
           }).AddTo(this);
 
     }
