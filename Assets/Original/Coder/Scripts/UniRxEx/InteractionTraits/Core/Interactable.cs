@@ -1,8 +1,7 @@
 using System;
 using UnityEngine;
-using UniRx;
 
-namespace Assembly.Components.Senses
+namespace UniRx.Ex.InteractionTraits.Core
 {
   [RequireComponent(typeof(Collider))]
   public class Interactable : MonoBehaviour

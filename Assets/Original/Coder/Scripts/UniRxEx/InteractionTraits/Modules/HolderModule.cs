@@ -1,7 +1,7 @@
 using System;
-using UniRx;
+using UniRx.Ex.InteractionTraits.Core;
 
-namespace Assembly.Components.Senses
+namespace UniRx.Ex.InteractionTraits
 {
   public class HolderModule : InteractorModuleBase
   {
@@ -54,7 +54,7 @@ namespace Assembly.Components.Senses
       }
     }
 
-    public bool hasItem => HoldingItem.Value;
+    public bool hasItem => HoldingItem.Value != null;
 
     public void Interact()
     {

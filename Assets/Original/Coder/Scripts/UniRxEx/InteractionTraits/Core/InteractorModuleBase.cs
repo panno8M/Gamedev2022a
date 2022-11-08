@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assembly.Components.Senses
+namespace UniRx.Ex.InteractionTraits.Core
 {
   [RequireComponent(typeof(Interactor))]
   public abstract class InteractorModuleBase : MonoBehaviour

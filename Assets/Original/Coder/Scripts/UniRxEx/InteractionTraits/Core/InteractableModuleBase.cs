@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assembly.Components.Senses
+namespace UniRx.Ex.InteractionTraits.Core
 {
   [RequireComponent(typeof(Interactable))]
   public abstract class InteractableModuleBase: MonoBehaviour

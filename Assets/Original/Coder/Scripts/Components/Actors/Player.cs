@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using UniRx.Ex.InteractionTraits;
 using Assembly.Components.Senses;
 
 namespace Assembly.Components.Actors

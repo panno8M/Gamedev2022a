@@ -1,8 +1,8 @@
 using System;
 using UnityEngine;
-using UniRx;
+using UniRx.Ex.InteractionTraits.Core;
 
-namespace Assembly.Components.Senses
+namespace UniRx.Ex.InteractionTraits
 {
   public class HoldableModule : InteractableModuleBase
   {

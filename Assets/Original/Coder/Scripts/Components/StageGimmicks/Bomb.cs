@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using Assembly.Components.Senses;
+using UniRx.Ex.InteractionTraits;
 
 namespace Assembly.Components.StageGimmicks
 {
