@@ -4950,7 +4950,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Interactor:
     value: {fileID: 0}
-  isActive: 1
   _holdable: {fileID: 8913918585577264786}
 --- !u!114 &8913918585577264786
 MonoBehaviour:
@@ -5050,7 +5049,7 @@ MonoBehaviour:
   _psBurnUp: {fileID: 6118583701548417970}
   _psExplosion: {fileID: 7171335578431579851}
   _damagable: {fileID: 7171335579413191722}
-  _holdable: {fileID: 8913918585577264786}
+  _interactable: {fileID: 7171335578221915799}
   secExplosionDelay: 4
 --- !u!33 &8100924280566219774
 MeshFilter:

@@ -31,8 +31,8 @@ namespace UniRx.Ex.InteractionTraits
 
     public void HoldForce(HoldableModule item)
     {
+      if (!item.HoldAccepted(this)) { return; }
       _RequestHold.OnNext(item);
-      HoldingItem.Value.HoldAccepted(this);
     }
     public bool Hold(HoldableModule item)
     {
@@ -44,11 +44,9 @@ namespace UniRx.Ex.InteractionTraits
     public void ReleaseForce()
     {
       var item = HoldingItem.Value;
-      if (item)
-      {
-        item.ReleaseAccepted(this);
-        _RequestRelease.OnNext(item);
-      }
+      if (!item) { return; }
+      if (!item.ReleaseAccepted(this)) { return; }
+      _RequestRelease.OnNext(item);
     }
     public void Release(HoldableModule item)
     {

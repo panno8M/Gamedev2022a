@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using Assembly.Components.Senses;
-using UniRx.Ex.InteractionTraits;
+using UniRx.Ex.InteractionTraits.Core;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -13,7 +13,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
     [SerializeField] DamagableWrapper _damagable;
-    [SerializeField] HoldableModule _holdable;
+    [SerializeField] Interactable _interactable;
     [SerializeField] float secExplosionDelay = 4;
 
     Rigidbody _rb;
@@ -27,8 +27,7 @@ namespace Assembly.Components.StageGimmicks
       _damagable.OnBroken
           .Subscribe(_ =>
           {
-            _holdable.ReleaseMe();
-            _holdable.enabled = false;
+            _interactable.holdable.Disactivate();
           }).AddTo(this);
 
       _damagable.OnBroken

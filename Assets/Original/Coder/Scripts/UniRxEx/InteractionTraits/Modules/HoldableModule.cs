@@ -16,15 +16,22 @@ namespace UniRx.Ex.InteractionTraits
     Subject<HolderModule> _OnRelease = new Subject<HolderModule>();
     public IObservable<HolderModule> OnRelease => _OnRelease;
 
-    public void HoldAccepted(HolderModule holder)
+    void Awake() {
+      OnDisactivated.Subscribe(_ => ReleaseMe());
+    }
+
+    public bool HoldAccepted(HolderModule holder)
     {
+      if (!isActive) { return false; }
       _owner = holder;
       _OnHold.OnNext(owner);
+      return true;
     }
-    public void ReleaseAccepted(HolderModule holder)
+    public bool ReleaseAccepted(HolderModule holder)
     {
       _OnRelease.OnNext(owner);
       _owner = null;
+      return true;
     }
 
     public void ReleaseMe()
