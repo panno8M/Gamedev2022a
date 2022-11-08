@@ -8,22 +8,12 @@ namespace UniRx.Ex.InteractionTraits.Core
   public class Interactable : MonoBehaviour
   {
     public ReactiveProperty<Interactor> Interactor = new ReactiveProperty<Interactor>();
-    public bool isActive = true;
 
-    Subject<Interactor> _onInteracted = new Subject<Interactor>();
-    public IObservable<Interactor> OnInteracted => _onInteracted;
-
+    #region buffers
     [SerializeField] HoldableModule _holdable;
     public HoldableModule holdable => _holdable;
+    #endregion
 
-    public void Interact(Interactor interactor)
-    {
-      if (isActive && interactor)
-      {
-        Interactor.Value = interactor;
-        _onInteracted.OnNext(interactor);
-      }
-    }
     void Reset()
     {
       SetDefaultComponent();

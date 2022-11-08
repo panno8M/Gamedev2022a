@@ -11,6 +11,8 @@ namespace UniRx.Ex.InteractionTraits.Core
 
     protected List<Interactable> _interactables => _interactor.interactables;
 
+    public abstract void Interact();
+
     void Reset()
     {
       SetDefaultComponent();

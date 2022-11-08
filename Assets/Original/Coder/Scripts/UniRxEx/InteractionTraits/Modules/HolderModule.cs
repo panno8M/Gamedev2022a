@@ -69,7 +69,7 @@ namespace UniRx.Ex.InteractionTraits
 
     public bool hasItem => HoldingItem.Value != null;
 
-    public void Interact()
+    public override void Interact()
     {
       if (hasItem)
       {
