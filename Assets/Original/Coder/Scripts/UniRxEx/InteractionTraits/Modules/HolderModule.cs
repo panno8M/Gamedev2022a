@@ -33,8 +33,12 @@ namespace UniRx.Ex.InteractionTraits
     }
     public void ReleaseForce()
     {
-      HoldingItem.Value.ReleaseAccepted(this);
-      _RequestRelease.OnNext(HoldingItem.Value);
+      var item = HoldingItem.Value;
+      if (item)
+      {
+        item.ReleaseAccepted(this);
+        _RequestRelease.OnNext(item);
+      }
     }
     public void Release(HoldableModule item)
     {
