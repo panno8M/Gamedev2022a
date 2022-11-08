@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using Assembly.Components.Senses;
+using UniRx.Ex.InteractionTraits.Core;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -26,8 +27,7 @@ namespace Assembly.Components.StageGimmicks
       _damagable.OnBroken
           .Subscribe(_ =>
           {
-            _interactable.Interactor.Value?.ReleaseIfeq(_rb);
-            _interactable.isActive = false;
+            _interactable.holdable.Disactivate();
           }).AddTo(this);
 
       _damagable.OnBroken
@@ -40,18 +40,17 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ => { Explode(); Destroy(gameObject, 1); })
           .AddTo(this);
 
-      _interactable.OnInteracted
-          .Where(interactor => interactor.gameObject.CompareTag("Player"))
-          .Subscribe(interactor =>
+      _interactable.holdable.OnHold
+          .Subscribe(_ =>
           {
-            if (interactor.HoldingItem.Value == _rb)
-            {
-              interactor.Release();
-            }
-            else
-            {
-              interactor.Hold(_rb);
-            }
+            _rb.useGravity = false;
+            _rb.isKinematic = true;
+          });
+      _interactable.holdable.OnRelease
+          .Subscribe(_ =>
+          {
+            _rb.useGravity = true;
+            _rb.isKinematic = false;
           });
     }
 

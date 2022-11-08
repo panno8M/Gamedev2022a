@@ -43,6 +43,7 @@ GameObject:
   - component: {fileID: 981942916}
   - component: {fileID: 981942917}
   - component: {fileID: 1305584510}
+  - component: {fileID: 4864222122978153979}
   m_Layer: 14
   m_Name: Tactile
   m_TagString: Player
@@ -90,10 +91,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e7575fc93abff741953c405d7881771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Interactable:
-    value: {fileID: 0}
-  HoldingItem:
-    value: {fileID: 0}
+  modules: []
+  _holder: {fileID: 4864222122978153979}
+--- !u!114 &4864222122978153979
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 981942915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 571b2995c5ea1434d83f20991e71ba9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _interactor: {fileID: 1305584510}
 --- !u!1 &4042233796002486148
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +276,7 @@ MonoBehaviour:
   groundNormalDegreeThreshold: 50
   damagable: {fileID: 4042233797364988407}
   aiVisible: {fileID: 4042233797005500142}
-  interactor: {fileID: 1305584510}
+  _interactor: {fileID: 1305584510}
   _isOnGround:
     value: 0
   _isFlapping: 0

@@ -2,6 +2,8 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using UniRx.Ex.InteractionTraits;
+using UniRx.Ex.InteractionTraits.Core;
 using Assembly.Components.Senses;
 
 namespace Assembly.Components.Actors
@@ -31,6 +33,7 @@ namespace Assembly.Components.Actors
             .Where(_ => !_isFlapping));
     public IObservable<Unit> OnFlap => _onFlap ??
         (_onFlap = Global.Control.GoUp
+            .Where(_ => !_interactor.holder.hasItem)
             .Where(_ => !_isOnGround.Value));
     public IObservable<Unit> OnLand => _onLand ??
         (_onLand = _isOnGround
@@ -39,19 +42,20 @@ namespace Assembly.Components.Actors
 
     public IObservable<Unit> OnBreathStart => _onBreathStart ??
         (_onBreathStart = Global.Control.BreathPress
-            .Where(_ => !Interactor.HoldingItem.Value));
+            .Where(_ => !_interactor.holder.HoldingItem.Value && isOnGround.Value));
 
     public IObservable<Unit> OnBreathStop => _onBreathStop ??
         (_onBreathStop = Observable.Merge(
             Global.Control.BreathRelease,
-            Interactor.OnHoldRequested.AsUnitObservable()));
+            _interactor.holder.RequestHold.AsUnitObservable(),
+            OnJump));
     #endregion
 
     #region editable params
     [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] DamagableWrapper damagable;
     [SerializeField] AiVisible aiVisible;
-    [SerializeField] Interactor interactor;
+    [SerializeField] Interactor _interactor;
     #endregion
 
     #region behaviour statements
@@ -63,7 +67,7 @@ namespace Assembly.Components.Actors
     #region accessors
     public DamagableWrapper Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
-    public Interactor Interactor => interactor;
+    public Interactor interactor => _interactor;
     public float wallCollidingBias => _wallCollidingBias;
     public bool isFlapping => _isFlapping;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
@@ -116,11 +120,13 @@ namespace Assembly.Components.Actors
           .AddTo(this);
 
       Damagable.OnBroken
-          .Subscribe(_ => Interactor.HoldingItem.Value = null);
+          .Subscribe(_ => _interactor.Forget());
 
       Global.Control.Interact
-          .Subscribe(_ => Interactor.Interact())
-          .AddTo(this);
+          .Subscribe(_ =>
+          {
+            _interactor.Process();
+          }).AddTo(this);
 
     }
   }

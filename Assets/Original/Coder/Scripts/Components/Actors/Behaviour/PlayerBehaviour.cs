@@ -97,16 +97,10 @@ namespace Assembly.Components.Actors.Behaviour
           .AddTo(this);
 
       #region hold
-      player.Interactor.OnHoldRequested
-          .Subscribe(item => item.useGravity = false)
-          .AddTo(this);
       this.FixedUpdateAsObservable()
-          .Select(_ => player.Interactor.HoldingItem.Value)
+          .Select(_ => player.interactor.holder.HoldingItem.Value)
           .Where(item => item)
-          .Subscribe(item => item.MovePosition(player.Interactor.transform.position));
-      player.Interactor.OnReleaseRequested
-          .Subscribe(item => item.useGravity = true)
-          .AddTo(this);
+          .Subscribe(item => item.rb.MovePosition(player.interactor.holder.transform.position));
       #endregion
     }
 
