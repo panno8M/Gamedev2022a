@@ -22,6 +22,7 @@ namespace Assembly.Components.Senses
 
     public void Affect(DamageUnit du) { damagable.Affect(du); }
     public void Repair() { damagable.Repair(); }
+    public void Break() { damagable.Break(); }
 
 #if DEBUG
     [Serializable]

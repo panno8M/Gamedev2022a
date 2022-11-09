@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.Components.Actors;
@@ -13,6 +14,7 @@ namespace Assembly.Components.UI
     [SerializeField] GameObject uiRightArrow;
     [SerializeField] GameObject uiLeftArrow;
     [SerializeField] GameObject uiQuestion;
+    [SerializeField] Image imgFeather;
 
     Vector3 posR;
     Vector3 posL;
@@ -20,6 +22,9 @@ namespace Assembly.Components.UI
 
     float easeR;
     float easeL;
+
+    Color featherBaseColor = Color.white;
+    Color featherPressColor = new Color(0.4f, 0, 0);
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +44,10 @@ namespace Assembly.Components.UI
           .Select(_ => player.interactor.isInteractable)
           .DistinctUntilChanged()
           .Subscribe(b => uiQuestion.SetActive(b));
+
+      Global.Control.RespawnInput
+          .Subscribe(b => imgFeather.color = b ? featherPressColor : featherBaseColor)
+          .AddTo(this);
 
 
       Observable.EveryUpdate()

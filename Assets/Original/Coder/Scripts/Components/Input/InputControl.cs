@@ -22,6 +22,9 @@ namespace Assembly.Components.Input
     public IObservable<Unit> BreathPress => provider.BreathPress;
     public IObservable<Unit> BreathRelease => provider.BreathRelease;
 
+    public ReadOnlyReactiveProperty<bool> RespawnInput => provider.RespawnInput;
+    public IObservable<Unit> Respawn => provider.Respawn;
+
     public ReadOnlyReactiveProperty<Vector2> MousePosInput => provider.MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage => provider.MousePosStage;
 

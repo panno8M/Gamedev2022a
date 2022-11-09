@@ -128,6 +128,12 @@ namespace Assembly.Components.Actors
             _interactor.Process();
           }).AddTo(this);
 
+      Global.Control.Respawn
+          .Subscribe(_ =>
+          {
+            Damagable.Break();
+          }).AddTo(this);
+
     }
   }
 }
