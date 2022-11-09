@@ -18,6 +18,9 @@ namespace Assembly.Components.Input.Internal
     public IObservable<Unit> BreathPress;
     public IObservable<Unit> BreathRelease;
 
+    public ReadOnlyReactiveProperty<bool> RespawnInput;
+    public IObservable<Unit> Respawn;
+
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage;
 
@@ -34,6 +37,7 @@ namespace Assembly.Components.Input.Internal
       BreathInput = input.Player.Breath.AsButton();
       MousePosInput = input.Player.MousePos.As2dAxis();
       InteractInput = input.Player.Interact.AsButton();
+      RespawnInput = input.Player.Respawn.AsButton();
 
       GoUp = GoUpInput
           .Where(x => x)
@@ -49,6 +53,12 @@ namespace Assembly.Components.Input.Internal
 
       BreathRelease = BreathInput
           .Where(x => !x)
+          .AsUnitObservable()
+          .BatchFrame(0, FrameCountType.FixedUpdate)
+          .Share();
+
+      Respawn = RespawnInput
+          .Where(x => x)
           .AsUnitObservable()
           .BatchFrame(0, FrameCountType.FixedUpdate)
           .Share();

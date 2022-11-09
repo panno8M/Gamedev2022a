@@ -53,5 +53,9 @@ namespace UniRx.Ex.DamageTraits {
 
         public void Affect(DamageUnit du) { _affect.OnNext(du); }
         public void Repair() { _repair.OnNext(Unit.Default); }
+
+        public void Break() {
+            Affect(new DamageUnit(_param.allowDamageSource, _param.stamina - TotalDamage.Value));
+            }
     }
 }

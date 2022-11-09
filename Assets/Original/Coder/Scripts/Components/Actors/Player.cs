@@ -48,7 +48,7 @@ namespace Assembly.Components.Actors
         (_onBreathStop = Observable.Merge(
             Global.Control.BreathRelease,
             _interactor.holder.RequestHold.AsUnitObservable(),
-            OnJump));
+            isOnGround.Where(x => !x).AsUnitObservable()));
     #endregion
 
     #region editable params
@@ -126,6 +126,12 @@ namespace Assembly.Components.Actors
           .Subscribe(_ =>
           {
             _interactor.Process();
+          }).AddTo(this);
+
+      Global.Control.Respawn
+          .Subscribe(_ =>
+          {
+            Damagable.Break();
           }).AddTo(this);
 
     }

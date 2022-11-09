@@ -52,6 +52,13 @@ namespace Assembly.Components.StageGimmicks
             _rb.useGravity = true;
             _rb.isKinematic = false;
           });
+      _interactable.holdable.OnRelease
+          .Delay(TimeSpan.FromMilliseconds(100))
+          .Subscribe(_ =>
+          {
+            _rb.velocity = Vector3.zero;
+            _rb.angularVelocity = Vector3.zero;
+          });
     }
 
     void Explode()
