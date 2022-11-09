@@ -72,6 +72,7 @@ namespace Assembly.Components.Actors.Behaviour
           .Select(_ => Global.Control.HorizontalMoveInput.Value)
           .Where(hmi => hmi != 0)
           .Where(_ => player.isOnGround.Value)
+          .Where(hmi => hmi != player.wallCollidingBias)
           .Subscribe(MoveHorizontal).AddTo(this);
 
       this.FixedUpdateAsObservable()
