@@ -22,8 +22,9 @@ namespace Assembly.Components.Actors
     [SerializeField] ParticleSystem psBurnUp;
     [SerializeField] AiSight sight;
     [SerializeField] DamagableWrapper damagable;
+    [SerializeField] Collider ctlTrigger;
 
-    Layer lVolume = Layer.AiControlVolume;
+    Layer lVolume = Layer.CtlVolume;
     [SerializeField] bool rotateTrigger;
     Quaternion rotateEnd;
 
@@ -52,7 +53,7 @@ namespace Assembly.Components.Actors
 
       cancelBT = BuildBihaviourPipeline(this.FixedUpdateAsObservable());
 
-      this.OnTriggerExitAsObservable()
+      ctlTrigger.OnTriggerExitAsObservable()
           .Where(other => (int)lVolume == other.gameObject.layer)
           .Subscribe(_ =>
           {

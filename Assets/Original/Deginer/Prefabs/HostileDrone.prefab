@@ -46,7 +46,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   eyesight: 20
   sightCooldown: 0.5
-  lVisible: 9
+  layerTarget: 9
+  layerObstacle: 6
   tags:
   - Player
   LastSeen:
@@ -147,7 +148,7 @@ GameObject:
   - component: {fileID: 3232116125892301783}
   - component: {fileID: 1210545985916033644}
   - component: {fileID: 1210545985916033645}
-  m_Layer: 7
+  m_Layer: 3
   m_Name: HostileDrone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -173,6 +174,7 @@ Transform:
   - {fileID: 1210545986821765796}
   - {fileID: 7647715171727268323}
   - {fileID: 3773708597081655226}
+  - {fileID: 1236633673857183677}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -194,6 +196,7 @@ MonoBehaviour:
   psBurnUp: {fileID: 1176009663848111660}
   sight: {fileID: 889259706891757632}
   damagable: {fileID: 9026324072695872059}
+  ctlTrigger: {fileID: 3642345148674282756}
   rotateTrigger: 0
 --- !u!114 &3232116125892301783
 MonoBehaviour:
@@ -10491,6 +10494,68 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4566464861465601371
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1236633673857183677}
+  - component: {fileID: 7898010259171661544}
+  - component: {fileID: 3642345148674282756}
+  m_Layer: 7
+  m_Name: CtlTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1236633673857183677
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4566464861465601371}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 1210545985916033634}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &7898010259171661544
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4566464861465601371}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
+--- !u!135 &3642345148674282756
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4566464861465601371}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &4896414494138056336
 GameObject:
   m_ObjectHideFlags: 0
