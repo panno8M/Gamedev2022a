@@ -38,11 +38,20 @@ namespace Assembly.Components.Actors.Pool
     [SerializeField] GameObject _prefPlayer;
     public Transform activeSpawnPoint;
 
-    PlayerPool pool;
+    PlayerPool _pool;
+    PlayerPool pool => _pool ?? (_pool = new PlayerPool(_prefPlayer, activeSpawnPoint));
+
+    BehaviorSubject<Player> _OnRent = new BehaviorSubject<Player>(null);
+    public IObservable<Player> OnRent => _OnRent.Where(x => x);
+
+    public Player Rent() {
+      var result = pool.Rent();
+      if (result) { _OnRent.OnNext(result); }
+      return result;
+    }
 
     void Awake()
     {
-      pool = new PlayerPool(_prefPlayer, activeSpawnPoint);
       this.OnDestroyAsObservable()
           .Subscribe(_ => pool.Dispose());
       Respawn();
@@ -60,7 +69,7 @@ namespace Assembly.Components.Actors.Pool
           .AddTo(this);
     }
 
-    public void Respawn() { pool.Rent(); }
+    public Player Respawn() { return Rent(); }
 
   }
 }

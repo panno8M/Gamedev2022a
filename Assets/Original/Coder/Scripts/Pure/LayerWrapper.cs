@@ -9,14 +9,15 @@ public enum Layer
   [Description("Water")] Water,
   [Description("UI")] UI,
   [Description("Physics/Stage")] Stage,
-  [Description("Enemy")] Enemy,
-  [Description("AiControlVolume")] AiControlVolume,
+  [Description("Ctlvol/Trigger")] CtlTrigger,
+  [Description("Ctlvol/Volume")] CtlVolume,
   [Description("Senses/AiVisible")] AiVisible,
   [Description("Senses/Damagable")] Damagable,
   [Description("ScreenToStageConverter")] ScreenToStageConverter,
   [Description("Senses/DamagableFromPlayer")] DamagableFromPlayer,
   [Description("Senses/Interactable")] Interactable,
   [Description("Senses/Interactor")] Interactor,
+  [Description("Physics/Item")] Item,
 }
 
 public struct Layers

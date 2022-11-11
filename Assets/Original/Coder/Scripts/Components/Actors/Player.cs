@@ -16,8 +16,7 @@ namespace Assembly.Components.Actors
 
     #region forBehaviourControlling
     IObservable<Unit> _onJump;
-    IObservable<Unit> _onFlapWhileFalling;
-    IObservable<Unit> _onFlap;
+    IObservable<int> _onFlap;
     IObservable<Unit> _onLand;
 
     IObservable<Unit> _onBreathStart;
@@ -28,13 +27,14 @@ namespace Assembly.Components.Actors
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
             .Where(_ => _isOnGround.Value));
-    public IObservable<Unit> OnFlapWhileFalling => _onFlapWhileFalling ??
-        (_onFlapWhileFalling = OnFlap
-            .Where(_ => !_isFlapping));
-    public IObservable<Unit> OnFlap => _onFlap ??
+    public IObservable<int> OnFlapWhileFalling => OnFlap.Where(x => x == 1);
+    public IObservable<int> OnFlap => _onFlap ??
         (_onFlap = Global.Control.GoUp
             .Where(_ => !_interactor.holder.hasItem)
-            .Where(_ => !_isOnGround.Value));
+            .Where(_ => !_isOnGround.Value)
+            .Do(_ => _flapCnt++)
+            .Select(_ => _flapCnt)
+            .Share());
     public IObservable<Unit> OnLand => _onLand ??
         (_onLand = _isOnGround
             .Where(x => x)
@@ -60,7 +60,7 @@ namespace Assembly.Components.Actors
 
     #region behaviour statements
     [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
-    [SerializeField] bool _isFlapping;
+    [SerializeField] int _flapCnt;
     [SerializeField] float _wallCollidingBias;
     #endregion
 
@@ -69,7 +69,7 @@ namespace Assembly.Components.Actors
     public AiVisible AiVisible => aiVisible;
     public Interactor interactor => _interactor;
     public float wallCollidingBias => _wallCollidingBias;
-    public bool isFlapping => _isFlapping;
+    public int flapCnt => _flapCnt;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
@@ -84,7 +84,7 @@ namespace Assembly.Components.Actors
               if (Vector2.Dot(contact.normal, Vector3.up) >= Mathf.Cos(groundNormalDegreeThreshold * Mathf.PI / 360f))
               {
                 _isOnGround.Value = true;
-                _isFlapping = false;
+                _flapCnt = 0;
               }
               else
               {
@@ -101,10 +101,6 @@ namespace Assembly.Components.Actors
             _isOnGround.Value = false;
             _wallCollidingBias = 0;
           });
-
-      OnFlapWhileFalling
-          .Subscribe(_ => _isFlapping = true)
-          .AddTo(this);
 
       Global.Control.HorizontalMoveInput
           .Select(hmi =>

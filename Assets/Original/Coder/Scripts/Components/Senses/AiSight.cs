@@ -11,9 +11,10 @@ namespace Assembly.Components.Senses
     public float eyesight = 20;
     public float sightCooldown = .5f;
 
-    public Layers lsEyeRay = new Layers(Layer.AiVisible, Layer.Stage);
-    public Layer lVisible = Layer.AiVisible;
-    public List<string> tags = new List<string>();
+    public Layer layerTarget = Layer.AiVisible;
+    public Layer layerObstacle = Layer.Stage;
+    public Layers lsEyeRay => new Layers(layerTarget, layerObstacle);
+    public List<Tag> tags = new List<Tag>();
 
     public ReactiveProperty<AiVisible> LastSeen;
     public IObservable<AiVisible> OnSeen;
@@ -43,7 +44,7 @@ namespace Assembly.Components.Senses
     bool Find(RaycastHit hit)
     {
       return hit.collider &&
-          (hit.collider.gameObject.layer == (int)lVisible) &&
+          (hit.collider.gameObject.layer == (int)layerTarget) &&
           tags.Contains(hit.collider.gameObject.tag);
     }
     void LookFor()
