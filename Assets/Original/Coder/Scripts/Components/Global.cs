@@ -10,6 +10,8 @@ namespace Assembly.Components
     public static InputControl Control => InputControl.Instance;
     public static Player Player => Player.Instance;
     public static PlayerRespawnMgr PlayerRespawn => PlayerRespawnMgr.Instance;
+
+    public static Camctl Cameraman => Camctl.Instance;
   }
   public abstract class UniqueBehaviour<T> : MonoBehaviour
       where T : MonoBehaviour

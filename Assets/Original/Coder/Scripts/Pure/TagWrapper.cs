@@ -7,6 +7,7 @@ public enum Tag
   Untagged,
   Player,
   CtlvolDroneMovable,
+  CtlvolCamera,
 }
 
 public static class TagExtensions
@@ -15,6 +16,7 @@ public static class TagExtensions
     "Untagged",
     "Player",
     "Ctlvol/DroneMovable",
+    "Ctlvol/Camera",
   };
 
   public static string GetName(this Tag x)
