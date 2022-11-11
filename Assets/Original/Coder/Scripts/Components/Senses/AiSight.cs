@@ -14,7 +14,7 @@ namespace Assembly.Components.Senses
     public Layer layerTarget = Layer.AiVisible;
     public Layer layerObstacle = Layer.Stage;
     public Layers lsEyeRay => new Layers(layerTarget, layerObstacle);
-    public List<string> tags = new List<string>();
+    public List<Tag> tags = new List<Tag>();
 
     public ReactiveProperty<AiVisible> LastSeen;
     public IObservable<AiVisible> OnSeen;
