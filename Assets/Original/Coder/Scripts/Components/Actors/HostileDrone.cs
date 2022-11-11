@@ -24,7 +24,7 @@ namespace Assembly.Components.Actors
     [SerializeField] DamagableWrapper damagable;
     [SerializeField] Collider ctlTrigger;
 
-    Layer lVolume = Layer.CtlVolume;
+    Tag reactableTag = Tag.CtlvolDroneMovable;
     [SerializeField] bool rotateTrigger;
     Quaternion rotateEnd;
 
@@ -54,7 +54,7 @@ namespace Assembly.Components.Actors
       cancelBT = BuildBihaviourPipeline(this.FixedUpdateAsObservable());
 
       ctlTrigger.OnTriggerExitAsObservable()
-          .Where(other => (int)lVolume == other.gameObject.layer)
+          .Where(other => other.gameObject.CompareTag(reactableTag.GetName()))
           .Subscribe(_ =>
           {
             rotateTrigger = true;
