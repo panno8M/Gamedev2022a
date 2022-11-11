@@ -30,11 +30,6 @@ namespace Assembly.Components.Actors
 
     void Start()
     {
-      var slowupdate = this
-          .UpdateAsObservable()
-          .ThrottleFirst(TimeSpan.FromSeconds(.5f))
-          .Share();
-
       sight.OnSeen
           .Subscribe(_ => psWater.Play()).AddTo(this);
       sight.OnLost
@@ -43,13 +38,13 @@ namespace Assembly.Components.Actors
       damagable.TotalDamage
           .Where(total => total == 1)
           .Delay(TimeSpan.FromSeconds(0.5))
-          .Subscribe(_ => psBurnUp.Play());
+          .Subscribe(_ => psBurnUp.Play())
+          .AddTo(this);
 
       damagable.OnBroken
           .Delay(TimeSpan.FromSeconds(0.5))
-          .Subscribe(_ => Dead());
-
-
+          .Subscribe(_ => Dead())
+          .AddTo(this);
 
       cancelBT = BuildBihaviourPipeline(this.FixedUpdateAsObservable());
 
@@ -115,6 +110,7 @@ namespace Assembly.Components.Actors
     {
       GetComponent<Rigidbody>().useGravity = true;
       GetComponent<Rigidbody>().isKinematic = false;
+
       cancelBT.Dispose();
       cancelBT = null;
     }
