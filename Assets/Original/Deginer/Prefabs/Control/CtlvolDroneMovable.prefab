@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2666191029743268470}
   - component: {fileID: 430802786631389529}
   m_Layer: 8
-  m_Name: DroneMovableVolume
+  m_Name: CtlvolDroneMovable
   m_TagString: Ctlvol/DroneMovable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
