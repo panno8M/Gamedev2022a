@@ -8,6 +8,7 @@ namespace Assembly.Components.Actors.Player
   public class PlayerBreath : MonoBehaviour
   {
     [SerializeField] PlayerAct _player;
+    [SerializeField] PlayerBehaviour _playerBehaviour;
     [SerializeField] ParticleSystem psFlameBreath;
 
     ReactiveProperty<bool> _IsExhaling = new ReactiveProperty<bool>();
@@ -84,11 +85,13 @@ namespace Assembly.Components.Actors.Player
     void SetOveruseLimitation()
     {
       _player.flapCtl.TightenLimit(0);
+      _playerBehaviour.mobility = PlayerBehaviour.Mobility.knackered;
     }
 
     void RemoveOveruseLimitation()
     {
       _player.flapCtl.ResetLimit();
+      _playerBehaviour.mobility = PlayerBehaviour.Mobility.Normal;
     }
 
 

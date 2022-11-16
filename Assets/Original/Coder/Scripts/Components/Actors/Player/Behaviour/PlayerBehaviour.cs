@@ -12,15 +12,17 @@ namespace Assembly.Components.Actors.Player
     [System.Serializable]
     public struct BehaviourScale
     {
-      public BehaviourScale(float jumpHeight, float soarHeight, float moveSpeed)
+      public BehaviourScale(float jumpHeight, float soarHeight, float moveSpeedNormal, float moveSpeedKnackered)
       {
         this.jumpHeight = jumpHeight;
         this.soarHeight = soarHeight;
-        this.moveSpeed = moveSpeed;
+        this.moveSpeedNormal = moveSpeedNormal;
+        this.moveSpeedKnackered = moveSpeedKnackered;
       }
       public float jumpHeight;
       public float soarHeight;
-      public float moveSpeed;
+      public float moveSpeedNormal;
+      public float moveSpeedKnackered;
     }
     [System.Serializable]
     public struct GravityScale
@@ -41,13 +43,18 @@ namespace Assembly.Components.Actors.Player
 
     void Reset()
     {
-      _scaleBehaviour = new BehaviourScale(5f, 3f, 3.5f);
+      _scaleBehaviour = new BehaviourScale(5f, 3f, 3.5f, 1.8f);
       _scaleGravity = new GravityScale(1.3f, .1f);
     }
     #endregion
 
     #region assets
     Rigidbody rb;
+    #endregion
+
+    #region behavior params
+    public enum Mobility { Normal, knackered }
+    public Mobility mobility;
     #endregion
 
     void Awake()
@@ -110,7 +117,9 @@ namespace Assembly.Components.Actors.Player
     void MoveHorizontal(float hmi)
     {
       rb.velocity = new Vector3(
-          hmi * _scaleBehaviour.moveSpeed,
+          hmi * (mobility == Mobility.Normal
+            ? _scaleBehaviour.moveSpeedNormal
+            : _scaleBehaviour.moveSpeedKnackered),
           rb.velocity.y,
           0);
     }
