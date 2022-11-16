@@ -36,7 +36,6 @@ namespace Assembly.Components.Actors.Behaviour
 
     #region editable params
     [SerializeField] Animator anim;
-    [SerializeField] ParticleSystem breathFire;
     [SerializeField] BehaviourScale _scaleBehaviour;
     [SerializeField] GravityScale _scaleGravity;
 
@@ -75,19 +74,6 @@ namespace Assembly.Components.Actors.Behaviour
           .Where(hmi => hmi != player.wallCollidingBias)
           .Subscribe(MoveHorizontal).AddTo(this);
 
-      this.FixedUpdateAsObservable()
-          .Where(_ => Global.Control.BreathInput.Value)
-          .Subscribe(_ =>
-          {
-            breathFire.transform.LookAt(Global.Control.MousePosStage.Value);
-          }).AddTo(this);
-
-      #region breath
-      player.OnBreathStart
-          .Subscribe(_ => breathFire.Play()).AddTo(this);
-      player.OnBreathStop
-          .Subscribe(_ => breathFire.Stop()).AddTo(this);
-      #endregion
 
       Global.Control.HorizontalMoveInput
           .Where(hmi => hmi == 0)
