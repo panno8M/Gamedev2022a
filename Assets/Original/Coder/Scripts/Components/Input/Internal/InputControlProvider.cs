@@ -63,13 +63,11 @@ namespace Assembly.Components.Input.Internal
           .BatchFrame(0, FrameCountType.FixedUpdate)
           .Share();
 
-      MousePosStage = Observable
-          .Merge(MousePosInput,
-                 Camera.main.transform.ObserveEveryValueChanged(x => x.position)
-                 .Select(_ => MousePosInput.Value))
-          .Select(pos => MousePos_ScreenToGameStage(pos, out Vector3 stagePos)
-                  ? stagePos
-                  : MousePosStage.Value)
+      MousePosStage = Camera.main.transform
+          .ObserveEveryValueChanged(x => x.position)
+          .Select(_ => MousePosInput.Value)
+          .Merge(MousePosInput)
+          .Select(pos => MousePos_ScreenToGameStage(pos) ?? MousePosStage?.Value ?? Vector3.zero)
           .ToReadOnlyReactiveProperty();
 
       Interact = InteractInput
@@ -80,7 +78,7 @@ namespace Assembly.Components.Input.Internal
     }
 
     static LayerMask stsc = new Layers(Layer.ScreenToStageConverter);
-    public static bool MousePos_ScreenToGameStage(Vector3 screenPos, out Vector3 stagePos)
+    public static Vector3? MousePos_ScreenToGameStage(Vector3 screenPos)
     {
       screenPos.z = 1.0f;
       var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
@@ -88,14 +86,11 @@ namespace Assembly.Components.Input.Internal
       if (Physics.Raycast(camPos, (worldPos - camPos), out RaycastHit hit, 100f, stsc))
       {
         Debug.DrawRay(camPos, hit.point, Color.red);
-        stagePos = hit.point;
-        stagePos.z = 0.0f;
-        return true;
+        return new Vector3(hit.point.x, hit.point.y, 0);
       }
       else
       {
-        stagePos = Vector3.zero;
-        return false;
+        return null;
       }
     }
   }
