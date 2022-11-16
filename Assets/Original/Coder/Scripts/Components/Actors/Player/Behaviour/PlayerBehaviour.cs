@@ -10,19 +10,49 @@ namespace Assembly.Components.Actors.Player
     public static float G = -9.8f;
 
     [System.Serializable]
-    public struct BehaviourScale
+    public class BehaviourParams
     {
-      public BehaviourScale(float jumpHeight, float soarHeight, float moveSpeedNormal, float moveSpeedKnackered)
+      public enum Mobility { Normal, knackered }
+      public BehaviourParams(float jumpHeight, float soarHeight, float moveSpeedNormal, float moveSpeedKnackered)
       {
         this.jumpHeight = jumpHeight;
         this.soarHeight = soarHeight;
         this.moveSpeedNormal = moveSpeedNormal;
         this.moveSpeedKnackered = moveSpeedKnackered;
+        this.mobility = Mobility.Normal;
       }
       public float jumpHeight;
       public float soarHeight;
       public float moveSpeedNormal;
       public float moveSpeedKnackered;
+      public Mobility mobility;
+
+      [Range(0f, 1f)] float moveSpeedBlend;
+      [SerializeField] float secTransitionSpeed = 1;
+
+      float latestCallTime;
+
+      void CalcBlend()
+      {
+        var delta = Time.time - latestCallTime;
+        if (delta < 0.001) { return; }
+        latestCallTime = Time.time;
+        moveSpeedBlend = Mathf.Clamp01(moveSpeedBlend + (mobility == Mobility.Normal ? -1 : 1) * delta / secTransitionSpeed);
+      }
+
+      public float MoveSpeed()
+      {
+        CalcBlend();
+        return moveSpeedNormal * (1 - moveSpeedBlend) + moveSpeedKnackered * moveSpeedBlend;
+      }
+      public void SetAsNormal()
+      {
+        mobility = Mobility.Normal;
+      }
+      public void SetAsKnackered()
+      {
+        mobility = Mobility.knackered;
+      }
     }
     [System.Serializable]
     public struct GravityScale
@@ -38,23 +68,19 @@ namespace Assembly.Components.Actors.Player
 
     #region editable params
     [SerializeField] Animator anim;
-    [SerializeField] BehaviourScale _scaleBehaviour;
+    [SerializeField] BehaviourParams _bp = new BehaviourParams(5f, 3f, 3.5f, 1.8f);
     [SerializeField] GravityScale _scaleGravity;
+
+    public BehaviourParams behaviourParams => _bp;
 
     void Reset()
     {
-      _scaleBehaviour = new BehaviourScale(5f, 3f, 3.5f, 1.8f);
       _scaleGravity = new GravityScale(1.3f, .1f);
     }
     #endregion
 
     #region assets
     Rigidbody rb;
-    #endregion
-
-    #region behavior params
-    public enum Mobility { Normal, knackered }
-    public Mobility mobility;
     #endregion
 
     void Awake()
@@ -110,16 +136,14 @@ namespace Assembly.Components.Actors.Player
     void Jump()
     {
       rb.velocity = rb.velocity.x_z();
-      rb.AddForce(_scaleBehaviour.jumpHeight._y_(), ForceMode.Impulse);
+      rb.AddForce(_bp.jumpHeight._y_(), ForceMode.Impulse);
     }
 
 
     void MoveHorizontal(float hmi)
     {
       rb.velocity = new Vector3(
-          hmi * (mobility == Mobility.Normal
-            ? _scaleBehaviour.moveSpeedNormal
-            : _scaleBehaviour.moveSpeedKnackered),
+          hmi * _bp.MoveSpeed(),
           rb.velocity.y,
           0);
     }

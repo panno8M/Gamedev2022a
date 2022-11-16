@@ -85,13 +85,13 @@ namespace Assembly.Components.Actors.Player
     void SetOveruseLimitation()
     {
       _player.flapCtl.TightenLimit(0);
-      _playerBehaviour.mobility = PlayerBehaviour.Mobility.knackered;
+      _playerBehaviour.behaviourParams.SetAsKnackered();
     }
 
     void RemoveOveruseLimitation()
     {
       _player.flapCtl.ResetLimit();
-      _playerBehaviour.mobility = PlayerBehaviour.Mobility.Normal;
+      _playerBehaviour.behaviourParams.SetAsNormal();
     }
 
 
