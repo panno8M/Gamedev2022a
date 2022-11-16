@@ -36,7 +36,7 @@ namespace Assembly.Components.Actors.Player
             if (b)
             {
               psFlameBreath.Play();
-              _player.flapCtl.OverrideLimit(0);
+              _player.flapCtl.TightenLimit(0);
             }
             else
             {

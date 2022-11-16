@@ -124,7 +124,7 @@ namespace Assembly.Components.Actors
           {
             if (item)
             {
-              _flapCtl.OverrideLimit(0);
+              _flapCtl.TightenLimit(0);
             }
             else
             {

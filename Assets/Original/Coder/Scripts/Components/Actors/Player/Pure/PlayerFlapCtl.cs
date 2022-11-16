@@ -42,6 +42,10 @@ namespace Assembly.Components.Actors.Player.Pure
       _upperLimitOverride = newLimit;
       _upperLimitOverriding = true;
     }
+    public void TightenLimit(int newLimit)
+    {
+      OverrideLimit(Mathf.Min(newLimit, _upperLimitOverride));
+    }
     public void ResetLimit()
     {
       _upperLimitOverriding = false;
