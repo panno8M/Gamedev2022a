@@ -12,13 +12,11 @@ namespace Assembly.Components.Actors.Player
 
     ReactiveProperty<bool> _IsExhaling = new ReactiveProperty<bool>();
     public ReactiveProperty<bool> IsExhaling => _IsExhaling;
-    public IObservable<bool> OnBreathStart => _IsExhaling.Where(x => x);
-    public IObservable<bool> OnBreathStop => _IsExhaling.Where(x => !x);
 
 
     [SerializeField] float _msecExhalableLimit = 3000;
-    [SerializeField] float _msecExhaling;
-    [SerializeField] float _msecCooldown;
+    float _msecExhaling;
+    float _msecCooldown;
     public float msecExhalableLimit => _msecExhalableLimit;
     public float msecExhaling => _msecExhaling;
     public float msecCooldown => _msecCooldown;
@@ -69,17 +67,14 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(_ => _IsExhaling.Value = true)
           .AddTo(this);
 
-      Global.Control.BreathRelease
-          .Where(_ => !isCoolingDown)
-          .Subscribe(_ => _IsExhaling.Value = false)
-          .AddTo(this);
-      _player.interactor.holder.RequestHold
-          .Where(_ => Global.Control.BreathInput.Value)
-          .Where(_ => !isCoolingDown)
-          .Subscribe(_ => _IsExhaling.Value = false)
-          .AddTo(this);
-      this.FixedUpdateAsObservable()
-          .Where(_ => msecExhaling > msecExhalableLimit)
+      Observable
+          .Merge(
+              Global.Control.BreathRelease,
+              _player.interactor.holder.RequestHold
+                  .Where(_ => Global.Control.BreathInput.Value)
+                  .AsUnitObservable(),
+              this.FixedUpdateAsObservable()
+                  .Where(_ => msecExhaling > msecExhalableLimit))
           .Where(_ => !isCoolingDown)
           .Subscribe(_ => _IsExhaling.Value = false)
           .AddTo(this);
