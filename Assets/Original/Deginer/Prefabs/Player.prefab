@@ -293,7 +293,12 @@ MonoBehaviour:
   _interactor: {fileID: 1305584510}
   _isOnGround:
     value: 0
-  _flapCnt: 0
+  _flapCtl:
+    _upperLimitDefault: 1
+    _upperLimitOverride: 0
+    _upperLimitOverriding: 0
+    _currentCnt:
+      value: 0
   _wallCollidingBias: 0
 --- !u!114 &4042233797003262913
 MonoBehaviour:
@@ -327,7 +332,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ffc7063df45514da2fd43c693504b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _player: {fileID: 4042233797003262943}
   psFlameBreath: {fileID: 1059547643}
+  msecOverheatCooldown: 3000
 --- !u!54 &444307188
 Rigidbody:
   m_ObjectHideFlags: 0
