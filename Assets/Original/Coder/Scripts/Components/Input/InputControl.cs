@@ -44,8 +44,9 @@ namespace Assembly.Components.Input
       public float horizontalMove;
       public bool goUp;
       public bool breath;
-      public Vector2 mousePos;
       public bool interact;
+      public Vector2 mousePos;
+      public Vector2 mousePosStage;
     }
     [SerializeField]
     Inspector inspector;
@@ -55,8 +56,10 @@ namespace Assembly.Components.Input
       HorizontalMoveInput.Subscribe(x => inspector.horizontalMove = x).AddTo(this);
       GoUpInput.Subscribe(x => inspector.goUp = x).AddTo(this);
       BreathInput.Subscribe(x => inspector.breath = x).AddTo(this);
-      MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
       InteractInput.Subscribe(x => inspector.interact = x).AddTo(this);
+      MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
+      MousePosStage.Subscribe(x => inspector.mousePosStage = x).AddTo(this);
+
     }
 #endif
   }
