@@ -2,13 +2,12 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using UniRx.Ex.InteractionTraits;
 using UniRx.Ex.InteractionTraits.Core;
 using Assembly.Components.Senses;
 
 namespace Assembly.Components.Actors
 {
-  public class Player : UniqueBehaviour<Player>
+  public class PlayerAct : UniqueBehaviour<PlayerAct>
   {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }

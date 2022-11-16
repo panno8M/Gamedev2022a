@@ -2,7 +2,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Assembly.Components.Actors.Behaviour
+namespace Assembly.Components.Actors.Player
 {
   [RequireComponent(typeof(Rigidbody))]
   public class PlayerBehaviour : MonoBehaviour
