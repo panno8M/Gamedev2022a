@@ -2,25 +2,23 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using UniRx.Ex.InteractionTraits;
 using UniRx.Ex.InteractionTraits.Core;
 using Assembly.Components.Senses;
+using Assembly.Components.Actors.Player.Pure;
 
 namespace Assembly.Components.Actors
 {
-  public class Player : UniqueBehaviour<Player>
+  public class PlayerAct : UniqueBehaviour<PlayerAct>
   {
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
+
+
     public enum Direction { Left = -1, Right = 1 }
 
     #region forBehaviourControlling
     IObservable<Unit> _onJump;
-    IObservable<int> _onFlap;
     IObservable<Unit> _onLand;
-
-    IObservable<Unit> _onBreathStart;
-    IObservable<Unit> _onBreathStop;
 
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 
@@ -28,27 +26,11 @@ namespace Assembly.Components.Actors
         (_onJump = Global.Control.GoUp
             .Where(_ => _isOnGround.Value));
     public IObservable<int> OnFlapWhileFalling => OnFlap.Where(x => x == 1);
-    public IObservable<int> OnFlap => _onFlap ??
-        (_onFlap = Global.Control.GoUp
-            .Where(_ => !_interactor.holder.hasItem)
-            .Where(_ => !_isOnGround.Value)
-            .Do(_ => _flapCnt++)
-            .Select(_ => _flapCnt)
-            .Share());
+    public IObservable<int> OnFlap => _flapCtl.OnFlap;
     public IObservable<Unit> OnLand => _onLand ??
         (_onLand = _isOnGround
             .Where(x => x)
             .AsUnitObservable());
-
-    public IObservable<Unit> OnBreathStart => _onBreathStart ??
-        (_onBreathStart = Global.Control.BreathPress
-            .Where(_ => !_interactor.holder.HoldingItem.Value && isOnGround.Value));
-
-    public IObservable<Unit> OnBreathStop => _onBreathStop ??
-        (_onBreathStop = Observable.Merge(
-            Global.Control.BreathRelease,
-            _interactor.holder.RequestHold.AsUnitObservable(),
-            isOnGround.Where(x => !x).AsUnitObservable()));
     #endregion
 
     #region editable params
@@ -60,7 +42,7 @@ namespace Assembly.Components.Actors
 
     #region behaviour statements
     [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
-    [SerializeField] int _flapCnt;
+    [SerializeField] PlayerFlapCtl _flapCtl = new PlayerFlapCtl(1);
     [SerializeField] float _wallCollidingBias;
     #endregion
 
@@ -69,7 +51,7 @@ namespace Assembly.Components.Actors
     public AiVisible AiVisible => aiVisible;
     public Interactor interactor => _interactor;
     public float wallCollidingBias => _wallCollidingBias;
-    public int flapCnt => _flapCnt;
+    public PlayerFlapCtl flapCtl => _flapCtl;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
@@ -84,7 +66,7 @@ namespace Assembly.Components.Actors
               if (Vector2.Dot(contact.normal, Vector3.up) >= Mathf.Cos(groundNormalDegreeThreshold * Mathf.PI / 360f))
               {
                 _isOnGround.Value = true;
-                _flapCnt = 0;
+                _flapCtl.ResetCount();
               }
               else
               {
@@ -128,6 +110,26 @@ namespace Assembly.Components.Actors
           .Subscribe(_ =>
           {
             Damagable.Break();
+          }).AddTo(this);
+
+      Global.Control.GoUp
+          .Where(_ => !_isOnGround.Value)
+          .Subscribe(_ =>
+          {
+            _flapCtl.Inc();
+          }).AddTo(this);
+
+      _interactor.holder.HoldingItem
+          .Subscribe(item =>
+          {
+            if (item)
+            {
+              _flapCtl.TightenLimit(0);
+            }
+            else
+            {
+              _flapCtl.ResetLimit();
+            }
           }).AddTo(this);
 
     }

@@ -4,9 +4,9 @@ using UniRx;
 using UniRx.Triggers;
 using UniRx.Toolkit;
 
-namespace Assembly.Components.Actors.Pool
+namespace Assembly.Components.Actors.Player.Pure
 {
-  public class PlayerPool : ObjectPool<Player>
+  public class PlayerPool : ObjectPool<PlayerAct>
   {
     public GameObject prefab;
     public Transform spawnAt;
@@ -15,14 +15,14 @@ namespace Assembly.Components.Actors.Pool
       this.prefab = prefab;
       this.spawnAt = spawnAt;
     }
-    protected override Player CreateInstance()
+    protected override PlayerAct CreateInstance()
     {
       if (Global.Player != null) { return Global.Player; }
       var result = GameObject.Instantiate(prefab, spawnAt.position, Quaternion.identity);
       result.name = prefab.name;
-      return result.GetComponent<Player>();
+      return result.GetComponent<PlayerAct>();
     }
-    protected override void OnBeforeRent(Player instance)
+    protected override void OnBeforeRent(PlayerAct instance)
     {
       base.OnBeforeRent(instance);
       instance.Damagable.Repair();
@@ -41,10 +41,10 @@ namespace Assembly.Components.Actors.Pool
     PlayerPool _pool;
     PlayerPool pool => _pool ?? (_pool = new PlayerPool(_prefPlayer, activeSpawnPoint));
 
-    BehaviorSubject<Player> _OnRent = new BehaviorSubject<Player>(null);
-    public IObservable<Player> OnRent => _OnRent.Where(x => x);
+    BehaviorSubject<PlayerAct> _OnRent = new BehaviorSubject<PlayerAct>(null);
+    public IObservable<PlayerAct> OnRent => _OnRent.Where(x => x);
 
-    public Player Rent() {
+    public PlayerAct Rent() {
       var result = pool.Rent();
       if (result) { _OnRent.OnNext(result); }
       return result;
@@ -69,7 +69,7 @@ namespace Assembly.Components.Actors.Pool
           .AddTo(this);
     }
 
-    public Player Respawn() { return Rent(); }
+    public PlayerAct Respawn() { return Rent(); }
 
   }
 }

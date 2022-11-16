@@ -8,7 +8,7 @@ namespace Assembly.Components.UI
 {
   public class TutorialMgr : MonoBehaviour
   {
-    Player player;
+    PlayerAct player;
     Transform playerTrans;
     [SerializeField] GameObject uiPlayerPivot;
     [SerializeField] GameObject uiRightArrow;
