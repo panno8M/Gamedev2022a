@@ -113,11 +113,23 @@ namespace Assembly.Components.Actors
           }).AddTo(this);
 
       Global.Control.GoUp
-          .Where(_ => !_interactor.holder.hasItem)
           .Where(_ => !_isOnGround.Value)
           .Subscribe(_ =>
           {
             _flapCtl.Inc();
+          }).AddTo(this);
+
+      _interactor.holder.HoldingItem
+          .Subscribe(item =>
+          {
+            if (item)
+            {
+              _flapCtl.OverrideLimit(0);
+            }
+            else
+            {
+              _flapCtl.ResetLimit();
+            }
           }).AddTo(this);
 
     }
