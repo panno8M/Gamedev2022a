@@ -20,9 +20,6 @@ namespace Assembly.Components.Actors
     IObservable<Unit> _onJump;
     IObservable<Unit> _onLand;
 
-    IObservable<Unit> _onBreathStart;
-    IObservable<Unit> _onBreathStop;
-
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 
     public IObservable<Unit> OnJump => _onJump ??
@@ -34,15 +31,6 @@ namespace Assembly.Components.Actors
         (_onLand = _isOnGround
             .Where(x => x)
             .AsUnitObservable());
-
-    public IObservable<Unit> OnBreathStart => _onBreathStart ??
-        (_onBreathStart = Global.Control.BreathPress
-            .Where(_ => !_interactor.holder.HoldingItem.Value));
-
-    public IObservable<Unit> OnBreathStop => _onBreathStop ??
-        (_onBreathStop = Observable.Merge(
-            Global.Control.BreathRelease,
-            _interactor.holder.RequestHold.AsUnitObservable()));
     #endregion
 
     #region editable params

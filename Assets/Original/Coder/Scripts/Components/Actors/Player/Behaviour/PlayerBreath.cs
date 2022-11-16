@@ -9,7 +9,19 @@ namespace Assembly.Components.Actors.Player
   {
     [SerializeField] PlayerAct _player;
     [SerializeField] ParticleSystem psFlameBreath;
-    [SerializeField] float msecOverheatCooldown = 3000;
+    [SerializeField] float msecExhalableLimit = 3000;
+
+    IObservable<Unit> _onBreathStart;
+    IObservable<Unit> _onBreathStop;
+    public IObservable<Unit> OnBreathStart => _onBreathStart ??
+        (_onBreathStart = Global.Control.BreathPress
+            .Where(_ => !_player.interactor.holder.HoldingItem.Value));
+
+    public IObservable<Unit> OnBreathStop => _onBreathStop ??
+        (_onBreathStop = Observable.Merge(
+            Global.Control.BreathRelease,
+            _player.interactor.holder.RequestHold.AsUnitObservable()
+                .Where(_ => Global.Control.BreathInput.Value)));
 
 
     void Awake()
@@ -21,14 +33,14 @@ namespace Assembly.Components.Actors.Player
             psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
           }).AddTo(this);
 
-      _player.OnBreathStart
+      OnBreathStart
           .Subscribe(_ => psFlameBreath.Play()).AddTo(this);
-      _player.OnBreathStop
+      OnBreathStop
           .Subscribe(_ => psFlameBreath.Stop()).AddTo(this);
 
-      _player.OnBreathStart
+      OnBreathStart
           .Subscribe(_ => _player.flapCtl.OverrideLimit(0)).AddTo(this);
-      _player.OnBreathStop
+      OnBreathStop
           .Subscribe(_ => _player.flapCtl.ResetLimit()).AddTo(this);
     }
 
