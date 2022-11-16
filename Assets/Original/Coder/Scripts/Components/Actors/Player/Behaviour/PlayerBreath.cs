@@ -16,9 +16,13 @@ namespace Assembly.Components.Actors.Player
     public IObservable<bool> OnBreathStop => _IsExhaling.Where(x => !x);
 
 
-    [SerializeField] float msecExhalableLimit = 3000;
-    [SerializeField] float msecExhaling;
-    [SerializeField] float msecCooldown;
+    [SerializeField] float _msecExhalableLimit = 3000;
+    [SerializeField] float _msecExhaling;
+    [SerializeField] float _msecCooldown;
+    public float msecExhalableLimit => _msecExhalableLimit;
+    public float msecExhaling => _msecExhaling;
+    public float msecCooldown => _msecCooldown;
+    public bool isCoolingDown => msecCooldown != 0;
 
     void Awake()
     {
@@ -28,7 +32,7 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(delta =>
           {
             psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-            msecExhaling += delta.Interval.Milliseconds;
+            _msecExhaling += delta.Interval.Milliseconds;
           }).AddTo(this);
 
       this.FixedUpdateAsObservable()
@@ -36,11 +40,11 @@ namespace Assembly.Components.Actors.Player
           .Where(_ => isCoolingDown)
           .Subscribe(delta =>
           {
-            msecCooldown -= delta.Interval.Milliseconds;
+            _msecCooldown -= delta.Interval.Milliseconds;
 
             if (msecCooldown <= 0)
             {
-              msecCooldown = 0;
+              _msecCooldown = 0;
               RemoveOveruseLimitation();
             }
           }).AddTo(this);
@@ -93,12 +97,11 @@ namespace Assembly.Components.Actors.Player
     }
 
 
-    bool isCoolingDown => msecCooldown != 0;
     void CooldownStart()
     {
       psFlameBreath.Stop();
-      msecCooldown = msecExhaling;
-      msecExhaling = 0;
+      _msecCooldown = msecExhaling;
+      _msecExhaling = 0;
     }
 
 
