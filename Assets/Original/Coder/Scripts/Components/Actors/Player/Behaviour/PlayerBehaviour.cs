@@ -67,7 +67,6 @@ namespace Assembly.Components.Actors.Player
     }
 
     #region editable params
-    [SerializeField] Animator anim;
     [SerializeField] BehaviourParams _bp = new BehaviourParams(5f, 3f, 3.5f, 1.8f);
     [SerializeField] GravityScale _scaleGravity;
 
@@ -111,9 +110,6 @@ namespace Assembly.Components.Actors.Player
       Global.Control.HorizontalMoveInput
           .Where(hmi => hmi == 0)
           .Subscribe(MoveHorizontal)
-          .AddTo(this);
-      Global.Control.HorizontalMoveInput
-          .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
           .AddTo(this);
 
       #region hold
