@@ -92,7 +92,7 @@ namespace Assembly.Components.Actors
           .Where(dir => dir != LookDir.Value)
           .Subscribe(dir =>
           {
-            transform.localScale *= new Vector2(-1, 1);
+            transform.localScale = transform.localScale.Xyz();
             LookDir.Value = dir;
           })
           .AddTo(this);
