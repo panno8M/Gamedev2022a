@@ -19,24 +19,24 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(_ =>
           {
             _player.interactor.Forget();
-            _player.controlMethod = PlayerAct.ControlMethod.IgnoreAnyInput;
-          });
+            _player.controlMethod.Value = PlayerAct.ControlMethod.IgnoreAnyInput;
+          }).AddTo(this);
 
       _player.Damagable.OnBroken
         .Delay(System.TimeSpan.FromMilliseconds(1000))
-        .Subscribe(_ => Global.PlayerRespawn.Return());
+        .Subscribe(_ => Global.PlayerRespawn.Return())
+        .AddTo(this);
 
       _player.Damagable.OnBroken
         .Delay(System.TimeSpan.FromMilliseconds(3000))
-        .Subscribe(_ => Global.PlayerRespawn.Rent());
+        .Subscribe(_ => Global.PlayerRespawn.Rent())
+        .AddTo(this);
 
       Global.PlayerRespawn.OnSpawn
         .Subscribe(instance =>
         {
-          instance.Damagable.Repair();
-          instance.controlMethod = PlayerAct.ControlMethod.ActiveAll;
-          instance.transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
-        });
+            instance.InitializeCondition();
+        }).AddTo(this);
     }
   }
 }

@@ -24,14 +24,21 @@ namespace Assembly.Components.Actors
     Subject<Direction> _whileWalking = new Subject<Direction>();
     Subject<Direction> _whileSkywalking = new Subject<Direction>();
     Subject<Unit> _afterBehavior = new Subject<Unit>();
+    ReadOnlyReactiveProperty<float> _horizontalMove;
 
     public IObservable<Direction> WhileWalking => _whileWalking;
     public IObservable<Direction> WhileSkywalking => _whileSkywalking;
     public IObservable<Unit> AfterBehavior => _afterBehavior;
 
+    public ReadOnlyReactiveProperty<float> HorizontalMove => _horizontalMove ?? (_horizontalMove = Global.Control.HorizontalMoveInput
+        .Where(hmi => isControlAccepting)
+        .Merge(controlMethod.Where(x => x == ControlMethod.IgnoreAnyInput).Select(x => 0f))
+        .ToReadOnlyReactiveProperty()
+        );
+
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
-    public ControlMethod controlMethod;
-    public bool isControlAccepting => controlMethod != ControlMethod.IgnoreAnyInput;
+    public ReactiveProperty<ControlMethod> controlMethod = new ReactiveProperty<ControlMethod>();
+    public bool isControlAccepting => controlMethod.Value != ControlMethod.IgnoreAnyInput;
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
@@ -65,6 +72,16 @@ namespace Assembly.Components.Actors
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
+    public void InitializeCondition()
+    {
+      Damagable.Repair();
+      controlMethod.Value = ControlMethod.ActiveAll;
+      transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
+      var ls = transform.localScale;
+      transform.localScale = new Vector3(Mathf.Abs(ls.x), ls.y, ls.z);
+      LookDir.Value = Direction.Right;
+      _wallCollidingDirection = 0;
+    }
 
     void Awake()
     {
@@ -98,7 +115,7 @@ namespace Assembly.Components.Actors
 
       this.FixedUpdateAsObservable()
           .Where(_ => isControlAccepting)
-          .Select(_ => Global.Control.HorizontalMoveInput.Value)
+          .Select(_ => HorizontalMove.Value)
           .Subscribe(hmi =>
           {
             if (hmi != 0 && hmi != _wallCollidingDirection)
@@ -116,12 +133,10 @@ namespace Assembly.Components.Actors
           });
 
 
-      Global.Control.HorizontalMoveInput
-          .Where(_ => isControlAccepting)
-          .Select(hmi =>
-                  (hmi == 1) ? Direction.Right :
-                  (hmi == -1) ? Direction.Left :
-                  LookDir.Value)
+      HorizontalMove
+          .Select(hmi => (hmi != 0)
+                    ? (Direction)hmi
+                    : LookDir.Value)
           .Where(dir => dir != LookDir.Value)
           .Subscribe(dir =>
           {

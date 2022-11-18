@@ -11,7 +11,8 @@ namespace Assembly.Components.Actors.Player
     [SerializeField] Animator _anim;
     void Awake()
     {
-      Global.Control.HorizontalMoveInput
+      _player.HorizontalMove
+          .ThrottleFrame(5)
           .Subscribe(Walk)
           .AddTo(this);
 
