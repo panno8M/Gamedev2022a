@@ -102,12 +102,10 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(hmi => StopHorizontal())
           .AddTo(this);
 
-      #region hold
-      this.FixedUpdateAsObservable()
+      player.AfterBehavior
           .Select(_ => player.interactor.holder.HoldingItem.Value)
           .Where(item => item)
           .Subscribe(item => item.rb.MovePosition(player.interactor.holder.transform.position));
-      #endregion
     }
 
     void sbsc_AddGravity()

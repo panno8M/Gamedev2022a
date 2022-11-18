@@ -22,9 +22,11 @@ namespace Assembly.Components.Actors
 
     Subject<Direction> _whileWalking = new Subject<Direction>();
     Subject<Direction> _whileSkywalking = new Subject<Direction>();
+    Subject<Unit> _afterBehavior = new Subject<Unit>();
 
     public IObservable<Direction> WhileWalking => _whileWalking;
     public IObservable<Direction> WhileSkywalking => _whileSkywalking;
+    public IObservable<Unit> AfterBehavior => _afterBehavior;
 
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 
@@ -93,15 +95,18 @@ namespace Assembly.Components.Actors
           .Select(_ => Global.Control.HorizontalMoveInput.Value)
           .Subscribe(hmi =>
           {
-            if (hmi == 0 || hmi == _wallCollidingDirection) { return; }
-            if (isOnGround.Value)
+            if (hmi != 0 || hmi != _wallCollidingDirection)
             {
-              _whileWalking.OnNext(LookDir.Value);
+              if (isOnGround.Value)
+              {
+                _whileWalking.OnNext(LookDir.Value);
+              }
+              else
+              {
+                _whileSkywalking.OnNext(LookDir.Value);
+              }
             }
-            else
-            {
-              _whileSkywalking.OnNext(LookDir.Value);
-            }
+            _afterBehavior.OnNext(Unit.Default);
           });
 
 
