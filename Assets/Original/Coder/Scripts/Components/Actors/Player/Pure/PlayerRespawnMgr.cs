@@ -28,6 +28,9 @@ namespace Assembly.Components.Actors.Player.Pure
       instance.Damagable.Repair();
       instance.transform.position = spawnAt.position;
     }
+    protected override void OnBeforeReturn(PlayerAct instance)
+    {
+    }
   }
 
   public class PlayerRespawnMgr : UniqueBehaviour<PlayerRespawnMgr>
@@ -43,33 +46,37 @@ namespace Assembly.Components.Actors.Player.Pure
 
     BehaviorSubject<PlayerAct> _OnRent = new BehaviorSubject<PlayerAct>(null);
     public IObservable<PlayerAct> OnRent => _OnRent.Where(x => x);
+    Subject<PlayerAct> _OnReturn = new Subject<PlayerAct>();
+    public IObservable<PlayerAct> OnReturn => _OnReturn;
 
     public PlayerAct Rent() {
       var result = pool.Rent();
       if (result) { _OnRent.OnNext(result); }
       return result;
     }
+    public void Return() {
+      if (Global.Player) { _OnReturn.OnNext(Global.Player); }
+      pool.Return(Global.Player);
+    }
 
     void Awake()
     {
       this.OnDestroyAsObservable()
           .Subscribe(_ => pool.Dispose());
-      Respawn();
+      Rent();
     }
 
     void Start()
     {
-
       Global.Player.Damagable.OnBroken
-          .Delay(TimeSpan.FromSeconds(0.5f))
-          .Subscribe(_ => Respawn());
+          .Subscribe(_ => Return());
 
-      Global.Player.Damagable.OnBroken
-          .Subscribe(_ => pool.Return(Global.Player))
-          .AddTo(this);
+      OnReturn
+        .Delay(TimeSpan.FromMilliseconds(2000))
+        .Subscribe(_ => Rent());
     }
 
-    public PlayerAct Respawn() { return Rent(); }
+    public PlayerAct RequestRespawn() { return Rent(); }
 
   }
 }

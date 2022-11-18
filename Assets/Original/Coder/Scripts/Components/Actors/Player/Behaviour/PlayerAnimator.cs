@@ -22,6 +22,14 @@ namespace Assembly.Components.Actors.Player
       _breath.IsExhaling
           .Subscribe(Breath)
           .AddTo(this);
+    
+      _player.Damagable.OnBroken
+          .Subscribe(Die)
+          .AddTo(this);
+
+      _player.Damagable.OnRepaired
+          .Subscribe(Revival)
+          .AddTo(this);
     }
 
     void Walk(bool b)
@@ -38,9 +46,9 @@ namespace Assembly.Components.Actors.Player
       _anim.SetBool("Grab", holdable);
     }
 
-    void Breath(bool b)
-    {
-      _anim.SetBool("Fire", b);
-    }
+    void Breath(bool b) { _anim.SetBool("Fire", b); }
+    void Die(bool b) { _anim.SetBool("Die", b); }
+    void Die(Unit _) { Die(true); }
+    void Revival(Unit _) { Die(false); }
   }
 }
