@@ -20,6 +20,12 @@ namespace Assembly.Components.Actors
     IObservable<Unit> _onJump;
     IObservable<Unit> _onLand;
 
+    Subject<Direction> _whileWalking = new Subject<Direction>();
+    Subject<Direction> _whileSkywalking = new Subject<Direction>();
+
+    public IObservable<Direction> WhileWalking => _whileWalking;
+    public IObservable<Direction> WhileSkywalking => _whileSkywalking;
+
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
 
     public IObservable<Unit> OnJump => _onJump ??
@@ -43,14 +49,13 @@ namespace Assembly.Components.Actors
     #region behaviour statements
     [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
     [SerializeField] PlayerFlapCtl _flapCtl = new PlayerFlapCtl(1);
-    [SerializeField] float _wallCollidingBias;
+    [SerializeField] float _wallCollidingDirection;
     #endregion
 
     #region accessors
     public DamagableWrapper Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
     public Interactor interactor => _interactor;
-    public float wallCollidingBias => _wallCollidingBias;
     public PlayerFlapCtl flapCtl => _flapCtl;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
@@ -70,7 +75,7 @@ namespace Assembly.Components.Actors
               }
               else
               {
-                _wallCollidingBias =
+                _wallCollidingDirection =
                       (contact.normal.x > 0) ? -1 :
                       (contact.normal.x < 0) ? 1 :
                       0;
@@ -81,8 +86,24 @@ namespace Assembly.Components.Actors
           .Subscribe(collision =>
           {
             _isOnGround.Value = false;
-            _wallCollidingBias = 0;
+            _wallCollidingDirection = 0;
           });
+
+      this.FixedUpdateAsObservable()
+          .Select(_ => Global.Control.HorizontalMoveInput.Value)
+          .Subscribe(hmi =>
+          {
+            if (hmi == 0 || hmi == _wallCollidingDirection) { return; }
+            if (isOnGround.Value)
+            {
+              _whileWalking.OnNext(LookDir.Value);
+            }
+            else
+            {
+              _whileSkywalking.OnNext(LookDir.Value);
+            }
+          });
+
 
       Global.Control.HorizontalMoveInput
           .Select(hmi =>
