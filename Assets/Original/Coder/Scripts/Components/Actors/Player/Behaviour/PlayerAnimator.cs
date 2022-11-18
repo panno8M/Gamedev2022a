@@ -7,6 +7,7 @@ namespace Assembly.Components.Actors.Player
   public class PlayerAnimator : MonoBehaviour
   {
     [SerializeField] PlayerAct _player;
+    [SerializeField] PlayerBreath _breath;
     [SerializeField] Animator _anim;
     void Awake()
     {
@@ -16,6 +17,10 @@ namespace Assembly.Components.Actors.Player
 
       _player.interactor.holder.HoldingItem
           .Subscribe(Hold)
+          .AddTo(this);
+
+      _breath.IsExhaling
+          .Subscribe(Breath)
           .AddTo(this);
     }
 
@@ -31,6 +36,11 @@ namespace Assembly.Components.Actors.Player
     void Hold(HoldableModule holdable)
     {
       _anim.SetBool("Grab", holdable);
+    }
+
+    void Breath(bool b)
+    {
+      _anim.SetBool("Fire", b);
     }
   }
 }

@@ -133,7 +133,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 819544957}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.1, y: 1.06, z: 0}
+  m_LocalPosition: {x: 1.43, y: 1.06, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5360,7 +5360,7 @@ MonoBehaviour:
     _upperLimitOverriding: 0
     _currentCnt:
       value: 0
-  _wallCollidingBias: 0
+  _wallCollidingDirection: 0
 --- !u!114 &1855202801
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5412,6 +5412,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _player: {fileID: 1855202803}
+  _breath: {fileID: 1855202801}
   _anim: {fileID: 8353330523695600826}
 --- !u!1001 &1516644082
 PrefabInstance:
