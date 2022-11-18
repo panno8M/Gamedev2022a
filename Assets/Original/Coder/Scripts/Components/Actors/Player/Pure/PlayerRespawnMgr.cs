@@ -68,9 +68,6 @@ namespace Assembly.Components.Actors.Player.Pure
 
     void Start()
     {
-      Global.Player.Damagable.OnBroken
-          .Subscribe(_ => Return());
-
       OnReturn
         .Delay(TimeSpan.FromMilliseconds(2000))
         .Subscribe(_ => Rent());

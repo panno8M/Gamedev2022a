@@ -15,6 +15,7 @@ namespace Assembly.Components.Actors
 
 
     public enum Direction { Left = -1, Right = 1 }
+    public enum ControlMethod { ActiveAll, IgnoreAnyInput }
 
     #region forBehaviourControlling
     IObservable<Unit> _onJump;
@@ -29,6 +30,8 @@ namespace Assembly.Components.Actors
     public IObservable<Unit> AfterBehavior => _afterBehavior;
 
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
+    public ControlMethod controlMethod;
+    public bool isControlAccepting => controlMethod != ControlMethod.IgnoreAnyInput;
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
@@ -66,6 +69,7 @@ namespace Assembly.Components.Actors
     void Awake()
     {
       this.OnCollisionStayAsObservable()
+          .Where(_ => isControlAccepting)
           .Subscribe(collision =>
           {
             foreach (var contact in collision.contacts)
@@ -85,6 +89,7 @@ namespace Assembly.Components.Actors
             }
           });
       this.OnCollisionExitAsObservable()
+          .Where(_ => isControlAccepting)
           .Subscribe(collision =>
           {
             _isOnGround.Value = false;
@@ -92,6 +97,7 @@ namespace Assembly.Components.Actors
           });
 
       this.FixedUpdateAsObservable()
+          .Where(_ => isControlAccepting)
           .Select(_ => Global.Control.HorizontalMoveInput.Value)
           .Subscribe(hmi =>
           {
@@ -111,6 +117,7 @@ namespace Assembly.Components.Actors
 
 
       Global.Control.HorizontalMoveInput
+          .Where(_ => isControlAccepting)
           .Select(hmi =>
                   (hmi == 1) ? Direction.Right :
                   (hmi == -1) ? Direction.Left :
@@ -124,21 +131,29 @@ namespace Assembly.Components.Actors
           .AddTo(this);
 
       Damagable.OnBroken
-          .Subscribe(_ => _interactor.Forget());
+          .Subscribe(_ =>
+          {
+            _interactor.Forget();
+            Global.PlayerRespawn.Return();
+            controlMethod = ControlMethod.IgnoreAnyInput;
+          });
 
       Global.Control.Interact
+          .Where(_ => isControlAccepting)
           .Subscribe(_ =>
           {
             _interactor.Process();
           }).AddTo(this);
 
       Global.Control.Respawn
+          .Where(_ => isControlAccepting)
           .Subscribe(_ =>
           {
             Damagable.Break();
           }).AddTo(this);
 
       Global.Control.GoUp
+          .Where(_ => isControlAccepting)
           .Where(_ => !_isOnGround.Value)
           .Subscribe(_ =>
           {
