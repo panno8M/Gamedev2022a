@@ -31,6 +31,18 @@ namespace Assembly.Components.Actors.Player
       _player.Damagable.OnRepaired
           .Subscribe(Revival)
           .AddTo(this);
+
+      _player.OnJump
+          .Subscribe(Jump)
+          .AddTo(this);
+
+      _player.OnLand
+          .Subscribe(Land)
+          .AddTo(this);
+
+      _player.OnFlapWhileFalling
+          .Subscribe(Flap)
+          .AddTo(this);
     }
 
     void Walk(bool b)
@@ -51,5 +63,9 @@ namespace Assembly.Components.Actors.Player
     void Die(bool b) { _anim.SetBool("Die", b); }
     void Die(Unit _) { Die(true); }
     void Revival(Unit _) { Die(false); }
+    void Jump(bool b) { _anim.SetBool("Jump", b); }
+    void Jump(Unit _) { Jump(true); }
+    void Land(Unit _) { Jump(false); }
+    void Flap(int i) { _anim.SetTrigger("Wing"); }
   }
 }
