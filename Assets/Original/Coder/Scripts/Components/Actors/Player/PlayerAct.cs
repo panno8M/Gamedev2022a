@@ -95,7 +95,7 @@ namespace Assembly.Components.Actors
           .Select(_ => Global.Control.HorizontalMoveInput.Value)
           .Subscribe(hmi =>
           {
-            if (hmi != 0 || hmi != _wallCollidingDirection)
+            if (hmi != 0 && hmi != _wallCollidingDirection)
             {
               if (isOnGround.Value)
               {
