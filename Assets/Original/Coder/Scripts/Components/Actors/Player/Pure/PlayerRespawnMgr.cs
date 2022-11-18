@@ -22,15 +22,6 @@ namespace Assembly.Components.Actors.Player.Pure
       result.name = prefab.name;
       return result.GetComponent<PlayerAct>();
     }
-    protected override void OnBeforeRent(PlayerAct instance)
-    {
-      base.OnBeforeRent(instance);
-      instance.Damagable.Repair();
-      instance.transform.position = spawnAt.position;
-    }
-    protected override void OnBeforeReturn(PlayerAct instance)
-    {
-    }
   }
 
   public class PlayerRespawnMgr : UniqueBehaviour<PlayerRespawnMgr>
@@ -44,18 +35,17 @@ namespace Assembly.Components.Actors.Player.Pure
     PlayerPool _pool;
     PlayerPool pool => _pool ?? (_pool = new PlayerPool(_prefPlayer, activeSpawnPoint));
 
-    BehaviorSubject<PlayerAct> _OnRent = new BehaviorSubject<PlayerAct>(null);
-    public IObservable<PlayerAct> OnRent => _OnRent.Where(x => x);
-    Subject<PlayerAct> _OnReturn = new Subject<PlayerAct>();
-    public IObservable<PlayerAct> OnReturn => _OnReturn;
+    BehaviorSubject<PlayerAct> _OnSpawn = new BehaviorSubject<PlayerAct>(null);
+    public IObservable<PlayerAct> OnSpawn => _OnSpawn.Where(x => x);
 
-    public PlayerAct Rent() {
+    public PlayerAct Rent()
+    {
       var result = pool.Rent();
-      if (result) { _OnRent.OnNext(result); }
+      if (result) { _OnSpawn.OnNext(result); }
       return result;
     }
-    public void Return() {
-      if (Global.Player) { _OnReturn.OnNext(Global.Player); }
+    public void Return()
+    {
       pool.Return(Global.Player);
     }
 
@@ -64,13 +54,6 @@ namespace Assembly.Components.Actors.Player.Pure
       this.OnDestroyAsObservable()
           .Subscribe(_ => pool.Dispose());
       Rent();
-    }
-
-    void Start()
-    {
-      OnReturn
-        .Delay(TimeSpan.FromMilliseconds(2000))
-        .Subscribe(_ => Rent());
     }
 
     public PlayerAct RequestRespawn() { return Rent(); }
