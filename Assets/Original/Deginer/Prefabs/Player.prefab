@@ -5277,8 +5277,9 @@ GameObject:
   - component: {fileID: 1855202800}
   - component: {fileID: 1855202804}
   - component: {fileID: 1855202803}
-  - component: {fileID: 1855202801}
   - component: {fileID: 1855202802}
+  - component: {fileID: 1855202801}
+  - component: {fileID: 3112990356196485283}
   - component: {fileID: 281757296479911890}
   m_Layer: 3
   m_Name: Player
@@ -5348,6 +5349,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LookDir:
     value: 1
+  controlMethod: 0
   groundNormalDegreeThreshold: 50
   damagable: {fileID: 2142224226}
   aiVisible: {fileID: 85444141}
@@ -5361,22 +5363,6 @@ MonoBehaviour:
     _currentCnt:
       value: 0
   _wallCollidingDirection: 0
---- !u!114 &1855202801
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8353330523506930298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02ffc7063df45514da2fd43c693504b2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _player: {fileID: 1855202803}
-  _playerBehaviour: {fileID: 1855202802}
-  psFlameBreath: {fileID: 5944828297956823533}
-  _msecExhalableLimit: 3000
 --- !u!114 &1855202802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5399,6 +5385,35 @@ MonoBehaviour:
   _scaleGravity:
     normal: 1.3
     flying: 0.1
+--- !u!114 &1855202801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02ffc7063df45514da2fd43c693504b2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 1855202803}
+  _playerBehaviour: {fileID: 1855202802}
+  psFlameBreath: {fileID: 5944828297956823533}
+  _msecExhalableLimit: 3000
+--- !u!114 &3112990356196485283
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aad08fd233e0b2c4bb7479c61316a93f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _player: {fileID: 1855202803}
 --- !u!114 &281757296479911890
 MonoBehaviour:
   m_ObjectHideFlags: 0

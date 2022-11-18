@@ -130,26 +130,11 @@ namespace Assembly.Components.Actors
           })
           .AddTo(this);
 
-      Damagable.OnBroken
-          .Subscribe(_ =>
-          {
-            _interactor.Forget();
-            Global.PlayerRespawn.Return();
-            controlMethod = ControlMethod.IgnoreAnyInput;
-          });
-
       Global.Control.Interact
           .Where(_ => isControlAccepting)
           .Subscribe(_ =>
           {
             _interactor.Process();
-          }).AddTo(this);
-
-      Global.Control.Respawn
-          .Where(_ => isControlAccepting)
-          .Subscribe(_ =>
-          {
-            Damagable.Break();
           }).AddTo(this);
 
       Global.Control.GoUp
