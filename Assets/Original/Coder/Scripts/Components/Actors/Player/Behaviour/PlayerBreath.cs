@@ -63,7 +63,7 @@ namespace Assembly.Components.Actors.Player
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => !_player.interactor.holder.HoldingItem.Value)
+          .Where(_ => !_player.interactor.holder.hasItem)
           .Where(_ => !isCoolingDown)
           .Subscribe(_ => _IsExhaling.Value = true)
           .AddTo(this);

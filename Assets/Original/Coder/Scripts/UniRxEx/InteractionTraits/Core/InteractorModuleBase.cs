@@ -9,7 +9,7 @@ namespace UniRx.Ex.InteractionTraits.Core
     [SerializeField] Interactor _interactor;
     public Interactor interactor => _interactor;
 
-    protected ReactiveCollection<Interactable> _interactables => _interactor.interactables;
+    protected List<Interactable> _interactables => _interactor.interactables;
 
     public abstract bool isInteractable { get; }
     public abstract void Discard();
