@@ -52,8 +52,10 @@ MonoBehaviour:
   inspector:
     horizontalMove: 0
     goUp: 0
-    doBreath: 0
+    breath: 0
+    interact: 0
     mousePos: {x: 0, y: 0}
+    mousePosStage: {x: 0, y: 0}
 --- !u!114 &2544326560853072376
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -66,7 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c112e9acebd65c45a362d0e8c09b160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefPlayer: {fileID: 4042233797003262917, guid: dbcdc19c2e9d8294a9eb71a49a993fef,
+  _prefPlayer: {fileID: 8353330523506930298, guid: 8c8b076293f7c694ab8c0776d8ee7594,
     type: 3}
   activeSpawnPoint: {fileID: 7946698944128784196}
 --- !u!114 &6092166074414875935
