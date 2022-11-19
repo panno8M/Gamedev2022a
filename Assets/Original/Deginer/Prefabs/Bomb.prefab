@@ -131,7 +131,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lmDamagable:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 5120
   _damageUnit:
     kind: 4
     scale: 1
@@ -5281,7 +5281,7 @@ MonoBehaviour:
   param:
     stamina: 1
     secCoolDownToNextDamage: 0
-    allowDamageSource: 1
+    allowDamageSource: 5
     damageDisabled: 0
   inspector:
     IsBroken: 0

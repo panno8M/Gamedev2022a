@@ -10,7 +10,7 @@ namespace Assembly.Components.Senses
 {
   public class Damager : MonoBehaviour
   {
-    [SerializeField] LayerMask lmDamagable = new Layers(Layer.Damagable);
+    [SerializeField] LayerMask lmDamagable = new Layers(Layer.Damagable, Layer.DamagableFromPlayer);
     [SerializeField] DamageUnit _damageUnit;
     ParticleSystem ps;
     List<ParticleCollisionEvent> ev;
