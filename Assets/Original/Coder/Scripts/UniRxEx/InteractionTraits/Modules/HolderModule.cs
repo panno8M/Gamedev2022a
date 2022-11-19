@@ -17,6 +17,7 @@ namespace UniRx.Ex.InteractionTraits
     public Subject<HoldableModule> _RequestRelease = new Subject<HoldableModule>();
     public IObservable<HoldableModule> RequestRelease => _RequestRelease;
 
+    public Transform _prevParent;
     ReadOnlyReactiveProperty<HoldableModule> _HoldingItem;
     public ReadOnlyReactiveProperty<HoldableModule> HoldingItem => _HoldingItem ?? (
         _HoldingItem = Observable.Merge(
@@ -70,6 +71,18 @@ namespace UniRx.Ex.InteractionTraits
           return;
         }
       }
+    }
+
+    public void Grab(HoldableModule item)
+    {
+      _prevParent = item.rb.transform.parent;
+      item.rb.transform.SetParent(transform);
+      item.rb.transform.localPosition = Vector3.zero;
+    }
+    public void Ungrab(HoldableModule item)
+    {
+      item.rb.transform.SetParent(_prevParent);
+      _prevParent = null;
     }
 
     public bool hasItem => HoldingItem.Value != null;
