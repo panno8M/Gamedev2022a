@@ -102,10 +102,10 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(hmi => StopHorizontal())
           .AddTo(this);
 
-      player.AfterBehavior
-          .Select(_ => player.interactor.holder.HoldingItem.Value)
-          .Where(item => item)
-          .Subscribe(item => item.rb.MovePosition(player.interactor.holder.transform.position));
+      player.interactor.holder.RequestHold
+          .Subscribe(player.interactor.holder.Grab);
+      player.interactor.holder.RequestRelease
+          .Subscribe(player.interactor.holder.Ungrab);
     }
 
     void sbsc_AddGravity()
