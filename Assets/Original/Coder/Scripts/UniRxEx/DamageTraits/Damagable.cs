@@ -32,8 +32,7 @@ namespace UniRx.Ex.DamageTraits {
                 .ToReadOnlyReactiveProperty();
 
             _onBroken = TotalDamage
-                .Where(_ => _param.stamina > 0)
-                .Where(total => total >= _param.stamina)
+                .Where(_ => isBroken)
                 .AsUnitObservable();
         }
 
@@ -50,6 +49,8 @@ namespace UniRx.Ex.DamageTraits {
         public IObservable<DamageUnit> OnAffected => _onAffected;
         public ReadOnlyReactiveProperty<int> TotalDamage => _totalDamage;
         public IObservable<Unit> OnBroken => _onBroken;
+
+        public bool isBroken => 0 < _param.stamina && _param.stamina <= _totalDamage.Value;
 
         public void Affect(DamageUnit du) { _affect.OnNext(du); }
         public void Repair() { _repair.OnNext(Unit.Default); }

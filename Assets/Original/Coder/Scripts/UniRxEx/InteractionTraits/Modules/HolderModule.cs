@@ -1,5 +1,9 @@
 using System;
 using UniRx.Ex.InteractionTraits.Core;
+using System.Collections.Generic;
+#if DEBUG
+using UnityEngine;
+#endif
 
 namespace UniRx.Ex.InteractionTraits
 {
@@ -27,6 +31,9 @@ namespace UniRx.Ex.InteractionTraits
         {
           ReleaseForce();
         });
+#if DEBUG
+      Inspect();
+#endif
     }
 
     public void HoldForce(HoldableModule item)
@@ -67,7 +74,7 @@ namespace UniRx.Ex.InteractionTraits
 
     public bool hasItem => HoldingItem.Value != null;
 
-    
+
     public override bool isInteractable => !hasItem;
 
     public override void Discard()
@@ -87,6 +94,31 @@ namespace UniRx.Ex.InteractionTraits
     }
     #endregion
 
+#if DEBUG
+    [Serializable]
+    struct Inspector
+    {
+      public List<HoldableModule> Holdables;
+      public HoldableModule Holding;
+    }
+    [SerializeField] Inspector inspector;
+
+    void Inspect()
+    {
+      HoldingItem
+          .Subscribe(x => inspector.Holding = x);
+      _interactables
+          .ObserveAdd()
+          .Select(x => x.Value.holdable)
+          .Where(x => x)
+          .Subscribe(x => inspector.Holdables.Add(x));
+      _interactables
+          .ObserveRemove()
+          .Select(x => x.Value.holdable)
+          .Where(x => x)
+          .Subscribe(x => inspector.Holdables.Remove(x));
+    }
+#endif
 
   }
 

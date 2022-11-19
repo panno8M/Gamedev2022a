@@ -19,6 +19,7 @@ namespace Assembly.Components.Senses
     public IObservable<DamageUnit> OnAffected => damagable.OnAffected;
     public ReadOnlyReactiveProperty<int> TotalDamage => damagable.TotalDamage;
     public IObservable<Unit> OnBroken => damagable.OnBroken;
+    public bool isBroken => damagable.isBroken;
 
     public void Affect(DamageUnit du) { damagable.Affect(du); }
     public void Repair() { damagable.Repair(); }

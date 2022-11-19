@@ -67,7 +67,6 @@ namespace Assembly.Components.Actors.Player
     }
 
     #region editable params
-    [SerializeField] Animator anim;
     [SerializeField] BehaviourParams _bp = new BehaviourParams(5f, 3f, 3.5f, 1.8f);
     [SerializeField] GravityScale _scaleGravity;
 
@@ -93,35 +92,20 @@ namespace Assembly.Components.Actors.Player
       player.OnJump.Subscribe(_ => Jump()).AddTo(this);
       player.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
 
-      this.FixedUpdateAsObservable()
-          .Select(_ => Global.Control.HorizontalMoveInput.Value)
-          .Where(hmi => hmi != 0)
-          .Where(_ => !player.isOnGround.Value)
-          .Where(hmi => hmi != player.wallCollidingBias)
+      player.WhileWalking
           .Subscribe(MoveHorizontal);
-
-      this.FixedUpdateAsObservable()
-          .Select(_ => Global.Control.HorizontalMoveInput.Value)
-          .Where(hmi => hmi != 0)
-          .Where(_ => player.isOnGround.Value)
-          .Where(hmi => hmi != player.wallCollidingBias)
-          .Subscribe(MoveHorizontal).AddTo(this);
-
+      player.WhileSkywalking
+          .Subscribe(MoveHorizontal);
 
       Global.Control.HorizontalMoveInput
           .Where(hmi => hmi == 0)
-          .Subscribe(MoveHorizontal)
-          .AddTo(this);
-      Global.Control.HorizontalMoveInput
-          .Subscribe(hmi => anim.SetBool("Walk", hmi != 0))
+          .Subscribe(hmi => StopHorizontal())
           .AddTo(this);
 
-      #region hold
-      this.FixedUpdateAsObservable()
+      player.AfterBehavior
           .Select(_ => player.interactor.holder.HoldingItem.Value)
           .Where(item => item)
           .Subscribe(item => item.rb.MovePosition(player.interactor.holder.transform.position));
-      #endregion
     }
 
     void sbsc_AddGravity()
@@ -140,12 +124,16 @@ namespace Assembly.Components.Actors.Player
     }
 
 
-    void MoveHorizontal(float hmi)
+    void MoveHorizontal(PlayerAct.Direction dir)
     {
       rb.velocity = new Vector3(
-          hmi * _bp.MoveSpeed(),
+          (float)dir * _bp.MoveSpeed(),
           rb.velocity.y,
-          0);
+          rb.velocity.z);
+    }
+    void StopHorizontal()
+    {
+      rb.velocity = rb.velocity._yz();
     }
   }
 }

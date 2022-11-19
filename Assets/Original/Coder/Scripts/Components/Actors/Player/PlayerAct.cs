@@ -15,12 +15,30 @@ namespace Assembly.Components.Actors
 
 
     public enum Direction { Left = -1, Right = 1 }
+    public enum ControlMethod { ActiveAll, IgnoreAnyInput }
 
     #region forBehaviourControlling
     IObservable<Unit> _onJump;
     IObservable<Unit> _onLand;
 
+    Subject<Direction> _whileWalking = new Subject<Direction>();
+    Subject<Direction> _whileSkywalking = new Subject<Direction>();
+    Subject<Unit> _afterBehavior = new Subject<Unit>();
+    ReadOnlyReactiveProperty<float> _horizontalMove;
+
+    public IObservable<Direction> WhileWalking => _whileWalking;
+    public IObservable<Direction> WhileSkywalking => _whileSkywalking;
+    public IObservable<Unit> AfterBehavior => _afterBehavior;
+
+    public ReadOnlyReactiveProperty<float> HorizontalMove => _horizontalMove ?? (_horizontalMove = Global.Control.HorizontalMoveInput
+        .Where(hmi => isControlAccepting)
+        .Merge(controlMethod.Where(x => x == ControlMethod.IgnoreAnyInput).Select(x => 0f))
+        .ToReadOnlyReactiveProperty()
+        );
+
     public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
+    public ReactiveProperty<ControlMethod> controlMethod = new ReactiveProperty<ControlMethod>();
+    public bool isControlAccepting => controlMethod.Value != ControlMethod.IgnoreAnyInput;
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
@@ -43,22 +61,32 @@ namespace Assembly.Components.Actors
     #region behaviour statements
     [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
     [SerializeField] PlayerFlapCtl _flapCtl = new PlayerFlapCtl(1);
-    [SerializeField] float _wallCollidingBias;
+    [SerializeField] float _wallCollidingDirection;
     #endregion
 
     #region accessors
     public DamagableWrapper Damagable => damagable;
     public AiVisible AiVisible => aiVisible;
     public Interactor interactor => _interactor;
-    public float wallCollidingBias => _wallCollidingBias;
     public PlayerFlapCtl flapCtl => _flapCtl;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
+    public void InitializeCondition()
+    {
+      Damagable.Repair();
+      controlMethod.Value = ControlMethod.ActiveAll;
+      transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
+      var ls = transform.localScale;
+      transform.localScale = new Vector3(Mathf.Abs(ls.x), ls.y, ls.z);
+      LookDir.Value = Direction.Right;
+      _wallCollidingDirection = 0;
+    }
 
     void Awake()
     {
       this.OnCollisionStayAsObservable()
+          .Where(_ => isControlAccepting)
           .Subscribe(collision =>
           {
             foreach (var contact in collision.contacts)
@@ -70,7 +98,7 @@ namespace Assembly.Components.Actors
               }
               else
               {
-                _wallCollidingBias =
+                _wallCollidingDirection =
                       (contact.normal.x > 0) ? -1 :
                       (contact.normal.x < 0) ? 1 :
                       0;
@@ -78,41 +106,54 @@ namespace Assembly.Components.Actors
             }
           });
       this.OnCollisionExitAsObservable()
+          .Where(_ => isControlAccepting)
           .Subscribe(collision =>
           {
             _isOnGround.Value = false;
-            _wallCollidingBias = 0;
+            _wallCollidingDirection = 0;
           });
 
-      Global.Control.HorizontalMoveInput
-          .Select(hmi =>
-                  (hmi == 1) ? Direction.Right :
-                  (hmi == -1) ? Direction.Left :
-                  LookDir.Value)
+      this.FixedUpdateAsObservable()
+          .Where(_ => isControlAccepting)
+          .Select(_ => HorizontalMove.Value)
+          .Subscribe(hmi =>
+          {
+            if (hmi != 0 && hmi != _wallCollidingDirection)
+            {
+              if (isOnGround.Value)
+              {
+                _whileWalking.OnNext(LookDir.Value);
+              }
+              else
+              {
+                _whileSkywalking.OnNext(LookDir.Value);
+              }
+            }
+            _afterBehavior.OnNext(Unit.Default);
+          });
+
+
+      HorizontalMove
+          .Select(hmi => (hmi != 0)
+                    ? (Direction)hmi
+                    : LookDir.Value)
           .Where(dir => dir != LookDir.Value)
           .Subscribe(dir =>
           {
-            transform.localScale *= new Vector2(-1, 1);
+            transform.localScale = transform.localScale.Xyz();
             LookDir.Value = dir;
           })
           .AddTo(this);
 
-      Damagable.OnBroken
-          .Subscribe(_ => _interactor.Forget());
-
       Global.Control.Interact
+          .Where(_ => isControlAccepting)
           .Subscribe(_ =>
           {
             _interactor.Process();
           }).AddTo(this);
 
-      Global.Control.Respawn
-          .Subscribe(_ =>
-          {
-            Damagable.Break();
-          }).AddTo(this);
-
       Global.Control.GoUp
+          .Where(_ => isControlAccepting)
           .Where(_ => !_isOnGround.Value)
           .Subscribe(_ =>
           {
