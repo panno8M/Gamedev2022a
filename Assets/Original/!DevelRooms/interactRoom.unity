@@ -141,6 +141,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlameBreath
       objectReference: {fileID: 0}
+    - target: {fileID: 5944828299234186825, guid: f071352f26a707646b4580729edb01e5,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5944828299234186836, guid: f071352f26a707646b4580729edb01e5,
         type: 3}
       propertyPath: m_RootOrder
@@ -5602,6 +5607,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7171335578761235704, guid: d1fb1d47056dcd84083c902081edeff5,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7171335578761235704, guid: d1fb1d47056dcd84083c902081edeff5,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7171335578761235704, guid: d1fb1d47056dcd84083c902081edeff5,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7171335578761235704, guid: d1fb1d47056dcd84083c902081edeff5,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: 7171335578761235704, guid: d1fb1d47056dcd84083c902081edeff5,
         type: 3}

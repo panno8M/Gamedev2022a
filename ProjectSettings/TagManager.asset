@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ctlvol/DroneMovable
   - Ctlvol/Camera
+  - Ground
   layers:
   - Default
   - TransparentFX
@@ -23,7 +24,7 @@ TagManager:
   - Senses/Interactable
   - Senses/Interactor
   - Physics/Item
-  - 
+  - Senses/Damager
   - 
   - 
   - 

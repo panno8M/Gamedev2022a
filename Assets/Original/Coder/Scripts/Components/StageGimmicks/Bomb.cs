@@ -18,10 +18,12 @@ namespace Assembly.Components.StageGimmicks
 
     Rigidbody _rb;
     [SerializeField] SpriteRenderer _renderer;
+    [SerializeField] Collider _damagerCollider;
 
     void Start()
     {
       _rb = GetComponent<Rigidbody>();
+      _damagerCollider.enabled = false;
 
       _damagable.OnBroken
           .Subscribe(_ =>
@@ -36,7 +38,12 @@ namespace Assembly.Components.StageGimmicks
 
       _damagable.OnBroken
           .Delay(TimeSpan.FromSeconds(secExplosionDelay))
-          .Subscribe(_ => { Explode(); Destroy(gameObject, 1); })
+          .Subscribe(_ =>
+          {
+            Explode();
+            _damagerCollider.enabled = true;
+            Destroy(gameObject, 1);
+          })
           .AddTo(this);
 
       _interactable.holdable.OnHold
