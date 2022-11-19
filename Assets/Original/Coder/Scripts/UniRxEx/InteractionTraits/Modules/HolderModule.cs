@@ -18,12 +18,11 @@ namespace UniRx.Ex.InteractionTraits
     public IObservable<HoldableModule> RequestRelease => _RequestRelease;
 
     public Transform _prevParent;
-    ReadOnlyReactiveProperty<HoldableModule> _HoldingItem;
-    public ReadOnlyReactiveProperty<HoldableModule> HoldingItem => _HoldingItem ?? (
-        _HoldingItem = Observable.Merge(
-            RequestHold,
-            RequestRelease.Select(_ => (HoldableModule)null)
-        ).ToReadOnlyReactiveProperty());
+    ReactiveProperty<HoldableModule> _HoldingItem = new ReactiveProperty<HoldableModule>();
+    public IObservable<HoldableModule> HoldingItem => _HoldingItem;
+    public HoldableModule holdingItem => _HoldingItem.Value;
+    public bool hasItem => holdingItem != null;
+
 
     void Awake()
     {
@@ -40,25 +39,28 @@ namespace UniRx.Ex.InteractionTraits
     public void HoldForce(HoldableModule item)
     {
       if (!item.HoldAccepted(this)) { return; }
+      _HoldingItem.Value = item;
       _RequestHold.OnNext(item);
     }
     public bool Hold(HoldableModule item)
     {
       if (item == null) { return false; }
-      if (HoldingItem.Value != null) { return false; }
+      if (hasItem) { return false; }
       HoldForce(item);
       return true;
     }
     public void ReleaseForce()
     {
-      var item = HoldingItem.Value;
+      var item = holdingItem;
       if (!item) { return; }
       if (!item.ReleaseAccepted(this)) { return; }
       _RequestRelease.OnNext(item);
+      Ungrab(item);
+      _HoldingItem.Value = null;
     }
     public void Release(HoldableModule item)
     {
-      if (HoldingItem.Value != item) { return; }
+      if (holdingItem != item) { return; }
       ReleaseForce();
     }
 
@@ -85,9 +87,6 @@ namespace UniRx.Ex.InteractionTraits
       _prevParent = null;
     }
 
-    public bool hasItem => HoldingItem.Value != null;
-
-
     public override bool isInteractable => !hasItem;
 
     public override void Discard()
@@ -111,7 +110,6 @@ namespace UniRx.Ex.InteractionTraits
     [Serializable]
     struct Inspector
     {
-      public List<HoldableModule> Holdables;
       public HoldableModule Holding;
     }
     [SerializeField] Inspector inspector;
@@ -120,16 +118,6 @@ namespace UniRx.Ex.InteractionTraits
     {
       HoldingItem
           .Subscribe(x => inspector.Holding = x);
-      _interactables
-          .ObserveAdd()
-          .Select(x => x.Value.holdable)
-          .Where(x => x)
-          .Subscribe(x => inspector.Holdables.Add(x));
-      _interactables
-          .ObserveRemove()
-          .Select(x => x.Value.holdable)
-          .Where(x => x)
-          .Subscribe(x => inspector.Holdables.Remove(x));
     }
 #endif
 

@@ -9,8 +9,9 @@ namespace UniRx.Ex.InteractionTraits.Core
   public class Interactor : MonoBehaviour
   {
     // TODO: AiSight等と統合できないか？
-    ReactiveCollection<Interactable> _interactables = new ReactiveCollection<Interactable>();
-    public ReactiveCollection<Interactable> interactables => _interactables;
+    [SerializeField]
+    List<Interactable> _interactables = new List<Interactable>();
+    public List<Interactable> interactables => _interactables;
 
     Subject<Unit> _OnForget = new Subject<Unit>();
     public IObservable<Unit> OnForget => _OnForget;
@@ -54,7 +55,9 @@ namespace UniRx.Ex.InteractionTraits.Core
       this.OnTriggerEnterAsObservable()
           .Subscribe(other =>
           {
-            _interactables.Add(other.GetComponent<Interactable>());
+            var interactable = other.GetComponent<Interactable>();
+            if (_interactables.IndexOf(interactable) != -1) { return; }
+            _interactables.Add(interactable);
           });
       this.OnTriggerExitAsObservable()
           .Subscribe(other =>
