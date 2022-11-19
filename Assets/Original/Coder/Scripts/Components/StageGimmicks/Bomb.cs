@@ -17,12 +17,11 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] float secExplosionDelay = 4;
 
     Rigidbody _rb;
-    MeshRenderer _mesh;
+    [SerializeField] SpriteRenderer _renderer;
 
     void Start()
     {
       _rb = GetComponent<Rigidbody>();
-      _mesh = GetComponent<MeshRenderer>();
 
       _damagable.OnBroken
           .Subscribe(_ =>
@@ -64,7 +63,7 @@ namespace Assembly.Components.StageGimmicks
     void Explode()
     {
       _damagable.enabled = false;
-      _mesh.enabled = false;
+      _renderer.enabled = false;
       GetComponent<Collider>().enabled = false;
       _psExplosion.Play();
     }
