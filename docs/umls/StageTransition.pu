@@ -4,20 +4,17 @@
 
 [*] --> Opening
 
-Opening --> GaolStage : Press Any Key
-note on link
-  スキップ可能なムービーを流す
-end note
+Opening --> GaolStage : 右に歩き続ける
 GaolStage --> LabStage : 研究施設内へ続く梯子に到達
 LabStage --> UndergroundStage : 正体不明の何かに襲われる
 UndergroundStage --> BossStage : 出口に続くはずだった行き止まりに到達
-BossStage -l> EndGame : ボスから逃げ切る
+BossStage -u> EndGame : ボスから逃げ切る
 note on link
   無事に研究施設の外に辿り着き
   陽の光に目を細める
 end note
-EndGame -u-> Opening
-Opening -> [*] : Quit Game
+EndGame -u-> [*]
+Opening -l> [*] : 左に歩き続ける
 
 Opening : ゲーム起動時のスタート画面
 
