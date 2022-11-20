@@ -8,8 +8,8 @@ namespace UniRx.Ex.InteractionTraits
   {
     HolderModule _owner;
     public HolderModule owner => _owner;
-    [SerializeField] Rigidbody _rb;
-    public Rigidbody rb => _rb;
+    [SerializeField] Rigidbody _rigidbodyObjectPhysics;
+    public Rigidbody rb => _rigidbodyObjectPhysics;
 
     Subject<HolderModule> _OnHold = new Subject<HolderModule>();
     public IObservable<HolderModule> OnHold => _OnHold;
