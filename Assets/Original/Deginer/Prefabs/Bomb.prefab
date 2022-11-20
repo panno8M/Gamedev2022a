@@ -5114,7 +5114,7 @@ MonoBehaviour:
   _interactable: {fileID: 7171335578221915799}
   _isActive:
     value: 1
-  _rb: {fileID: 7171335578761235706}
+  _rigidbodyObjectPhysics: {fileID: 7171335578761235706}
 --- !u!1 &7171335578761235701
 GameObject:
   m_ObjectHideFlags: 0
