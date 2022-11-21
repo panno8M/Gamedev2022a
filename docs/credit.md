@@ -1,13 +1,32 @@
-> チームメンバーは敬称略
+# Credit
 
-### イラスト・スプライト
+## システム
+* 伊藤大翔 (la .panon.)  
+  [github](https://github.com/panno8M)
 
-#### [十年筆](https://twitter.com/teenader_v)
+## シナリオ
 
-* 背景
-* 主人公
+* 大塚圭介
 
-### BGM
+## グラフィック
 
-#### [時の案内人](https://timelessberry.com)様
-* キカイ人形
+* 塩崎玄武(十年筆)  
+  [twitter](https://twitter.com/teenader_v)
+
+## スクリプト
+
+* 伊藤大翔 (la .panon.)  
+  [github](https://github.com/panno8M)
+
+* 鈴木悠斗
+
+## 制作
+
+オムライスラボ広報部
+
+# お借りしたもの
+
+## BGM
+
+* [時の案内人](https://timelessberry.com)様
+  * キカイ人形
