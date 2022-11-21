@@ -4,10 +4,7 @@
 
 ## 各地詳細
 
-* [Opening][url_stage_opening]
-* [Gaol Stage][url_stage_gaol]
-
-[url_stage_opening]: stages/opening.md
-[url_stage_gaol]: stages/gaolStage.md
+* [オープニング](stages/opening.md)
+* [地下牢ステージ](stages/gaolStage.md)
 
 [img_stageTransition]: umls/StageTransition/Stage%20Transition.svg
