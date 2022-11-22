@@ -1,6 +1,11 @@
 @startuml Stage Transition
 !theme blueprint
 
+state "オープニング" as Opening
+state "地下牢" as GaolStage
+state "ラボラトリー" as LabStage
+state "崩落した地下水路" as UndergroundStage
+state "ボス" as BossStage
 
 [*] --> Opening
 
