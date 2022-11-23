@@ -1,0 +1,47 @@
+@startuml Gimmick - Portal (class diagram)
+!theme blueprint
+
+namespace UnityEngine {
+  class MonoBehaviour {
+    +OnTriggerEnter(Collider)
+    +OnTriggerExit(Collider)
+  }
+}
+
+interface ITransferable {
+  +void OnPortalEnter(Portal)
+  +void OnPortalExit(Portal)
+  +void OnCompleteTransfer(Portal)
+}
+
+class PlayerTransfer {
+  Portal availablePortal
+}
+entity Player
+
+class Portal {
+  Subject<ITransferable> _OnTransferRequest
+  Subject<ITransferable> _OnTransferReady
+  +IObservable<ITransferable> OnTransferRequest
+  +IObservable<ITransferable> OnTransferReady
+  +readonly TransferKind kind
+  +Portal route { get; set; }
+  +bool RequestTransfer(ITransferable)
+  +bool ReadyTransfer(ITransferable)
+}
+enum TransferKind {
+  Door
+  Passage
+  Wormhole
+}
+
+
+UnityEngine.MonoBehaviour <|-- Portal
+ITransferable <|-- PlayerTransfer
+PlayerTransfer *-- Player : have
+
+Portal::kind -> TransferKind
+PlayerTransfer -> Portal::RequestTransfer
+PlayerTransfer -> Portal::ReadyTransfer
+
+@enduml

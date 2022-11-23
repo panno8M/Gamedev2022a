@@ -1,0 +1,47 @@
+@startuml Gimmick - Portal (sequence diagram)
+!theme blueprint
+
+Title Basic Translation
+
+ITransferable -> ITransferable : check
+note right
+他のポータルの転送処理中でないか？
+このポータルは要件と合っているか？
+end note
+
+ITransferable -> Portal : RequestTransfer(target= this)
+note right
+例えばplayerにITransferableを実装した場合、
+wキーが押された時にportalの範囲内に入っているか確認して
+リクエストを送信するなど
+end note
+
+Portal -> Portal : OnTranferRequest.OnNext()
+
+Portal --> ITransferable : ack (returns of RequestTransfer)
+
+ITransferable -> ITransferable : procedure ...
+note right
+E.g. 暗転・ポータルのもとに歩いていくアニメーション
+end note
+
+ITransferable -> Portal : ReadyTransfer(target= this)
+
+Portal -> Portal : OnTranferReady.OnNext()
+
+Portal --> ITransferable : ack (returns of ReadyTransfer)
+
+Portal -> ITransferable : transform.position =
+
+Portal -> ITransferable : CompleteTransfer(portal= this)
+ITransferable -> ITransferable : procedure ...
+note right
+E.g. 明転・ポータルから出てくるアニメーション
+end note
+
+newpage Within-Range Notification
+
+Portal -> ITransferable : OnPortalEnter(portal= this)
+Portal -> ITransferable : OnPortalExit(portal= this)
+
+@enduml

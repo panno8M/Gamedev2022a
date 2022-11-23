@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="580px" preserveAspectRatio="none" style="width:719px;height:580px;background:#003153;" version="1.1" viewBox="0 0 719 580" width="719px" zoomAndPan="magnify"><defs/><g><rect fill="#003153" height="36.7373" id="_title" style="stroke:#003153;stroke-width:0.0;" width="226" x="245" y="10"/><text fill="#D9D3D0" font-family="Verdana" font-size="22" font-weight="bold" lengthAdjust="spacing" textLength="216" x="250" y="37.1182">Basic Translation</text><line style="stroke:#D9D3D0;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="73" x2="73" y1="84.752" y2="544.9424"/><line style="stroke:#D9D3D0;stroke-width:1.0;stroke-dasharray:5.0,5.0;" x1="315" x2="315" y1="84.752" y2="544.9424"/><rect fill="#003153" height="31.0146" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="106" x="20" y="52.7373"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="92" x="27" y="73.8125">ITransferable</text><rect fill="#003153" height="31.0146" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="106" x="20" y="543.9424"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="92" x="27" y="565.0176">ITransferable</text><rect fill="#003153" height="31.0146" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="54" x="288" y="52.7373"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="40" x="295" y="73.8125">Portal</text><rect fill="#003153" height="31.0146" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="54" x="288" y="543.9424"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="40" x="295" y="565.0176">Portal</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="73" x2="115" y1="120.9509" y2="120.9509"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="115" x2="115" y1="120.9509" y2="133.9509"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="74" x2="115" y1="133.9509" y2="133.9509"/><polygon fill="#D9D3D0" points="84,129.9509,74,133.9509,84,137.9509,80,133.9509" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="39" x="80" y="116.2214">check</text><path d="M131,99.752 L131,140.752 L373,140.752 L373,109.752 L363,99.752 L131,99.752 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M363,99.752 L363,109.752 L373,109.752 L363,99.752 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="221" x="137" y="117.8218">他のポータルの転送処理中でないか？</text><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="221" x="137" y="133.6211">このポータルは要件と合っているか？</text><polygon fill="#D9D3D0" points="303,182.9492,313,186.9492,303,190.9492,307,186.9492" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="73" x2="309" y1="186.9492" y2="186.9492"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="199" x="80" y="182.2197">RequestTransfer(target= this)</text><path d="M320,151.3506 L320,208.3506 L702,208.3506 L702,161.3506 L692,151.3506 L320,151.3506 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M692,151.3506 L692,161.3506 L702,161.3506 L692,151.3506 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="283" x="326" y="169.4204">例えばplayerにITransferableを実装した場合、</text><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="361" x="326" y="185.2197">wキーが押された時にportalの範囲内に入っているか確認して</text><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="156" x="326" y="201.019">リクエストを送信するなど</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="315" x2="357" y1="235.5479" y2="235.5479"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="357" x2="357" y1="235.5479" y2="248.5479"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="316" x2="357" y1="248.5479" y2="248.5479"/><polygon fill="#D9D3D0" points="326,244.5479,316,248.5479,326,252.5479,322,248.5479" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="184" x="322" y="230.8184">OnTranferRequest.OnNext()</text><polygon fill="#D9D3D0" points="84,274.3472,74,278.3472,84,282.3472,80,278.3472" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="78" x2="314" y1="278.3472" y2="278.3472"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="218" x="90" y="273.6177">ack (returns of RequestTransfer)</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="73" x2="115" y1="308.1465" y2="308.1465"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="115" x2="115" y1="308.1465" y2="321.1465"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="74" x2="115" y1="321.1465" y2="321.1465"/><polygon fill="#D9D3D0" points="84,317.1465,74,321.1465,84,325.1465,80,321.1465" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="86" x="80" y="303.417">procedure ...</text><path d="M178,294.8472 L178,319.8472 L529,319.8472 L529,304.8472 L519,294.8472 L178,294.8472 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M519,294.8472 L519,304.8472 L529,304.8472 L519,294.8472 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="330" x="184" y="312.917">E.g. 暗転・ポータルのもとに歩いていくアニメーション</text><polygon fill="#D9D3D0" points="303,346.9458,313,350.9458,303,354.9458,307,350.9458" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="73" x2="309" y1="350.9458" y2="350.9458"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="186" x="80" y="346.2163">ReadyTransfer(target= this)</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="315" x2="357" y1="380.7451" y2="380.7451"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="357" x2="357" y1="380.7451" y2="393.7451"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="316" x2="357" y1="393.7451" y2="393.7451"/><polygon fill="#D9D3D0" points="326,389.7451,316,393.7451,326,397.7451,322,393.7451" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="171" x="322" y="376.0156">OnTranferReady.OnNext()</text><polygon fill="#D9D3D0" points="84,419.5444,74,423.5444,84,427.5444,80,423.5444" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="78" x2="314" y1="423.5444" y2="423.5444"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="205" x="90" y="418.8149">ack (returns of ReadyTransfer)</text><polygon fill="#D9D3D0" points="84,449.3438,74,453.3438,84,457.3438,80,453.3438" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="78" x2="314" y1="453.3438" y2="453.3438"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="133" x="90" y="448.6143">transform.position =</text><polygon fill="#D9D3D0" points="84,479.1431,74,483.1431,84,487.1431,80,483.1431" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="78" x2="314" y1="483.1431" y2="483.1431"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="204" x="90" y="478.4136">CompleteTransfer(portal= this)</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="73" x2="115" y1="512.9424" y2="512.9424"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="115" x2="115" y1="512.9424" y2="525.9424"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="74" x2="115" y1="525.9424" y2="525.9424"/><polygon fill="#D9D3D0" points="84,521.9424,74,525.9424,84,529.9424,80,525.9424" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="86" x="80" y="508.2129">procedure ...</text><path d="M178,499.6431 L178,524.6431 L490,524.6431 L490,509.6431 L480,499.6431 L178,499.6431 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M480,499.6431 L480,509.6431 L490,509.6431 L480,499.6431 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="291" x="184" y="517.7129">E.g. 明転・ポータルから出てくるアニメーション</text><line style="stroke:#000000;stroke-width:1.0;stroke-dasharray:2.0,2.0;" x1="5" x2="712" y1="533.9424" y2="533.9424"/><!--MD5=[4aebbd76ee95f503d47158939b31829d]
+@startuml Gimmick - Portal (sequence diagram)
+!theme blueprint
+
+Title Basic Translation
+
+ITransferable -> ITransferable : check
+note right
+他のポータルの転送処理中でないか？
+このポータルは要件と合っているか？
+end note
+
+ITransferable -> Portal : RequestTransfer(target= this)
+note right
+例えばplayerにITransferableを実装した場合、
+wキーが押された時にportalの範囲内に入っているか確認して
+リクエストを送信するなど
+end note
+
+Portal -> Portal : OnTranferRequest.OnNext()
+
+Portal - -> ITransferable : ack (returns of RequestTransfer)
+
+ITransferable -> ITransferable : procedure ...
+note right
+E.g. 暗転・ポータルのもとに歩いていくアニメーション
+end note
+
+ITransferable -> Portal : ReadyTransfer(target= this)
+
+Portal -> Portal : OnTranferReady.OnNext()
+
+Portal - -> ITransferable : ack (returns of ReadyTransfer)
+
+Portal -> ITransferable : transform.position =
+
+Portal -> ITransferable : CompleteTransfer(portal= this)
+ITransferable -> ITransferable : procedure ...
+note right
+E.g. 明転・ポータルから出てくるアニメーション
+end note
+
+newpage Within-Range Notification
+
+Portal -> ITransferable : OnPortalEnter(portal= this)
+Portal -> ITransferable : OnPortalExit(portal= this)
+
+@enduml
+
+@startuml Gimmick - Portal (sequence diagram)
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor #003153
+    FontColor #D9D3D0
+    FontName Verdana
+    HyperLinkColor #D9D3D0
+    LineColor #D9D3D0
+    LineThickness 1
+    Margin 5
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  header {
+    LineThickness 0
+  }
+  node {
+    MaximumWidth 300
+  }
+  title {
+    FontSize 22
+    LineThickness 0
+  }
+</style>
+
+skinparam ArrowLollipopColor #D9D3D0
+skinparam BackgroundColor #003153
+skinparam DefaultFontName Verdana
+skinparam DefaultMonospacedFontName Courier
+skinparam LifelineStrategy nosolid
+skinparam ParticipantPadding 10
+skinparam SequenceLifeLineBorderColor #D9D3D0
+skinparam Shadowing false
+skinparam UseBetaStyle true
+
+skinparam Activity {
+  BackgroundColor #003153
+  BarColor #D9D3D0
+  BorderColor #D9D3D0
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Boundary {
+  FontColor #D9D3D0
+}
+skinparam Box {
+  Padding 5
+}
+skinparam CircledCharacter {
+  FontColor #D9D3D0
+  FontName Courier
+  Radius 9
+}
+skinparam Class {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam ClassAttribute {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam ClassStereotype {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Footer {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Header {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Hyperlink {
+  Color #D9D3D0
+}
+skinparam IconPackage {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam IconPrivate {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam IconProtected {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam IconPublic {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam Note {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Object {
+  BorderColor #D9D3D0
+}
+skinparam Package {
+  BorderColor #D9D3D0
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam State {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeA {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeC {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeE {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeI {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeN {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam UseCaseStereoType {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+
+Title Basic Translation
+
+ITransferable -> ITransferable : check
+note right
+他のポータルの転送処理中でないか？
+このポータルは要件と合っているか？
+end note
+
+ITransferable -> Portal : RequestTransfer(target= this)
+note right
+例えばplayerにITransferableを実装した場合、
+wキーが押された時にportalの範囲内に入っているか確認して
+リクエストを送信するなど
+end note
+
+Portal -> Portal : OnTranferRequest.OnNext()
+
+Portal - -> ITransferable : ack (returns of RequestTransfer)
+
+ITransferable -> ITransferable : procedure ...
+note right
+E.g. 暗転・ポータルのもとに歩いていくアニメーション
+end note
+
+ITransferable -> Portal : ReadyTransfer(target= this)
+
+Portal -> Portal : OnTranferReady.OnNext()
+
+Portal - -> ITransferable : ack (returns of ReadyTransfer)
+
+Portal -> ITransferable : transform.position =
+
+Portal -> ITransferable : CompleteTransfer(portal= this)
+ITransferable -> ITransferable : procedure ...
+note right
+E.g. 明転・ポータルから出てくるアニメーション
+end note
+
+newpage Within-Range Notification
+
+Portal -> ITransferable : OnPortalEnter(portal= this)
+Portal -> ITransferable : OnPortalExit(portal= this)
+
+@enduml
+
+PlantUML version 1.2022.7(Tue Aug 23 02:01:30 JST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: MS932
+Language: ja
+Country: JP
+--></g></svg>

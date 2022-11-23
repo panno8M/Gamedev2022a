@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentStyleType="text/css" height="520px" preserveAspectRatio="none" style="width:791px;height:520px;background:#003153;" version="1.1" viewBox="0 0 791 520" width="791px" zoomAndPan="magnify"><defs/><g><!--MD5=[d13a83a75d1ec61fceb66fefb5a2964f]
+cluster UnityEngine--><g id="cluster_UnityEngine"><path d="M330,12.1191 L482,12.1191 A3.75,3.75 0 0 1 484.5,14.6191 L491.5,44.8564 L553,44.8564 A2.5,2.5 0 0 1 555.5,47.3564 L555.5,148.6191 A2.5,2.5 0 0 1 553,151.1191 L330,151.1191 A2.5,2.5 0 0 1 327.5,148.6191 L327.5,14.6191 A2.5,2.5 0 0 1 330,12.1191 " fill="#003153" style="stroke:#D9D3D0;stroke-width:1.0;"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="327.5" x2="491.5" y1="44.8564" y2="44.8564"/><text fill="#D9D3D0" font-family="Verdana" font-size="22" font-weight="bold" lengthAdjust="spacing" textLength="151" x="331.5" y="36.2373">UnityEngine</text></g><!--MD5=[cbc521fcaf3492f4faf3fc97db40cdfb]
+class UnityEngine.MonoBehaviour--><g id="elem_UnityEngine.MonoBehaviour"><rect codeLine="4" fill="#003153" height="78.0293" id="UnityEngine.MonoBehaviour" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="195" x="344" y="57.1191"/><ellipse cx="383.75" cy="71.1191" fill="#003153" rx="9" ry="9" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M386.5156,72.6504 L388.9063,73.4004 Q388.3594,75.3848 387.0859,76.3535 Q385.8125,77.3223 383.8438,77.3223 Q381.4219,77.3223 379.8672,75.666 Q378.3125,74.0098 378.3125,71.1348 Q378.3125,68.1035 379.875,66.4238 Q381.4375,64.7441 384,64.7441 Q386.2344,64.7441 387.625,66.0566 Q388.4531,66.8379 388.875,68.3066 L386.4375,68.8848 Q386.2188,67.9316 385.5391,67.3848 Q384.8594,66.8379 383.875,66.8379 Q382.5156,66.8379 381.6797,67.8145 Q380.8438,68.791 380.8438,70.9629 Q380.8438,73.2598 381.6719,74.2441 Q382.5,75.2285 383.8281,75.2285 Q384.8125,75.2285 385.5156,74.6035 Q386.2188,73.9785 386.5156,72.6504 Z " fill="#D9D3D0"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="108" x="401.25" y="76.687">MonoBehaviour</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="345" x2="538" y1="85.1191" y2="85.1191"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="345" x2="538" y1="93.1191" y2="93.1191"/><ellipse cx="355" cy="107.1265" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="171" x="362" y="111.1943">OnTriggerEnter(Collider)</text><ellipse cx="355" cy="124.1411" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="160" x="362" y="128.209">OnTriggerExit(Collider)</text></g><!--MD5=[c0c8ce742fabe3dce46ce24aca8c9c01]
+class ITransferable--><g id="elem_ITransferable"><rect codeLine="10" fill="#003153" height="95.0439" id="ITransferable" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="255" x="12" y="48.6191"/><ellipse cx="88.75" cy="62.6191" fill="#003153" rx="9" ry="9" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M87.9063,68.6191 L87.9063,56.4473 L90.375,56.4473 L90.375,68.6191 L87.9063,68.6191 Z " fill="#D9D3D0"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="94" x="106.25" y="68.187">ITransferable</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="13" x2="266" y1="76.6191" y2="76.6191"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="13" x2="266" y1="84.6191" y2="84.6191"/><ellipse cx="23" cy="98.6265" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="184" x="30" y="102.6943">void OnPortalEnter(Portal)</text><ellipse cx="23" cy="115.6411" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="173" x="30" y="119.709">void OnPortalExit(Portal)</text><ellipse cx="23" cy="132.6558" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="231" x="30" y="136.7236">void OnCompleteTransfer(Portal)</text></g><!--MD5=[e4cbd5f7bd69dff5df33d1569bbb846b]
+class PlayerTransfer--><g id="elem_PlayerTransfer"><rect codeLine="16" fill="#003153" height="61.0146" id="PlayerTransfer" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="155" x="62" y="268.1191"/><ellipse cx="87.15" cy="282.1191" fill="#003153" rx="9" ry="9" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M89.9156,283.6504 L92.3063,284.4004 Q91.7594,286.3848 90.4859,287.3535 Q89.2125,288.3223 87.2438,288.3223 Q84.8219,288.3223 83.2672,286.666 Q81.7125,285.0098 81.7125,282.1348 Q81.7125,279.1035 83.275,277.4238 Q84.8375,275.7441 87.4,275.7441 Q89.6344,275.7441 91.025,277.0566 Q91.8531,277.8379 92.275,279.3066 L89.8375,279.8848 Q89.6188,278.9316 88.9391,278.3848 Q88.2594,277.8379 87.275,277.8379 Q85.9156,277.8379 85.0797,278.8145 Q84.2438,279.791 84.2438,281.9629 Q84.2438,284.2598 85.0719,285.2441 Q85.9,286.2285 87.2281,286.2285 Q88.2125,286.2285 88.9156,285.6035 Q89.6188,284.9785 89.9156,283.6504 Z " fill="#D9D3D0"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="100" x="101.85" y="287.687">PlayerTransfer</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="63" x2="216" y1="296.1191" y2="296.1191"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="143" x="68" y="314.1943">Portal availablePortal</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="63" x2="216" y1="321.1338" y2="321.1338"/></g><!--MD5=[2cb47ba637a0d19583e6199456f6ad0b]
+class Player--><g id="elem_Player"><rect codeLine="19" fill="#003153" height="44" id="Player" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="69" x="105" y="469.6191"/><ellipse cx="118" cy="483.6191" fill="#003153" rx="9" ry="9" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M113.7344,489.6191 L113.7344,477.4473 L122.7656,477.4473 L122.7656,479.5098 L116.1875,479.5098 L116.1875,482.2129 L122.2969,482.2129 L122.2969,484.2598 L116.1875,484.2598 L116.1875,487.5723 L123,487.5723 L123,489.6191 L113.7344,489.6191 Z " fill="#D9D3D0"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="41" x="130" y="489.187">Player</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="106" x2="173" y1="497.6191" y2="497.6191"/><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="106" x2="173" y1="505.6191" y2="505.6191"/></g><!--MD5=[f5ea1f64bc04260f09f32845b6b2c213]
+class Portal--><g id="elem_Portal"><rect codeLine="21" fill="#003153" height="180.1172" id="Portal" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="363" x="260" y="208.6191"/><ellipse cx="417.75" cy="222.6191" fill="#003153" rx="9" ry="9" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M420.5156,224.1504 L422.9063,224.9004 Q422.3594,226.8848 421.0859,227.8535 Q419.8125,228.8223 417.8438,228.8223 Q415.4219,228.8223 413.8672,227.166 Q412.3125,225.5098 412.3125,222.6348 Q412.3125,219.6035 413.875,217.9238 Q415.4375,216.2441 418,216.2441 Q420.2344,216.2441 421.625,217.5566 Q422.4531,218.3379 422.875,219.8066 L420.4375,220.3848 Q420.2188,219.4316 419.5391,218.8848 Q418.8594,218.3379 417.875,218.3379 Q416.5156,218.3379 415.6797,219.3145 Q414.8438,220.291 414.8438,222.4629 Q414.8438,224.7598 415.6719,225.7441 Q416.5,226.7285 417.8281,226.7285 Q418.8125,226.7285 419.5156,226.1035 Q420.2188,225.4785 420.5156,224.1504 Z " fill="#D9D3D0"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="40" x="435.25" y="228.187">Portal</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="261" x2="622" y1="236.6191" y2="236.6191"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="319" x="278" y="254.6943">Subject&lt;ITransferable&gt; _OnTransferRequest</text><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="304" x="278" y="271.709">Subject&lt;ITransferable&gt; _OnTransferReady</text><ellipse cx="271" cy="284.6558" fill="none" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="339" x="278" y="288.7236">IObservable&lt;ITransferable&gt; OnTransferRequest</text><ellipse cx="271" cy="301.6704" fill="none" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="324" x="278" y="305.7383">IObservable&lt;ITransferable&gt; OnTransferReady</text><ellipse cx="271" cy="318.6851" fill="none" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="189" x="278" y="322.7529">readonly TransferKind kind</text><ellipse cx="271" cy="335.6997" fill="none" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="178" x="278" y="339.7676">Portal route { get; set; }</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="261" x2="622" y1="346.707" y2="346.707"/><ellipse cx="271" cy="360.7144" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="256" x="278" y="364.7822">bool RequestTransfer(ITransferable)</text><ellipse cx="271" cy="377.729" fill="#003153" rx="3" ry="3" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="241" x="278" y="381.7969">bool ReadyTransfer(ITransferable)</text></g><!--MD5=[4a2705c8312bbf691958c667407dee18]
+class TransferKind--><g id="elem_TransferKind"><rect codeLine="31" fill="#003153" height="95.0439" id="TransferKind" rx="2.5" ry="2.5" style="stroke:#D9D3D0;stroke-width:1.0;" width="118" x="666.5" y="251.1191"/><ellipse cx="679.5" cy="265.1191" fill="#003153" rx="9" ry="9" style="stroke:#D9D3D0;stroke-width:1.0;"/><path d="M675.2344,271.1191 L675.2344,258.9473 L684.2656,258.9473 L684.2656,261.0098 L677.6875,261.0098 L677.6875,263.7129 L683.7969,263.7129 L683.7969,265.7598 L677.6875,265.7598 L677.6875,269.0723 L684.5,269.0723 L684.5,271.1191 L675.2344,271.1191 Z " fill="#D9D3D0"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="90" x="691.5" y="270.687">TransferKind</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="667.5" x2="783.5" y1="279.1191" y2="279.1191"/><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="35" x="672.5" y="297.1943">Door</text><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="57" x="672.5" y="314.209">Passage</text><text fill="#D9D3D0" font-family="Verdana" font-size="14" lengthAdjust="spacing" textLength="72" x="672.5" y="331.2236">Wormhole</text><line style="stroke:#D9D3D0;stroke-width:1.0;" x1="667.5" x2="783.5" y1="338.1631" y2="338.1631"/></g><!--MD5=[fc1eb89f8c7ca937404eb1c4d224e74a]
+reverse link UnityEngine.MonoBehaviour to Portal--><g id="link_UnityEngine.MonoBehaviour_Portal"><path codeLine="38" d="M441.5,155.3591 C441.5,170.6691 441.5,187.5691 441.5,204.2291 " fill="none" id="UnityEngine.MonoBehaviour-backto-Portal" style="stroke:#D9D3D0;stroke-width:1.0;"/><polygon fill="none" points="434.5,155.2991,441.5,135.2991,448.5,155.2991,434.5,155.2991" style="stroke:#D9D3D0;stroke-width:1.0;"/></g><!--MD5=[fb0c73fe58287b0669cae66781b26ced]
+reverse link ITransferable to PlayerTransfer--><g id="link_ITransferable_PlayerTransfer"><path codeLine="39" d="M139.5,164.0091 C139.5,199.1891 139.5,240.5691 139.5,267.8491 " fill="none" id="ITransferable-backto-PlayerTransfer" style="stroke:#D9D3D0;stroke-width:1.0;"/><polygon fill="none" points="132.5,163.6191,139.5,143.6191,146.5,163.6191,132.5,163.6191" style="stroke:#D9D3D0;stroke-width:1.0;"/></g><!--MD5=[0881a2783c68fc2bd2a377e93a7ccf57]
+reverse link PlayerTransfer to Player--><g id="link_PlayerTransfer_Player"><path codeLine="40" d="M139.5,342.6491 C139.5,382.1791 139.5,439.1091 139.5,469.5391 " fill="none" id="PlayerTransfer-backto-Player" style="stroke:#D9D3D0;stroke-width:1.0;"/><polygon fill="#D9D3D0" points="139.5,329.4591,135.5,335.4591,139.5,341.4591,143.5,335.4591,139.5,329.4591" style="stroke:#D9D3D0;stroke-width:1.0;"/><text fill="#D9D3D0" font-family="Verdana" font-size="13" lengthAdjust="spacing" textLength="32" x="140.5" y="436.689">have</text></g><!--MD5=[058796d4d64911bc2aa0a84c5fff8cf2]
+link Portal to TransferKind--><g id="link_Portal_TransferKind"><path codeLine="42" d="M624.5,317.6191 C634.88,321.5191 645.76,323.5291 656.36,324.0891 " fill="none" id="Portal-to-TransferKind" style="stroke:#D9D3D0;stroke-width:1.0;"/><polygon fill="#D9D3D0" points="666.42,324.2191,657.4663,320.1166,661.4203,324.162,657.3749,328.116,666.42,324.2191" style="stroke:#D9D3D0;stroke-width:1.0;"/></g><!--MD5=[4b22869c29857834fc819f46862c9e8e]
+link PlayerTransfer to Portal--><g id="link_PlayerTransfer_Portal"><path codeLine="43" d="M177.97,329.2991 C197.74,342.7691 223.28,356.1891 249.45,359.0591 " fill="none" id="PlayerTransfer-to-Portal" style="stroke:#D9D3D0;stroke-width:1.0;"/><polygon fill="#D9D3D0" points="259.5,359.6191,250.7429,355.1122,254.5081,359.3339,250.2865,363.0992,259.5,359.6191" style="stroke:#D9D3D0;stroke-width:1.0;"/></g><!--MD5=[4b22869c29857834fc819f46862c9e8e]
+link PlayerTransfer to Portal--><g id="link_PlayerTransfer_Portal"><path codeLine="44" d="M167.56,329.4491 C187.72,349.2091 217.23,371.8891 249.43,375.9691 " fill="none" id="PlayerTransfer-to-Portal-1" style="stroke:#D9D3D0;stroke-width:1.0;"/><polygon fill="#D9D3D0" points="259.5,376.6191,250.7687,372.0624,254.5098,376.3055,250.2668,380.0467,259.5,376.6191" style="stroke:#D9D3D0;stroke-width:1.0;"/></g><!--MD5=[773f4cd1f6de9b62e20a1080886cad9d]
+@startuml Gimmick - Portal (class diagram)
+!theme blueprint
+
+namespace UnityEngine {
+  class MonoBehaviour {
+    +OnTriggerEnter(Collider)
+    +OnTriggerExit(Collider)
+  }
+}
+
+interface ITransferable {
+  +void OnPortalEnter(Portal)
+  +void OnPortalExit(Portal)
+  +void OnCompleteTransfer(Portal)
+}
+
+class PlayerTransfer {
+  Portal availablePortal
+}
+entity Player
+
+class Portal {
+  Subject<ITransferable> _OnTransferRequest
+  Subject<ITransferable> _OnTransferReady
+  +IObservable<ITransferable> OnTransferRequest
+  +IObservable<ITransferable> OnTransferReady
+  +readonly TransferKind kind
+  +Portal route { get; set; }
+  +bool RequestTransfer(ITransferable)
+  +bool ReadyTransfer(ITransferable)
+}
+enum TransferKind {
+  Door
+  Passage
+  Wormhole
+}
+
+
+UnityEngine.MonoBehaviour <|- - Portal
+ITransferable <|- - PlayerTransfer
+PlayerTransfer *- - Player : have
+
+Portal::kind -> TransferKind
+PlayerTransfer -> Portal::RequestTransfer
+PlayerTransfer -> Portal::ReadyTransfer
+
+@enduml
+
+@startuml Gimmick - Portal (class diagram)
+
+
+
+
+
+<style>
+  root {
+    BackgroundColor #003153
+    FontColor #D9D3D0
+    FontName Verdana
+    HyperLinkColor #D9D3D0
+    LineColor #D9D3D0
+    LineThickness 1
+    Margin 5
+  }
+  caption {
+    LineThickness 0
+  }
+  footer {
+    LineThickness 0
+  }
+  header {
+    LineThickness 0
+  }
+  node {
+    MaximumWidth 300
+  }
+  title {
+    FontSize 22
+    LineThickness 0
+  }
+</style>
+
+skinparam ArrowLollipopColor #D9D3D0
+skinparam BackgroundColor #003153
+skinparam DefaultFontName Verdana
+skinparam DefaultMonospacedFontName Courier
+skinparam LifelineStrategy nosolid
+skinparam ParticipantPadding 10
+skinparam SequenceLifeLineBorderColor #D9D3D0
+skinparam Shadowing false
+skinparam UseBetaStyle true
+
+skinparam Activity {
+  BackgroundColor #003153
+  BarColor #D9D3D0
+  BorderColor #D9D3D0
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Boundary {
+  FontColor #D9D3D0
+}
+skinparam Box {
+  Padding 5
+}
+skinparam CircledCharacter {
+  FontColor #D9D3D0
+  FontName Courier
+  Radius 9
+}
+skinparam Class {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam ClassAttribute {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam ClassStereotype {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Footer {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Header {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Hyperlink {
+  Color #D9D3D0
+}
+skinparam IconPackage {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam IconPrivate {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam IconProtected {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam IconPublic {
+  Color #D9D3D0
+  BackgroundColor #003153
+}
+skinparam Note {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam Object {
+  BorderColor #D9D3D0
+}
+skinparam Package {
+  BorderColor #D9D3D0
+  FontColor #D9D3D0
+  FontName Verdana
+}
+skinparam State {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeA {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeC {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeE {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeI {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam StereotypeN {
+  BackgroundColor #003153
+  BorderColor #D9D3D0
+}
+skinparam UseCaseStereoType {
+  FontColor #D9D3D0
+  FontName Verdana
+}
+
+namespace UnityEngine {
+  class MonoBehaviour {
+    +OnTriggerEnter(Collider)
+    +OnTriggerExit(Collider)
+  }
+}
+
+interface ITransferable {
+  +void OnPortalEnter(Portal)
+  +void OnPortalExit(Portal)
+  +void OnCompleteTransfer(Portal)
+}
+
+class PlayerTransfer {
+  Portal availablePortal
+}
+entity Player
+
+class Portal {
+  Subject<ITransferable> _OnTransferRequest
+  Subject<ITransferable> _OnTransferReady
+  +IObservable<ITransferable> OnTransferRequest
+  +IObservable<ITransferable> OnTransferReady
+  +readonly TransferKind kind
+  +Portal route { get; set; }
+  +bool RequestTransfer(ITransferable)
+  +bool ReadyTransfer(ITransferable)
+}
+enum TransferKind {
+  Door
+  Passage
+  Wormhole
+}
+
+
+UnityEngine.MonoBehaviour <|- - Portal
+ITransferable <|- - PlayerTransfer
+PlayerTransfer *- - Player : have
+
+Portal::kind -> TransferKind
+PlayerTransfer -> Portal::RequestTransfer
+PlayerTransfer -> Portal::ReadyTransfer
+
+@enduml
+
+PlantUML version 1.2022.7(Tue Aug 23 02:01:30 JST 2022)
+(GPL source distribution)
+Java Runtime: Java(TM) SE Runtime Environment
+JVM: Java HotSpot(TM) 64-Bit Server VM
+Default Encoding: MS932
+Language: ja
+Country: JP
+--></g></svg>
