@@ -12,6 +12,7 @@ public class CamctlOverride : MonoBehaviour
   [SerializeField] CinemachineVirtualCamera _cmCamera;
   [SerializeField] OverrideMode _overrideMode;
   [SerializeField] int priority = 20;
+  [SerializeField] bool followPlayer;
 
   void Awake()
   {
@@ -19,7 +20,10 @@ public class CamctlOverride : MonoBehaviour
         .Where(other => other.CompareTag(Tag.CtlvolCamera.GetName()))
         .Subscribe(other =>
         {
-          _cmCamera.m_Follow = Global.Player.transform;
+          if (followPlayer)
+          {
+            _cmCamera.m_Follow = Global.Player.transform;
+          }
           _cmCamera.Priority = priority;
         });
     this.OnTriggerExitAsObservable()
@@ -28,7 +32,10 @@ public class CamctlOverride : MonoBehaviour
         .Subscribe(other =>
         {
           _cmCamera.Priority = 0;
-          _cmCamera.m_Follow = null;
+          if (followPlayer && _cmCamera.m_Follow == Global.Player.transform)
+          {
+            _cmCamera.m_Follow = null;
+          }
         });
 
   }
