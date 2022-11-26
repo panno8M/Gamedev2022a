@@ -17,7 +17,9 @@ namespace UniRx.Ex.InteractionTraits
     public Subject<HoldableModule> _RequestRelease = new Subject<HoldableModule>();
     public IObservable<HoldableModule> RequestRelease => _RequestRelease;
 
-    Transform _previousParentOfHoldingItem;
+    Transform _previousParentOfGrabingItem;
+    bool _isGrabing;
+
     ReactiveProperty<HoldableModule> _HoldingItem = new ReactiveProperty<HoldableModule>();
     public IObservable<HoldableModule> HoldingItem => _HoldingItem;
     public HoldableModule holdingItem => _HoldingItem.Value;
@@ -83,9 +85,15 @@ namespace UniRx.Ex.InteractionTraits
     /// <param name="item">対象のHoldableModule。親の指定にはrbメンバのトランスフォームが使われる</param>
     /// <param name="holdBy">一時的に親にするトランスフォーム。</param>
     /// <param name="offset"></param>
-    public void Grab(HoldableModule item, Transform holdBy, Vector3 offset)
+    public void Grab(HoldableModule item, Transform holdBy, Vector3 offset, bool replaceItem = true)
     {
-      _previousParentOfHoldingItem = item.rb.transform.parent;
+      if (_isGrabing)
+      {
+        if (replaceItem) { Ungrab(item); }
+        else { return; }
+      }
+      _previousParentOfGrabingItem = item.rb.transform.parent;
+      _isGrabing = true;
       item.rb.transform.SetParent(holdBy);
       item.rb.transform.localPosition = offset;
     }
@@ -95,19 +103,20 @@ namespace UniRx.Ex.InteractionTraits
     /// <see cref="Ungrab(HoldableModule)"/>で解除。
     /// </summary>
     /// <param name="item">対象のHoldableModule。親の指定にはrbメンバのトランスフォームが使われる</param>
-    public void Grab(HoldableModule item) { Grab(item, transform, Vector3.zero); }
+    public void Grab(HoldableModule item, bool replaceItem = true) { Grab(item, transform, Vector3.zero, replaceItem); }
     /// <summary>
     /// <see cref="Grab(HoldableModule)"/>で結んだ親子関係を解除する。
     /// <see cref="ReleaseForce()"/>,<see cref="Release(HoldableModule)"/> 実行時に暗黙的に呼ばれる。
     /// <see cref="RequestRelease"/>ストリーム内で使われる想定。
     /// </summary>
     /// <param name="item"></param>
+    public void Grab(HoldableModule item) { Grab(item, transform, Vector3.zero, true); }
+
     public void Ungrab(HoldableModule item)
     {
-      if (!_previousParentOfHoldingItem) { return; }
-      Debug.Log(_previousParentOfHoldingItem.name);
-      item.rb.transform.SetParent(_previousParentOfHoldingItem);
-      _previousParentOfHoldingItem = null;
+      if (!_isGrabing) { return; }
+      item.rb.transform.SetParent(_previousParentOfGrabingItem);
+      _isGrabing = false;
     }
 
     public override bool isInteractable => !hasItem;
