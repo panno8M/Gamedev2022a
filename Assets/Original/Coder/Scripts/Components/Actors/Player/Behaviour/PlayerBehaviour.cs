@@ -104,8 +104,6 @@ namespace Assembly.Components.Actors.Player
 
       player.interactor.holder.RequestHold
           .Subscribe(player.interactor.holder.Grab);
-      player.interactor.holder.RequestRelease
-          .Subscribe(player.interactor.holder.Ungrab);
     }
 
     void sbsc_AddGravity()
