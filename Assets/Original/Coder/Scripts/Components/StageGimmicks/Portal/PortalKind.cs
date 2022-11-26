@@ -1,6 +1,9 @@
-public enum PortalKind
+namespace Assembly.Components.StageGimmicks
 {
-  Wormhole,
-  Door,
-  Passage,
+  public enum PortalKind
+  {
+    Wormhole,
+    Door,
+    Passage,
+  }
 }

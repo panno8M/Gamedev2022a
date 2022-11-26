@@ -165,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2e7575fc93abff741953c405d7881771, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _interactables: []
   _holder: {fileID: 819544959}
 --- !u!114 &819544959
 MonoBehaviour:
@@ -179,9 +180,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _interactor: {fileID: 819544960}
-  _prevParent: {fileID: 0}
   inspector:
-    Holdables: []
     Holding: {fileID: 0}
 --- !u!1 &847327825
 GameObject:
@@ -5282,6 +5281,7 @@ GameObject:
   - component: {fileID: 1855202801}
   - component: {fileID: 3112990356196485283}
   - component: {fileID: 281757296479911890}
+  - component: {fileID: 1168846669}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -5431,6 +5431,20 @@ MonoBehaviour:
   _player: {fileID: 1855202803}
   _breath: {fileID: 1855202801}
   _anim: {fileID: 8353330523695600826}
+--- !u!114 &1168846669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320cea006ad073746aa9e7041279a09f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _transferDurationEnter: 0.25
+  _transferDurationExit: 0.25
 --- !u!1001 &1516644082
 PrefabInstance:
   m_ObjectHideFlags: 0
