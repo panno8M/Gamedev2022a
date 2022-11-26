@@ -399,7 +399,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _next: {fileID: 0}
-  _kind: 0
+  _kind: 1
 --- !u!212 &376813799
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -750,27 +750,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1168846660 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8353330523506930298, guid: 8c8b076293f7c694ab8c0776d8ee7594,
-    type: 3}
-  m_PrefabInstance: {fileID: 693365476}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1168846669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1168846660}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4cdbc6a6b830624280a99734e001686, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  nearestPortal: {fileID: 0}
-  _transferDurationEnter: 0.25
-  _transferDurationExit: 0.25
 --- !u!1 &1369336931
 GameObject:
   m_ObjectHideFlags: 0
@@ -987,7 +966,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _next: {fileID: 376813798}
-  _kind: 0
+  _kind: 1
 --- !u!212 &1932464207
 SpriteRenderer:
   m_ObjectHideFlags: 0

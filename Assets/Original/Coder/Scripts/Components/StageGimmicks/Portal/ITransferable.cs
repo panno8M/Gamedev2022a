@@ -1,7 +1,10 @@
-public interface ITransferable
+namespace Assembly.Components.StageGimmicks
 {
-  void OnPortalEnter(Portal portal);
-  void OnPortalExit(Portal portal);
-  void Transfer(Portal portal);
-  void OnCompleteTransfer(Portal portal);
+  public interface ITransferable
+  {
+    void OnPortalEnter(Portal portal);
+    void OnPortalExit(Portal portal);
+    void Transfer(Portal portal);
+    void OnCompleteTransfer(Portal portal);
+  }
 }
