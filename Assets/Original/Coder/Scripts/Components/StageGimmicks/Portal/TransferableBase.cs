@@ -3,42 +3,69 @@ using UniRx;
 
 namespace Assembly.Components.StageGimmicks
 {
+  [RequireComponent(typeof(Rigidbody))]
   public abstract class TransferableBase : MonoBehaviour, ITransferable
   {
+    [SerializeField] protected Rigidbody rb;
     protected Portal nearestPortal;
+    bool _isTransfering;
 
-    protected virtual bool Handshake(Portal portal)
+    protected virtual bool Handshake(Portal portal) { return true; }
+
+    bool Connectable(Portal portal)
     {
-      return portal.Handshake(this);
+      return !_isTransfering && portal &&
+          Handshake(portal) && portal.Handshake(this);
     }
 
     protected abstract void OnStartTransfer(Portal portal);
-    public abstract void OnCompleteTransfer(Portal portal);
+    protected abstract void OnCompleteTransfer(Portal portal);
 
-    public virtual void Transfer(Portal portal)
+    protected void DoneStart() { nearestPortal.ReadyTransfer(this); }
+    protected void DoneComplete() { _isTransfering = false; }
+
+    public void StartTransfer(Portal portal)
     {
-      transform.position += portal.positionDelta;
+      if (_isTransfering) { return; }
+      _isTransfering = true;
+      OnStartTransfer(portal);
+    }
+    public virtual void ProcessTransfer(Portal portal)
+    {
+      ProcessTransfer_SamePoint(portal);
+    }
+    public void CompleteTransfer(Portal portal)
+    {
+      if (!_isTransfering) { return; }
+      OnCompleteTransfer(portal);
     }
 
-    protected void Transision(Unit _) { Transision(); }
-    protected void Transision() { Transision(nearestPortal); }
-    protected virtual void Transision(Portal portal)
+    protected void ProcessTransfer_SamePoint(Portal portal)
     {
-      if (!Handshake(portal)) { return; }
-      OnStartTransfer(portal);
+      rb.MovePosition(transform.position + portal.positionDelta);
+    }
+    protected void ProcessTransfer_Center(Portal portal)
+    {
+      rb.MovePosition(portal.next.transform.position);
+    }
+
+    protected void Transition(Unit _) { Transition(); }
+    protected void Transition() { Transition(nearestPortal); }
+    protected void Transition(Portal portal)
+    {
+      if (!Connectable(portal)) { return; }
+      StartTransfer(portal);
     }
 
     public virtual void OnPortalEnter(Portal portal)
     {
-      if (portal == nearestPortal?.next)
-      {
-        nearestPortal = null;
-        return;
-      }
+      if (_isTransfering) { return; }
       nearestPortal = portal;
     }
     public virtual void OnPortalExit(Portal portal)
     {
+      if (_isTransfering) { return; }
+      nearestPortal = null;
     }
   }
 }
