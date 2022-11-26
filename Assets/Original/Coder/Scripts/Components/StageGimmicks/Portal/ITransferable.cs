@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class ITransferable : MonoBehaviour
+public interface ITransferable
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+  void OnPortalEnter(Portal portal);
+  void OnPortalExit(Portal portal);
+  void Transfer(Portal portal);
+  void OnCompleteTransfer(Portal portal);
 }
