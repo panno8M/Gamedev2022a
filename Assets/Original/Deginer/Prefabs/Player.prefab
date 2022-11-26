@@ -5443,6 +5443,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 320cea006ad073746aa9e7041279a09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 1855202800}
+  mumbling: 0
   _transferDurationEnter: 0.25
   _transferDurationExit: 0.25
 --- !u!1001 &1516644082

@@ -25,8 +25,8 @@ namespace Assembly.Components.StageGimmicks
 
     public void ReadyTransfer(ITransferable item)
     {
-      item.Transfer(this);
-      item.OnCompleteTransfer(this);
+      item.ProcessTransfer(this);
+      item.CompleteTransfer(this);
     }
 
     void OnTriggerEnter(Collider other)
@@ -36,7 +36,6 @@ namespace Assembly.Components.StageGimmicks
     void OnTriggerExit(Collider other)
     {
       other.GetComponent<ITransferable>()?.OnPortalExit(this);
-
     }
 
 #if UNITY_EDITOR
