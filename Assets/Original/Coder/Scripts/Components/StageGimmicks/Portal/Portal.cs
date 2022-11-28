@@ -1,6 +1,8 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
 using UnityEditor;
+using UnityEditor.SceneManagement;
 #endif
 
 namespace Assembly.Components.StageGimmicks
@@ -65,13 +67,13 @@ namespace Assembly.Components.StageGimmicks
       public override void OnInspectorGUI()
       {
         Portal portal = target as Portal;
+        var oldNext = portal._next;
+        var oldKind = portal._kind;
 
-        Portal newNext = EditorGUILayout.ObjectField("Next Portal", portal._next, typeof(Portal), true) as Portal;
-        PortalKind newKind = (PortalKind)(EditorGUILayout.EnumPopup("Kind", portal._kind));
-        if (newNext != portal._next || newKind != portal._kind)
+        base.OnInspectorGUI();
+
+        if (oldNext != portal._next || oldKind != portal._kind)
         {
-          portal._next = newNext;
-          portal._kind = newKind;
           if (portal._next && portal._next.kind != portal.kind)
           {
             Debug.LogWarningFormat("({0}) {1}, the next portal, have not same kind of", portal.name, portal._next.name);
