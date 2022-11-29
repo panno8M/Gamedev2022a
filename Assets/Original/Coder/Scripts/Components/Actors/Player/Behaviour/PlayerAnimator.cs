@@ -24,11 +24,11 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(Breath)
           .AddTo(this);
     
-      _player.Damagable.OnBroken
+      _player.damagable.OnBroken
           .Subscribe(Die)
           .AddTo(this);
 
-      _player.Damagable.OnRepaired
+      _player.damagable.OnRepaired
           .Subscribe(Revival)
           .AddTo(this);
 

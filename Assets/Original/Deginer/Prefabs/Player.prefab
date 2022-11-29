@@ -5353,8 +5353,7 @@ MonoBehaviour:
   controlMethod:
     value: 0
   groundNormalDegreeThreshold: 50
-  damagable: {fileID: 2142224226}
-  aiVisible: {fileID: 85444141}
+  _damagable: {fileID: 2142224226}
   _interactor: {fileID: 819544960}
   _isOnGround:
     value: 0

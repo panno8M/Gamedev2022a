@@ -4,9 +4,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-using UniRx.Ex.DamageTraits;
-
-namespace Assembly.Components.Senses
+namespace Senses.Pain
 {
   public class Damager : MonoBehaviour
   {
@@ -21,7 +19,7 @@ namespace Assembly.Components.Senses
 
       this.OnTriggerStayAsObservable()
           .Where(other => (lmDamagable & 1 << other.gameObject.layer) != 0)
-          .Subscribe(other => other.GetComponent<DamagableWrapper>().Affect(_damageUnit));
+          .Subscribe(other => other.GetComponent<IDamagable>().Affect(_damageUnit));
 
       this.OnParticleCollisionAsObservable()
           .Where(other => (lmDamagable & 1 << other.layer) != 0)
@@ -31,7 +29,7 @@ namespace Assembly.Components.Senses
             int num = ps.GetCollisionEvents(other, ev);
             if (num != 0)
             {
-              other.GetComponent<DamagableWrapper>().Affect(_damageUnit);
+              other.GetComponent<IDamagable>().Affect(_damageUnit);
             }
           }).AddTo(this);
     }

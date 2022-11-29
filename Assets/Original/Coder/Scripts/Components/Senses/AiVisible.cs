@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 
-namespace Assembly.Components.Senses
+namespace Senses
 {
   public class AiVisible : MonoBehaviour
   {

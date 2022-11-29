@@ -15,7 +15,7 @@ namespace Assembly.Components.UI
 
     void Start()
     {
-      Global.Player.Damagable.TotalDamage
+      Global.Player.damagable.TotalDamage
           .Select(x => x.ToString())
           .Subscribe(x => _uiTextPlayerDmg.text = x)
           .AddTo(this);

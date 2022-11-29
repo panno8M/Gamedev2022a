@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UniRx;
-using Assembly.Components.Senses;
+using Senses;
 using UniRx.Ex.InteractionTraits.Core;
 
 namespace Assembly.Components.StageGimmicks
@@ -12,7 +12,7 @@ namespace Assembly.Components.StageGimmicks
 
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
-    [SerializeField] DamagableWrapper _damagable;
+    [SerializeField] DamagableComponent _damagable;
     [SerializeField] Interactable _interactable;
     [SerializeField] float secExplosionDelay = 4;
 

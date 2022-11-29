@@ -2,30 +2,40 @@ using System;
 using UnityEngine;
 using UniRx;
 
-using UniRx.Ex.DamageTraits;
+using Senses.Pain;
 
-namespace Assembly.Components.Senses
+namespace Senses
 {
   [RequireComponent(typeof(Collider))]
   [RequireComponent(typeof(Rigidbody))]
-  public class DamagableWrapper : MonoBehaviour
+  public class DamagableComponent : MonoBehaviour, IDamagable
   {
     Damagable _damagable;
-    Damagable damagable => _damagable ?? (_damagable = new Damagable(param));
+    Damagable damagable => _damagable ?? (_damagable = new Pain.Damagable(param));
 
-    [SerializeField] DamagableParams param;
+    [SerializeField] DamagableParam param;
 
     public IObservable<Unit> OnRepaired => damagable.OnRepaired;
     public IObservable<DamageUnit> OnAffected => damagable.OnAffected;
-    public ReadOnlyReactiveProperty<int> TotalDamage => damagable.TotalDamage;
+    public IObservable<int> TotalDamage => damagable.TotalDamage;
+    public int totalDamage => damagable.totalDamage;
     public IObservable<Unit> OnBroken => damagable.OnBroken;
     public bool isBroken => damagable.isBroken;
 
-    public void Affect(DamageUnit du) { damagable.Affect(du); }
-    public void Repair() { damagable.Repair(); }
-    public void Break() { damagable.Break(); }
+    public void Affect(DamageUnit du)
+    {
+      if (isActiveAndEnabled) damagable.Affect(du);
+    }
+    public void Repair()
+    {
+      if (isActiveAndEnabled) damagable.Repair();
+    }
+    public void Break()
+    {
+      if (isActiveAndEnabled) damagable.Break();
+    }
 
-#if DEBUG
+#if UNITY_EDITOR
     [Serializable]
     struct Inspector
     {

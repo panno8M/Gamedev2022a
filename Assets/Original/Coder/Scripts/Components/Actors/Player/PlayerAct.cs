@@ -3,7 +3,8 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits.Core;
-using Assembly.Components.Senses;
+using Senses;
+using Senses.Pain;
 using Assembly.Components.Actors.Player.Pure;
 
 namespace Assembly.Components.Actors
@@ -53,8 +54,7 @@ namespace Assembly.Components.Actors
 
     #region editable params
     [SerializeField] float groundNormalDegreeThreshold;
-    [SerializeField] DamagableWrapper damagable;
-    [SerializeField] AiVisible aiVisible;
+    [SerializeField] DamagableComponent _damagable;
     [SerializeField] Interactor _interactor;
     #endregion
 
@@ -65,8 +65,7 @@ namespace Assembly.Components.Actors
     #endregion
 
     #region accessors
-    public DamagableWrapper Damagable => damagable;
-    public AiVisible AiVisible => aiVisible;
+    public IDamagable damagable => _damagable;
     public Interactor interactor => _interactor;
     public PlayerFlapCtl flapCtl => _flapCtl;
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
@@ -74,7 +73,7 @@ namespace Assembly.Components.Actors
 
     public void InitializeCondition()
     {
-      Damagable.Repair();
+      damagable.Repair();
       controlMethod.Value = ControlMethod.ActiveAll;
       transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
       var ls = transform.localScale;

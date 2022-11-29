@@ -1,12 +1,12 @@
 using UnityEngine;
 using UniRx;
-using Assembly.Components.Senses;
+using Senses;
 
 namespace Assembly.Components.StageGimmicks
 {
   public class Campfire : MonoBehaviour
   {
-    [SerializeField] DamagableWrapper damagable;
+    [SerializeField] DamagableComponent damagable;
     [SerializeField] ParticleSystem psBurnUp;
 
     void Start()
