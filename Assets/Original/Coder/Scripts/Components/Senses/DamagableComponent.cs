@@ -21,6 +21,7 @@ namespace Senses
     public int totalDamage => damagable.totalDamage;
     public IObservable<Unit> OnBroken => damagable.OnBroken;
     public bool isBroken => damagable.isBroken;
+    public int stamina => damagable.stamina;
 
     public void Affect(DamageUnit du)
     {

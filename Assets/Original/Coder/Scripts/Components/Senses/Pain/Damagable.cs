@@ -43,14 +43,15 @@ namespace Senses.Pain
     public int totalDamage => _totalDamage.Value;
     public IObservable<Unit> OnBroken => _onBroken;
 
-    public bool isBroken => 0 < _param.stamina && _param.stamina <= _totalDamage.Value;
+    public bool isBroken => 0 < stamina && stamina <= _totalDamage.Value;
+    public int stamina => _param.stamina;
 
     public void Affect(DamageUnit du) { _affect.OnNext(du); }
     public void Repair() { _repair.OnNext(Unit.Default); }
 
     public void Break()
     {
-      _totalDamage.Value = _param.stamina;
+      _totalDamage.Value = stamina;
     }
   }
 }

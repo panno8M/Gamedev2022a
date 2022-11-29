@@ -15,6 +15,7 @@ namespace Senses.Pain
     int totalDamage { get; }
     IObservable<Unit> OnBroken { get; }
 
-    bool isBroken {get;}
+    bool isBroken { get; }
+    int stamina { get; }
   }
 }
