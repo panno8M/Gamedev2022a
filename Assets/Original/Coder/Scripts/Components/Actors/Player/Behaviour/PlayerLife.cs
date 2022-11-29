@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
+using Senses.Pain;
 
 namespace Assembly.Components.Actors.Player
 {
@@ -36,7 +38,14 @@ namespace Assembly.Components.Actors.Player
       Global.PlayerRespawn.OnSpawn
         .Subscribe(instance =>
         {
-            instance.InitializeCondition();
+          instance.InitializeCondition();
+        }).AddTo(this);
+
+      this.FixedUpdateAsObservable()
+        .ThrottleFirst(TimeSpan.FromMilliseconds(100))
+        .Subscribe(_ =>
+        {
+          _player.damagable.Affect(new DamageUnit(DamageKind.Water, 1));
         }).AddTo(this);
     }
   }

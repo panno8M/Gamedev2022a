@@ -1628,6 +1628,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2142224226, guid: 8c8b076293f7c694ab8c0776d8ee7594, type: 3}
+      propertyPath: param.stamina
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 2142224226, guid: 8c8b076293f7c694ab8c0776d8ee7594, type: 3}
+      propertyPath: param.secCoolDownToNextDamage
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8353330523506930297, guid: 8c8b076293f7c694ab8c0776d8ee7594,
         type: 3}
       propertyPath: m_RootOrder
