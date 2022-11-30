@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 7201817327894664076}
   - component: {fileID: 7201817327894664079}
   - component: {fileID: 7201817327894664078}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CtlvolCamera
   m_TagString: Ctlvol/Camera
   m_Icon: {fileID: 0}
@@ -228,3 +228,4 @@ MonoBehaviour:
   _cmCamera: {fileID: 7201817326662109757}
   _overrideMode: 0
   priority: 20
+  followPlayer: 0
