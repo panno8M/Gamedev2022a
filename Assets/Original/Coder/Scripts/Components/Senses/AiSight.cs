@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Assembly.Components.Senses
+namespace Senses.Sight
 {
   public class AiSight : MonoBehaviour
   {

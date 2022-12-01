@@ -2,14 +2,14 @@ using System;
 using UnityEngine;
 
 using UniRx;
-using Assembly.Components.Senses;
+using Senses;
 
 namespace Assembly.Components.StageGimmicks
 {
 
   public class BreakableWall : MonoBehaviour
   {
-    [SerializeField] DamagableWrapper damagable;
+    [SerializeField] DamagableComponent damagable;
 
     void Start()
     {

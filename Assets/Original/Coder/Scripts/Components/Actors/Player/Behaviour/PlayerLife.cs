@@ -1,5 +1,8 @@
+using System;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
+using Senses.Pain;
 
 namespace Assembly.Components.Actors.Player
 {
@@ -12,30 +15,37 @@ namespace Assembly.Components.Actors.Player
           .Where(_ => _player.isControlAccepting)
           .Subscribe(_ =>
           {
-            _player.Damagable.Break();
+            _player.damagable.Break();
           }).AddTo(this);
 
-      _player.Damagable.OnBroken
+      _player.damagable.OnBroken
           .Subscribe(_ =>
           {
             _player.interactor.Forget();
             _player.controlMethod.Value = PlayerAct.ControlMethod.IgnoreAnyInput;
           }).AddTo(this);
 
-      _player.Damagable.OnBroken
-        .Delay(System.TimeSpan.FromMilliseconds(1000))
+      _player.damagable.OnBroken
+        .Delay(TimeSpan.FromMilliseconds(1000))
         .Subscribe(_ => Global.PlayerRespawn.Return())
         .AddTo(this);
 
-      _player.Damagable.OnBroken
-        .Delay(System.TimeSpan.FromMilliseconds(3000))
+      _player.damagable.OnBroken
+        .Delay(TimeSpan.FromMilliseconds(3000))
         .Subscribe(_ => Global.PlayerRespawn.Rent())
         .AddTo(this);
 
       Global.PlayerRespawn.OnSpawn
         .Subscribe(instance =>
         {
-            instance.InitializeCondition();
+          instance.InitializeCondition();
+        }).AddTo(this);
+
+      this.FixedUpdateAsObservable()
+        .ThrottleFirst(TimeSpan.FromMilliseconds(100))
+        .Subscribe(_ =>
+        {
+          _player.damagable.Affect(new DamageUnit(DamageKind.Water, 1));
         }).AddTo(this);
     }
   }

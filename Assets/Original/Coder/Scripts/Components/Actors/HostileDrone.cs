@@ -4,7 +4,8 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.ReactiveNeuro;
-using Assembly.Components.Senses;
+using Senses;
+using Senses.Sight;
 
 namespace Assembly.Components.Actors
 {
@@ -21,7 +22,7 @@ namespace Assembly.Components.Actors
     [SerializeField] ParticleSystem psWater;
     [SerializeField] ParticleSystem psBurnUp;
     [SerializeField] AiSight sight;
-    [SerializeField] DamagableWrapper damagable;
+    [SerializeField] DamagableComponent damagable;
     [SerializeField] Collider ctlTrigger;
 
     Tag reactableTag = Tag.CtlvolDroneMovable;
