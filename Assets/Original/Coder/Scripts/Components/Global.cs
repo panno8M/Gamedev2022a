@@ -10,6 +10,7 @@ namespace Assembly.Components
     public static InputControl Control => InputControl.Instance;
     public static PlayerAct Player => PlayerAct.Instance;
     public static PlayerRespawnMgr PlayerRespawn => PlayerRespawnMgr.Instance;
+    public static GameTime GameTime => GameTime.Instance;
 
     public static Camctl Cameraman => Camctl.Instance;
   }
