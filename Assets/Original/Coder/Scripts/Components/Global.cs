@@ -1,7 +1,6 @@
 using UnityEngine;
 using Assembly.Components.Input;
 using Assembly.Components.Actors;
-using Assembly.Components.Actors.Player.Pure;
 
 namespace Assembly.Components
 {

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 
-namespace Assembly.Components.Actors.Player.Pure
+namespace Assembly.Components.Actors
 {
 
   [Serializable]

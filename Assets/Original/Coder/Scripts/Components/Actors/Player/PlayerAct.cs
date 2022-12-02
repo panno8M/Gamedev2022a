@@ -5,7 +5,6 @@ using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits.Core;
 using Senses;
 using Senses.Pain;
-using Assembly.Components.Actors.Player.Pure;
 
 namespace Assembly.Components.Actors
 {

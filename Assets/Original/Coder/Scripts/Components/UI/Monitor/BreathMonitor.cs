@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Assembly.Components;
-using Assembly.Components.Actors.Player;
+using Assembly.Components.Actors;
 
 public class BreathMonitor : MonoBehaviour
 {

@@ -3,12 +3,10 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Assembly.Components.Actors.Player
+namespace Assembly.Components.Actors
 {
-  public class PlayerBreath : MonoBehaviour
+  public class PlayerBreath : ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerAct _player;
-    [SerializeField] PlayerBehaviour _playerBehaviour;
     [SerializeField] ParticleSystem psFlameBreath;
 
     ReactiveProperty<bool> _IsExhaling = new ReactiveProperty<bool>();
@@ -23,7 +21,7 @@ namespace Assembly.Components.Actors.Player
     public float msecCooldown => _msecCooldown;
     public bool isCoolingDown => msecCooldown != 0;
 
-    void Awake()
+    protected override void OnInit()
     {
       this.FixedUpdateAsObservable()
           .TimeInterval()
@@ -63,7 +61,7 @@ namespace Assembly.Components.Actors.Player
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => !_player.interactor.holder.hasItem)
+          .Where(_ => !_actor.interactor.holder.hasItem)
           .Where(_ => !isCoolingDown)
           .Subscribe(_ => _IsExhaling.Value = true)
           .AddTo(this);
@@ -71,7 +69,7 @@ namespace Assembly.Components.Actors.Player
       Observable
           .Merge(
               Global.Control.BreathRelease,
-              _player.interactor.holder.RequestHold
+              _actor.interactor.holder.RequestHold
                   .Where(_ => Global.Control.BreathInput.Value)
                   .AsUnitObservable(),
               this.FixedUpdateAsObservable()
@@ -84,14 +82,14 @@ namespace Assembly.Components.Actors.Player
 
     void SetOveruseLimitation()
     {
-      _player.flapCtl.TightenLimit(0);
-      _player.param.SetAsKnackered();
+      _actor.flapCtl.TightenLimit(0);
+      _actor.param.SetAsKnackered();
     }
 
     void RemoveOveruseLimitation()
     {
-      _player.flapCtl.ResetLimit();
-      _player.param.SetAsNormal();
+      _actor.flapCtl.ResetLimit();
+      _actor.param.SetAsNormal();
     }
 
 
@@ -100,17 +98,6 @@ namespace Assembly.Components.Actors.Player
       psFlameBreath.Stop();
       _msecCooldown = msecExhaling;
       _msecExhaling = 0;
-    }
-
-
-    void Reset()
-    {
-      SetDefaultComponent();
-    }
-
-    void SetDefaultComponent()
-    {
-      _player = GetComponent<PlayerAct>();
     }
   }
 }

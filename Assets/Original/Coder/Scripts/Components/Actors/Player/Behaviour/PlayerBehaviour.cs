@@ -2,10 +2,10 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Assembly.Components.Actors.Player
+namespace Assembly.Components.Actors
 {
   [RequireComponent(typeof(Rigidbody))]
-  public class PlayerBehaviour : MonoBehaviour
+  public class PlayerBehaviour : ActorBehavior<PlayerAct>
   {
     public static float G = -9.8f;
 
@@ -24,7 +24,7 @@ namespace Assembly.Components.Actors.Player
     #region editable params
     [SerializeField] GravityScale _scaleGravity;
 
-    void Reset()
+    protected override void OnResetInEditor()
     {
       _scaleGravity = new GravityScale(1.3f, .1f);
     }
@@ -32,22 +32,21 @@ namespace Assembly.Components.Actors.Player
 
     #region assets
     Rigidbody rb;
-    PlayerAct _player;
     #endregion
 
-    void Awake()
+    protected override void OnInit()
     {
       rb = GetComponent<Rigidbody>();
-      _player = Global.Player;
+      _actor = Global.Player;
 
       sbsc_AddGravity();
 
-      _player.OnJump.Subscribe(_ => Jump()).AddTo(this);
-      _player.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
+      _actor.OnJump.Subscribe(_ => Jump()).AddTo(this);
+      _actor.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
 
-      _player.WhileWalking
+      _actor.WhileWalking
           .Subscribe(MoveHorizontal);
-      _player.WhileSkywalking
+      _actor.WhileSkywalking
           .Subscribe(MoveHorizontal);
 
       Global.Control.HorizontalMoveInput
@@ -55,8 +54,8 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(hmi => StopHorizontal())
           .AddTo(this);
 
-      _player.interactor.holder.RequestHold
-          .Subscribe(_player.interactor.holder.Grab);
+      _actor.interactor.holder.RequestHold
+          .Subscribe(_actor.interactor.holder.Grab);
     }
 
     void sbsc_AddGravity()
@@ -71,14 +70,14 @@ namespace Assembly.Components.Actors.Player
     void Jump()
     {
       rb.velocity = rb.velocity.x_z();
-      rb.AddForce(_player.param.jumpHeight._y_(), ForceMode.Impulse);
+      rb.AddForce(_actor.param.jumpHeight._y_(), ForceMode.Impulse);
     }
 
 
     void MoveHorizontal(PlayerAct.Direction dir)
     {
       rb.velocity = new Vector3(
-          (float)dir * _player.param.MoveSpeed(),
+          (float)dir * _actor.param.MoveSpeed(),
           rb.velocity.y,
           rb.velocity.z);
     }
