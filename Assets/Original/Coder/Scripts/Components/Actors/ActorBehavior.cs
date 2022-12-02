@@ -1,11 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 namespace Assembly.Components.Actors
 {
   public abstract class ActorBehavior<Actor> : MonoBehaviour
-    where Actor : MonoBehaviour
+    where Actor : ActorCore<Actor>
   {
     [SerializeField] protected Actor _actor;
 
@@ -20,6 +19,7 @@ namespace Assembly.Components.Actors
     void Start()
     {
       SetActor();
+      _actor.OnRebuildObservable.Subscribe(_ => OnRebuild());
       OnInit();
     }
     void Reset()
@@ -30,5 +30,6 @@ namespace Assembly.Components.Actors
 
     protected abstract void OnInit();
     protected virtual void OnResetInEditor(){}
+    protected virtual void OnRebuild(){}
   }
 }

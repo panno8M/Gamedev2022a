@@ -3,13 +3,14 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits.Core;
-using Senses;
 using Senses.Pain;
 
 namespace Assembly.Components.Actors
 {
-  public class PlayerAct : UniqueBehaviour<PlayerAct>
+  public class PlayerAct : ActorCore<PlayerAct>
   {
+    protected static PlayerAct instance;
+    public static PlayerAct Instance => instance ?? (instance = (PlayerAct)FindObjectOfType(typeof(PlayerAct)));
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
 
@@ -73,9 +74,8 @@ namespace Assembly.Components.Actors
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
-    public void InitializeCondition()
+    protected override void OnRebuild()
     {
-      damagable.Repair();
       ControlMethod.Value = ControlMethods.ActiveAll;
       transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
       var ls = transform.localScale;
@@ -84,7 +84,7 @@ namespace Assembly.Components.Actors
       _wallCollidingDirection = 0;
     }
 
-    void Awake()
+    protected override void OnInit()
     {
       this.OnCollisionStayAsObservable()
           .Where(_ => isControlAccepting)

@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Senses.Pain;
+using Senses;
 
 namespace Assembly.Components.Actors
 {
@@ -10,6 +11,12 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] int _dmgAmountOverTime = 1;
     [SerializeField] float _msDmgInterval = 300;
+
+    protected override void OnRebuild()
+    {
+      _actor.damagable.Repair();
+    }
+
     protected override void OnInit()
     {
       Global.Control.Respawn
@@ -36,7 +43,7 @@ namespace Assembly.Components.Actors
       Global.PlayerRespawn.OnSpawn
         .Subscribe(instance =>
         {
-          instance.InitializeCondition();
+          instance.Rebuild();
         }).AddTo(this);
 
       this.FixedUpdateAsObservable()

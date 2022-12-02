@@ -18,7 +18,7 @@ namespace Assembly.Components.UI
     {
       Reset();
 
-      _damagable.TotalDamage
+      _damagable?.TotalDamage
         .Subscribe(x => _text.text = (_damagable.stamina - x) + " / " + _damagable.stamina)
         .AddTo(this);
     }

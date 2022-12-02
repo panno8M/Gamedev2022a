@@ -5348,6 +5348,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 386d6a5f9f86c7f4b9f4adce074cb809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actor: {fileID: 1855202803}
   _HorizontalMove:
     value: 0
   _LookDir:

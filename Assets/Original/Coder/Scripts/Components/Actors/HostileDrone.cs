@@ -4,7 +4,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.ReactiveNeuro;
-using Senses;
+using Senses.Pain;
 using Senses.Sight;
 
 namespace Assembly.Components.Actors

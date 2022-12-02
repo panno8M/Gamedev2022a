@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 
 using UniRx;
-using Senses;
+using Senses.Pain;
 
 namespace Assembly.Components.StageGimmicks
 {
