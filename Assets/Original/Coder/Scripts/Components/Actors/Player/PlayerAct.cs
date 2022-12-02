@@ -56,6 +56,9 @@ namespace Assembly.Components.Actors
     [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Interactor _interactor;
+
+    [SerializeField] PlayerParam _param = new PlayerParam();
+    public PlayerParam param => _param;
     #endregion
 
     #region behaviour statements
