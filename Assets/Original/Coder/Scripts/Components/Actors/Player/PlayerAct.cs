@@ -9,12 +9,6 @@ namespace Assembly.Components.Actors
 {
   public class PlayerAct : ActorCore<PlayerAct>
   {
-    protected static PlayerAct instance;
-    public static PlayerAct Instance => instance ?? (instance = (PlayerAct)FindObjectOfType(typeof(PlayerAct)));
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void Init() { instance = null; }
-
-
     public enum Direction { Left = -1, Right = 1 }
     public enum ControlMethods { ActiveAll, IgnoreAnyInput }
 
@@ -77,7 +71,7 @@ namespace Assembly.Components.Actors
     protected override void OnRebuild()
     {
       ControlMethod.Value = ControlMethods.ActiveAll;
-      transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
+      transform.position = Global.PlayerPool.activeSpawnPoint.position;
       var ls = transform.localScale;
       transform.localScale = new Vector3(Mathf.Abs(ls.x), ls.y, ls.z);
       _LookDir.Value = Direction.Right;

@@ -7,8 +7,8 @@ namespace Assembly.Components
   public static class Global
   {
     public static InputControl Control => InputControl.Instance;
-    public static PlayerAct Player => PlayerAct.Instance;
-    public static PlayerRespawnMgr PlayerRespawn => PlayerRespawnMgr.Instance;
+    public static PlayerAct Player => PlayerPool.player;
+    public static PlayerPool PlayerPool => PlayerPool.Instance as PlayerPool;
     public static GameTime GameTime => GameTime.Instance;
 
     public static Camctl Cameraman => Camctl.Instance;
@@ -18,6 +18,10 @@ namespace Assembly.Components
   {
     protected static T instance;
     public static T Instance => instance ?? (instance = (T)FindObjectOfType(typeof(T)));
+    void OnDestroy()
+    {
+      if (instance) instance = null;
+    }
   }
 
 }

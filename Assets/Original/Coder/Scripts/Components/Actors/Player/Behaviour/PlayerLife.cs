@@ -33,14 +33,14 @@ namespace Assembly.Components.Actors
             _actor.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
 
             Observable.Timer(TimeSpan.FromMilliseconds(1000))
-              .Subscribe(_ => Global.PlayerRespawn.Return())
+              .Subscribe(_ => Global.PlayerPool.Despawn())
               .AddTo(this);
             Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerRespawn.Rent())
+              .Subscribe(_ => Global.PlayerPool.Spawn())
               .AddTo(this);
           }).AddTo(this);
 
-      Global.PlayerRespawn.OnSpawn
+      Global.PlayerPool.OnSpawn
         .Subscribe(instance =>
         {
           instance.Rebuild();
