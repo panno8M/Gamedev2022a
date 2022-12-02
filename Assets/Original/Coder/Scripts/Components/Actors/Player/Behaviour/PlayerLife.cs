@@ -24,7 +24,7 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(_ =>
           {
             _player.interactor.Forget();
-            _player.controlMethod.Value = PlayerAct.ControlMethod.IgnoreAnyInput;
+            _player.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
 
             Observable.Timer(TimeSpan.FromMilliseconds(1000))
               .Subscribe(_ => Global.PlayerRespawn.Return())
