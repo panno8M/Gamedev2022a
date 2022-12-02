@@ -15,12 +15,12 @@ namespace Senses.Pain
       _totalDamage = new ReactiveProperty<int>();
 
       _onAffected = _affect
-        .Where(dmg => !_param.damageDisabled)
+        .Where(dmg => !_param.damageDisabled && !isBroken)
         .ThrottleFirst(param.coolDownToNextDamage);
 
       _onAffected
         .Where(dmg => dmg.kind.MatchAny(_param.allowDamageSource))
-        .Subscribe(dmg => _totalDamage.Value += dmg.scale);
+        .Subscribe(dmg => _totalDamage.Value = Math.Min(totalDamage + dmg.scale, stamina));
       _repair.Subscribe(_ => _totalDamage.Value = 0);
 
       _onBroken = TotalDamage
@@ -43,7 +43,7 @@ namespace Senses.Pain
     public int totalDamage => _totalDamage.Value;
     public IObservable<Unit> OnBroken => _onBroken;
 
-    public bool isBroken => 0 < stamina && stamina <= _totalDamage.Value;
+    public bool isBroken => stamina <= totalDamage && stamina > 0;
     public int stamina => _param.stamina;
 
     public void Affect(DamageUnit du) { _affect.OnNext(du); }

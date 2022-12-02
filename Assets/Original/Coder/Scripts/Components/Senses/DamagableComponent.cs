@@ -2,9 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 
-using Senses.Pain;
-
-namespace Senses
+namespace Senses.Pain
 {
   [RequireComponent(typeof(Collider))]
   [RequireComponent(typeof(Rigidbody))]

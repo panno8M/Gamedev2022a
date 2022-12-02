@@ -2,58 +2,13 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Assembly.Components.Actors.Player
+namespace Assembly.Components.Actors
 {
   [RequireComponent(typeof(Rigidbody))]
-  public class PlayerBehaviour : MonoBehaviour
+  public class PlayerBehaviour : ActorBehavior<PlayerAct>
   {
     public static float G = -9.8f;
 
-    [System.Serializable]
-    public class BehaviourParams
-    {
-      public enum Mobility { Normal, knackered }
-      public BehaviourParams(float jumpHeight, float soarHeight, float moveSpeedNormal, float moveSpeedKnackered)
-      {
-        this.jumpHeight = jumpHeight;
-        this.soarHeight = soarHeight;
-        this.moveSpeedNormal = moveSpeedNormal;
-        this.moveSpeedKnackered = moveSpeedKnackered;
-        this.mobility = Mobility.Normal;
-      }
-      public float jumpHeight;
-      public float soarHeight;
-      public float moveSpeedNormal;
-      public float moveSpeedKnackered;
-      public Mobility mobility;
-
-      [Range(0f, 1f)] float moveSpeedBlend;
-      [SerializeField] float secTransitionSpeed = 1;
-
-      float latestCallTime;
-
-      void CalcBlend()
-      {
-        var delta = Time.time - latestCallTime;
-        if (delta < 0.001) { return; }
-        latestCallTime = Time.time;
-        moveSpeedBlend = Mathf.Clamp01(moveSpeedBlend + (mobility == Mobility.Normal ? -1 : 1) * delta / secTransitionSpeed);
-      }
-
-      public float MoveSpeed()
-      {
-        CalcBlend();
-        return moveSpeedNormal * (1 - moveSpeedBlend) + moveSpeedKnackered * moveSpeedBlend;
-      }
-      public void SetAsNormal()
-      {
-        mobility = Mobility.Normal;
-      }
-      public void SetAsKnackered()
-      {
-        mobility = Mobility.knackered;
-      }
-    }
     [System.Serializable]
     public struct GravityScale
     {
@@ -67,12 +22,9 @@ namespace Assembly.Components.Actors.Player
     }
 
     #region editable params
-    [SerializeField] BehaviourParams _bp = new BehaviourParams(5f, 3f, 3.5f, 1.8f);
     [SerializeField] GravityScale _scaleGravity;
 
-    public BehaviourParams behaviourParams => _bp;
-
-    void Reset()
+    protected override void OnResetInEditor()
     {
       _scaleGravity = new GravityScale(1.3f, .1f);
     }
@@ -82,19 +34,19 @@ namespace Assembly.Components.Actors.Player
     Rigidbody rb;
     #endregion
 
-    void Awake()
+    protected override void OnInit()
     {
       rb = GetComponent<Rigidbody>();
-      var player = Global.Player;
+      _actor = Global.Player;
 
       sbsc_AddGravity();
 
-      player.OnJump.Subscribe(_ => Jump()).AddTo(this);
-      player.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
+      _actor.OnJump.Subscribe(_ => Jump()).AddTo(this);
+      _actor.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
 
-      player.WhileWalking
+      _actor.WhileWalking
           .Subscribe(MoveHorizontal);
-      player.WhileSkywalking
+      _actor.WhileSkywalking
           .Subscribe(MoveHorizontal);
 
       Global.Control.HorizontalMoveInput
@@ -102,8 +54,8 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(hmi => StopHorizontal())
           .AddTo(this);
 
-      player.interactor.holder.RequestHold
-          .Subscribe(player.interactor.holder.Grab);
+      _actor.interactor.holder.RequestHold
+          .Subscribe(_actor.interactor.holder.Grab);
     }
 
     void sbsc_AddGravity()
@@ -118,14 +70,14 @@ namespace Assembly.Components.Actors.Player
     void Jump()
     {
       rb.velocity = rb.velocity.x_z();
-      rb.AddForce(_bp.jumpHeight._y_(), ForceMode.Impulse);
+      rb.AddForce(_actor.param.jumpHeight._y_(), ForceMode.Impulse);
     }
 
 
     void MoveHorizontal(PlayerAct.Direction dir)
     {
       rb.velocity = new Vector3(
-          (float)dir * _bp.MoveSpeed(),
+          (float)dir * _actor.param.MoveSpeed(),
           rb.velocity.y,
           rb.velocity.z);
     }

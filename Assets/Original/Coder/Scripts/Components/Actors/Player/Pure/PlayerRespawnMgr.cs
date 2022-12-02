@@ -4,7 +4,7 @@ using UniRx;
 using UniRx.Triggers;
 using UniRx.Toolkit;
 
-namespace Assembly.Components.Actors.Player.Pure
+namespace Assembly.Components.Actors
 {
   public class PlayerPool : ObjectPool<PlayerAct>
   {

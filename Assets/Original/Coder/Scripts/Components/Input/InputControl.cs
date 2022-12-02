@@ -24,6 +24,8 @@ namespace Assembly.Components.Input
 
     public ReadOnlyReactiveProperty<bool> RespawnInput => provider.RespawnInput;
     public IObservable<Unit> Respawn => provider.Respawn;
+    public ReadOnlyReactiveProperty<bool> PauseInput => provider.PauseInput;
+    public IObservable<Unit> Pause => provider.Pause;
 
     public ReadOnlyReactiveProperty<Vector2> MousePosInput => provider.MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage => provider.MousePosStage;
@@ -44,6 +46,8 @@ namespace Assembly.Components.Input
       public float horizontalMove;
       public bool goUp;
       public bool breath;
+      public bool respawn;
+      public bool pause;
       public bool interact;
       public Vector2 mousePos;
       public Vector2 mousePosStage;
@@ -59,6 +63,8 @@ namespace Assembly.Components.Input
       InteractInput.Subscribe(x => inspector.interact = x).AddTo(this);
       MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
       MousePosStage.Subscribe(x => inspector.mousePosStage = x).AddTo(this);
+      RespawnInput.Subscribe(x => inspector.respawn = x).AddTo(this);
+      PauseInput.Subscribe(x => inspector.pause = x).AddTo(this);
 
     }
 #endif

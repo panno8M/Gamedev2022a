@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 using UniRx;
-using Senses;
+using Senses.Pain;
 using UniRx.Ex.InteractionTraits.Core;
 
 namespace Assembly.Components.StageGimmicks

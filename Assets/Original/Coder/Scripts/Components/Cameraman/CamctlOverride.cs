@@ -38,7 +38,7 @@ public class CamctlOverride : MonoBehaviour
           }
         });
 
-    Global.Player.damagable.OnBroken
+    Global.Player.OnRebuildObservable
         .Subscribe(_ =>
         {
           _cmCamera.Priority = 0;

@@ -3,49 +3,54 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Senses.Pain;
+using Senses;
 
-namespace Assembly.Components.Actors.Player
+namespace Assembly.Components.Actors
 {
-  public class PlayerLife : MonoBehaviour
+  public class PlayerLife : ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerAct _player;
-    void Awake()
+    [SerializeField] int _dmgAmountOverTime = 1;
+    [SerializeField] float _msDmgInterval = 300;
+
+    protected override void OnRebuild()
+    {
+      _actor.damagable.Repair();
+    }
+
+    protected override void OnInit()
     {
       Global.Control.Respawn
-          .Where(_ => _player.isControlAccepting)
+          .Where(_ => _actor.isControlAccepting)
           .Subscribe(_ =>
           {
-            _player.damagable.Break();
+            _actor.damagable.Break();
           }).AddTo(this);
 
-      _player.damagable.OnBroken
+      _actor.damagable.OnBroken
           .Subscribe(_ =>
           {
-            _player.interactor.Forget();
-            _player.controlMethod.Value = PlayerAct.ControlMethod.IgnoreAnyInput;
+            _actor.interactor.Forget();
+            _actor.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
+
+            Observable.Timer(TimeSpan.FromMilliseconds(1000))
+              .Subscribe(_ => Global.PlayerRespawn.Return())
+              .AddTo(this);
+            Observable.Timer(TimeSpan.FromMilliseconds(3000))
+              .Subscribe(_ => Global.PlayerRespawn.Rent())
+              .AddTo(this);
           }).AddTo(this);
-
-      _player.damagable.OnBroken
-        .Delay(TimeSpan.FromMilliseconds(1000))
-        .Subscribe(_ => Global.PlayerRespawn.Return())
-        .AddTo(this);
-
-      _player.damagable.OnBroken
-        .Delay(TimeSpan.FromMilliseconds(3000))
-        .Subscribe(_ => Global.PlayerRespawn.Rent())
-        .AddTo(this);
 
       Global.PlayerRespawn.OnSpawn
         .Subscribe(instance =>
         {
-          instance.InitializeCondition();
+          instance.Rebuild();
         }).AddTo(this);
 
       this.FixedUpdateAsObservable()
-        .ThrottleFirst(TimeSpan.FromMilliseconds(100))
+        .ThrottleFirst(TimeSpan.FromMilliseconds(_msDmgInterval))
         .Subscribe(_ =>
         {
-          _player.damagable.Affect(new DamageUnit(DamageKind.Water, 1));
+          _actor.damagable.Affect(new DamageUnit(DamageKind.Water, _dmgAmountOverTime));
         }).AddTo(this);
     }
   }

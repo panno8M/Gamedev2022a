@@ -21,6 +21,9 @@ namespace Assembly.Components.Input.Internal
     public ReadOnlyReactiveProperty<bool> RespawnInput;
     public IObservable<Unit> Respawn;
 
+    public ReadOnlyReactiveProperty<bool> PauseInput;
+    public IObservable<Unit> Pause;
+
     public ReadOnlyReactiveProperty<Vector2> MousePosInput;
     public ReadOnlyReactiveProperty<Vector3> MousePosStage;
 
@@ -38,6 +41,7 @@ namespace Assembly.Components.Input.Internal
       MousePosInput = input.Player.MousePos.As2dAxis();
       InteractInput = input.Player.Interact.AsButton();
       RespawnInput = input.Player.Respawn.AsButton();
+      PauseInput = input.Player.Pause.AsButton();
 
       GoUp = GoUpInput
           .Where(x => x)
@@ -58,6 +62,12 @@ namespace Assembly.Components.Input.Internal
           .Share();
 
       Respawn = RespawnInput
+          .Where(x => x)
+          .AsUnitObservable()
+          .BatchFrame(0, FrameCountType.FixedUpdate)
+          .Share();
+
+      Pause = PauseInput
           .Where(x => x)
           .AsUnitObservable()
           .BatchFrame(0, FrameCountType.FixedUpdate)

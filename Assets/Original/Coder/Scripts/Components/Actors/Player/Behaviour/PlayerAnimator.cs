@@ -2,45 +2,44 @@ using UnityEngine;
 using UniRx;
 using UniRx.Ex.InteractionTraits;
 
-namespace Assembly.Components.Actors.Player
+namespace Assembly.Components.Actors
 {
-  public class PlayerAnimator : MonoBehaviour
+  public class PlayerAnimator : ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerAct _player;
     [SerializeField] PlayerBreath _breath;
     [SerializeField] Animator _anim;
-    void Awake()
+    protected override void OnInit()
     {
-      _player.HorizontalMove
+      _actor.HorizontalMove
           .ThrottleFrame(5)
           .Subscribe(Walk)
           .AddTo(this);
 
-      _player.interactor.holder.HoldingItem
+      _actor.interactor.holder.HoldingItem
           .Subscribe(Hold)
           .AddTo(this);
 
       _breath.IsExhaling
           .Subscribe(Breath)
           .AddTo(this);
-    
-      _player.damagable.OnBroken
+
+      _actor.damagable.OnBroken
           .Subscribe(Die)
           .AddTo(this);
 
-      _player.damagable.OnRepaired
+      _actor.damagable.OnRepaired
           .Subscribe(Revival)
           .AddTo(this);
 
-      _player.OnJump
+      _actor.OnJump
           .Subscribe(Jump)
           .AddTo(this);
 
-      _player.OnLand
+      _actor.OnLand
           .Subscribe(Land)
           .AddTo(this);
 
-      _player.OnFlapWhileFalling
+      _actor.OnFlapWhileFalling
           .Subscribe(Flap)
           .AddTo(this);
     }

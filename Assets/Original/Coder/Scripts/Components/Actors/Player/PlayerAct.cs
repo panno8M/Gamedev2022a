@@ -3,20 +3,20 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits.Core;
-using Senses;
 using Senses.Pain;
-using Assembly.Components.Actors.Player.Pure;
 
 namespace Assembly.Components.Actors
 {
-  public class PlayerAct : UniqueBehaviour<PlayerAct>
+  public class PlayerAct : ActorCore<PlayerAct>
   {
+    protected static PlayerAct instance;
+    public static PlayerAct Instance => instance ?? (instance = (PlayerAct)FindObjectOfType(typeof(PlayerAct)));
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
     static void Init() { instance = null; }
 
 
     public enum Direction { Left = -1, Right = 1 }
-    public enum ControlMethod { ActiveAll, IgnoreAnyInput }
+    public enum ControlMethods { ActiveAll, IgnoreAnyInput }
 
     #region forBehaviourControlling
     IObservable<Unit> _onJump;
@@ -25,21 +25,21 @@ namespace Assembly.Components.Actors
     Subject<Direction> _whileWalking = new Subject<Direction>();
     Subject<Direction> _whileSkywalking = new Subject<Direction>();
     Subject<Unit> _afterBehavior = new Subject<Unit>();
-    ReadOnlyReactiveProperty<float> _horizontalMove;
 
     public IObservable<Direction> WhileWalking => _whileWalking;
     public IObservable<Direction> WhileSkywalking => _whileSkywalking;
     public IObservable<Unit> AfterBehavior => _afterBehavior;
 
-    public ReadOnlyReactiveProperty<float> HorizontalMove => _horizontalMove ?? (_horizontalMove = Global.Control.HorizontalMoveInput
-        .Where(hmi => isControlAccepting)
-        .Merge(controlMethod.Where(x => x == ControlMethod.IgnoreAnyInput).Select(x => 0f))
-        .ToReadOnlyReactiveProperty()
-        );
+    public ReactiveProperty<float> _HorizontalMove = new ReactiveProperty<float>();
+    public IObservable<float> HorizontalMove => _HorizontalMove;
+    public float horizontalMove => _HorizontalMove.Value;
 
-    public ReactiveProperty<Direction> LookDir = new ReactiveProperty<Direction>(Direction.Right);
-    public ReactiveProperty<ControlMethod> controlMethod = new ReactiveProperty<ControlMethod>();
-    public bool isControlAccepting => controlMethod.Value != ControlMethod.IgnoreAnyInput;
+    public ReactiveProperty<Direction> _LookDir = new ReactiveProperty<Direction>(Direction.Right);
+    public IObservable<Direction> LookDir => _LookDir;
+    public Direction lookDir => _LookDir.Value;
+
+    public ReactiveProperty<ControlMethods> ControlMethod = new ReactiveProperty<ControlMethods>();
+    public bool isControlAccepting => ControlMethod.Value != ControlMethods.IgnoreAnyInput;
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
@@ -56,6 +56,9 @@ namespace Assembly.Components.Actors
     [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Interactor _interactor;
+
+    [SerializeField] PlayerParam _param = new PlayerParam();
+    public PlayerParam param => _param;
     #endregion
 
     #region behaviour statements
@@ -71,18 +74,17 @@ namespace Assembly.Components.Actors
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
-    public void InitializeCondition()
+    protected override void OnRebuild()
     {
-      damagable.Repair();
-      controlMethod.Value = ControlMethod.ActiveAll;
+      ControlMethod.Value = ControlMethods.ActiveAll;
       transform.position = Global.PlayerRespawn.activeSpawnPoint.position;
       var ls = transform.localScale;
       transform.localScale = new Vector3(Mathf.Abs(ls.x), ls.y, ls.z);
-      LookDir.Value = Direction.Right;
+      _LookDir.Value = Direction.Right;
       _wallCollidingDirection = 0;
     }
 
-    void Awake()
+    protected override void OnInit()
     {
       this.OnCollisionStayAsObservable()
           .Where(_ => isControlAccepting)
@@ -114,35 +116,24 @@ namespace Assembly.Components.Actors
 
       this.FixedUpdateAsObservable()
           .Where(_ => isControlAccepting)
-          .Select(_ => HorizontalMove.Value)
+          .Select(_ => horizontalMove)
           .Subscribe(hmi =>
           {
             if (hmi != 0 && hmi != _wallCollidingDirection)
             {
               if (isOnGround.Value)
               {
-                _whileWalking.OnNext(LookDir.Value);
+                _whileWalking.OnNext(lookDir);
               }
               else
               {
-                _whileSkywalking.OnNext(LookDir.Value);
+                _whileSkywalking.OnNext(lookDir);
               }
             }
             _afterBehavior.OnNext(Unit.Default);
           });
 
-
-      HorizontalMove
-          .Select(hmi => (hmi != 0)
-                    ? (Direction)hmi
-                    : LookDir.Value)
-          .Where(dir => dir != LookDir.Value)
-          .Subscribe(dir =>
-          {
-            transform.localScale = transform.localScale.Xyz();
-            LookDir.Value = dir;
-          })
-          .AddTo(this);
+      sbsc_MoveAndDirect();
 
       Global.Control.Interact
           .Where(_ => isControlAccepting)
@@ -172,6 +163,32 @@ namespace Assembly.Components.Actors
             }
           }).AddTo(this);
 
+    }
+
+    void sbsc_MoveAndDirect()
+    {
+      Global.Control.HorizontalMoveInput
+        .Where(hmi => isControlAccepting)
+        .Subscribe(hmi => _HorizontalMove.Value = hmi)
+        .AddTo(this);
+      ControlMethod
+        .Where(x => x == ControlMethods.IgnoreAnyInput)
+        .Subscribe(hmi => _HorizontalMove.Value = 0);
+
+      HorizontalMove
+          .Select(CalcCurrentDirection)
+          .Where(dir => dir != lookDir)
+          .Subscribe(dir =>
+          {
+            transform.localScale = transform.localScale.Xyz();
+            _LookDir.Value = dir;
+          })
+          .AddTo(this);
+
+      Direction CalcCurrentDirection(float hmi)
+      {
+        return hmi != 0 ? (Direction)hmi : lookDir;
+      }
     }
   }
 }

@@ -5348,13 +5348,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 386d6a5f9f86c7f4b9f4adce074cb809, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LookDir:
+  _actor: {fileID: 1855202803}
+  _HorizontalMove:
+    value: 0
+  _LookDir:
     value: 1
-  controlMethod:
+  ControlMethod:
     value: 0
   groundNormalDegreeThreshold: 50
   _damagable: {fileID: 2142224226}
   _interactor: {fileID: 819544960}
+  _param:
+    jumpHeight: 5
+    soarHeight: 3
+    moveSpeedNormal: 3.5
+    moveSpeedKnackered: 1.8
+    mobility: 0
+    secTransitionSpeed: 1
   _isOnGround:
     value: 0
   _flapCtl:
@@ -5376,13 +5386,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9de58308045c1194fbcb3fda0d3c3741, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bp:
-    jumpHeight: 5
-    soarHeight: 3
-    moveSpeedNormal: 3.5
-    moveSpeedKnackered: 1.8
-    mobility: 0
-    secTransitionSpeed: 1
+  _actor: {fileID: 1855202803}
   _scaleGravity:
     normal: 1.3
     flying: 0.1
@@ -5398,8 +5402,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 02ffc7063df45514da2fd43c693504b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 1855202803}
-  _playerBehaviour: {fileID: 1855202802}
+  _actor: {fileID: 1855202803}
   psFlameBreath: {fileID: 5944828297956823533}
   _msecExhalableLimit: 3000
 --- !u!114 &3112990356196485283
@@ -5414,7 +5417,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aad08fd233e0b2c4bb7479c61316a93f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 1855202803}
+  _actor: {fileID: 1855202803}
+  _dmgAmountOverTime: 1
+  _msDmgInterval: 300
 --- !u!114 &281757296479911890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5427,7 +5432,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dabace5249a021e43b1f69d8d7042aac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _player: {fileID: 1855202803}
+  _actor: {fileID: 1855202803}
   _breath: {fileID: 1855202801}
   _anim: {fileID: 8353330523695600826}
 --- !u!114 &1168846669
