@@ -7,8 +7,9 @@ using UniRx.Ex.InteractionTraits.Core;
 namespace Assembly.Components.StageGimmicks
 {
 
-  public class Bomb : MonoBehaviour
+  public class Bomb : DiBehavior, IPoolCollectable
   {
+    Vector3 _defaultPosition;
 
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
@@ -20,8 +21,22 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] SpriteRenderer _renderer;
     [SerializeField] Collider _damagerCollider;
 
+    public void Rebuild()
+    {
+      transform.position = _defaultPosition;
+      transform.rotation = Quaternion.identity;
+      _damagerCollider.enabled = false;
+      _damagable.enabled = true;
+      _renderer.enabled = true;
+      GetComponent<Collider>().enabled = true;
+      _interactable.holdable.Activate();
+      _damagable.Repair();
+    }
+
     void Start()
     {
+      _defaultPosition = transform.position;
+
       _rb = GetComponent<Rigidbody>();
       _damagerCollider.enabled = false;
 
@@ -41,8 +56,12 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ =>
           {
             Explode();
-            _damagerCollider.enabled = true;
-            Destroy(gameObject, 1);
+            Observable.Timer(TimeSpan.FromSeconds(1))
+              .Subscribe(_ =>
+              {
+                BombPool.Instance.Despawn(this);
+                _psExplosion.Stop();
+              }).AddTo(this);
           })
           .AddTo(this);
 
@@ -72,7 +91,9 @@ namespace Assembly.Components.StageGimmicks
       _damagable.enabled = false;
       _renderer.enabled = false;
       GetComponent<Collider>().enabled = false;
+      _damagerCollider.enabled = true;
       _psExplosion.Play();
+      _psBurnUp.Stop();
     }
   }
 }

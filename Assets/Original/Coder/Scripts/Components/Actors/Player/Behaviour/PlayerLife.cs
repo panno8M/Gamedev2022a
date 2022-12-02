@@ -40,12 +40,6 @@ namespace Assembly.Components.Actors
               .AddTo(this);
           }).AddTo(this);
 
-      Global.PlayerPool.OnSpawn
-        .Subscribe(instance =>
-        {
-          instance.Rebuild();
-        }).AddTo(this);
-
       this.FixedUpdateAsObservable()
         .ThrottleFirst(TimeSpan.FromMilliseconds(_msDmgInterval))
         .Subscribe(_ =>

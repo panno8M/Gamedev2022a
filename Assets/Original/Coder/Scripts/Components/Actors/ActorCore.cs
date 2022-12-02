@@ -5,7 +5,7 @@ using Senses.Pain;
 
 namespace Assembly.Components.Actors
 {
-  public abstract class ActorCore<Actor> : ActorBehavior<Actor>
+  public abstract class ActorCore<Actor> : ActorBehavior<Actor>, IPoolCollectable
     where Actor : ActorCore<Actor>
   {
     protected Subject<Unit> _OnRebuild = new Subject<Unit>();

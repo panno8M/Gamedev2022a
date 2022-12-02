@@ -3,7 +3,7 @@ using UniRx;
 
 namespace Assembly.Components.Actors
 {
-  public abstract class ActorBehavior<Actor> : MonoBehaviour
+  public abstract class ActorBehavior<Actor> : DiBehavior
     where Actor : ActorCore<Actor>
   {
     [SerializeField] protected Actor _actor;
@@ -16,19 +16,18 @@ namespace Assembly.Components.Actors
                 ?? transform.parent.GetComponent<Actor>();
       }
     }
-    void Start()
+    protected void Start()
     {
       SetActor();
       _actor.OnRebuildObservable.Subscribe(_ => OnRebuild());
       OnInit();
     }
-    void Reset()
+    protected void Reset()
     {
       SetActor();
       OnResetInEditor();
     }
 
-    protected abstract void OnInit();
     protected virtual void OnResetInEditor(){}
     protected virtual void OnRebuild(){}
   }

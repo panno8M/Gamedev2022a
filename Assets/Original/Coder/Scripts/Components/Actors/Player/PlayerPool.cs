@@ -1,11 +1,9 @@
 using UnityEngine;
-using UniRx;
 
 namespace Assembly.Components.Actors
 {
-  public class PlayerPool : ObjectPool<PlayerAct>
+  public class PlayerPool : GameObjectPool<PlayerAct>
   {
-    [SerializeField] GameObject _prefPlayer;
     public Transform activeSpawnPoint;
     PlayerAct _player;
     public PlayerAct player => _player ?? Spawn();
@@ -18,8 +16,8 @@ namespace Assembly.Components.Actors
 
         if (_player == null)
         {
-          var result = GameObject.Instantiate(_prefPlayer, activeSpawnPoint.position, Quaternion.identity);
-          result.name = _prefPlayer.name;
+          var result = GameObject.Instantiate(prefab, activeSpawnPoint.position, Quaternion.identity);
+          result.name = prefab.name;
           _player = result.GetComponent<PlayerAct>();
         }
       }
