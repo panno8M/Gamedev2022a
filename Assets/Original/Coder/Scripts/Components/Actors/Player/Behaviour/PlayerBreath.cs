@@ -21,7 +21,7 @@ namespace Assembly.Components.Actors
     public float msecCooldown => _msecCooldown;
     public bool isCoolingDown => msecCooldown != 0;
 
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       this.FixedUpdateAsObservable()
           .TimeInterval()

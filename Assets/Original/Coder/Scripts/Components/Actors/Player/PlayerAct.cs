@@ -68,7 +68,7 @@ namespace Assembly.Components.Actors
     public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
     #endregion
 
-    protected override void OnRebuild()
+    protected override void OnAssemble()
     {
       ControlMethod.Value = ControlMethods.ActiveAll;
       transform.position = Global.PlayerPool.activeSpawnPoint.position;
@@ -78,7 +78,7 @@ namespace Assembly.Components.Actors
       _wallCollidingDirection = 0;
     }
 
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       this.OnCollisionStayAsObservable()
           .Where(_ => isControlAccepting)

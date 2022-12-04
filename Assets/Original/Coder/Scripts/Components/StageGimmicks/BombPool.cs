@@ -10,7 +10,7 @@ namespace Assembly.Components.StageGimmicks
     {
       throw new System.NotImplementedException();
     }
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       Global.PlayerPool.OnSpawn.Subscribe(_ =>
       {

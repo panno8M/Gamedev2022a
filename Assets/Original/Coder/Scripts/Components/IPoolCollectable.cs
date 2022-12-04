@@ -6,6 +6,7 @@ namespace Assembly.Components
 {
   public interface IPoolCollectable
   {
-    void Rebuild();
+    void Assemble();
+    void Disassemble();
   }
 }

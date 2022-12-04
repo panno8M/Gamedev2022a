@@ -34,7 +34,7 @@ namespace Assembly.Components.Actors
     Rigidbody rb;
     #endregion
 
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       rb = GetComponent<Rigidbody>();
       _actor = Global.Player;

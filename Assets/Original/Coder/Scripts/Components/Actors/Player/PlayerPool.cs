@@ -27,7 +27,7 @@ namespace Assembly.Components.Actors
 
     public void Despawn() { Despawn(_player); }
 
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       Spawn();
     }

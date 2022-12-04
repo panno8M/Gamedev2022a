@@ -6,6 +6,6 @@ namespace Assembly.Components
 {
 public abstract class DiBehavior : MonoBehaviour
 {
-    protected virtual void OnInit(){}
+    protected virtual void Blueprint(){}
 }
 }

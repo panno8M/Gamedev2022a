@@ -19,8 +19,8 @@ namespace Assembly.Components.Actors
     protected void Start()
     {
       SetActor();
-      _actor.OnRebuildObservable.Subscribe(_ => OnRebuild());
-      OnInit();
+      _actor.OnAssembleObservable.Subscribe(_ => OnAssemble());
+      Blueprint();
     }
     protected void Reset()
     {
@@ -29,6 +29,6 @@ namespace Assembly.Components.Actors
     }
 
     protected virtual void OnResetInEditor(){}
-    protected virtual void OnRebuild(){}
+    protected virtual void OnAssemble(){}
   }
 }

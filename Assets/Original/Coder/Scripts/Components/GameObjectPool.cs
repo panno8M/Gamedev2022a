@@ -12,8 +12,8 @@ namespace Assembly.Components
     [SerializeField] protected GameObject prefab;
 
     protected abstract T CreateInstance();
-    protected virtual void OnBeforeSpawn(T instance){}
-    protected virtual void OnBeforeDespawn(T instance){}
+    protected virtual void OnBeforeSpawn(T instance) { }
+    protected virtual void OnBeforeDespawn(T instance) { }
 
     Subject<T> _OnSpawn = new Subject<T>();
     public IObservable<T> OnSpawn => _OnSpawn;
@@ -44,7 +44,7 @@ namespace Assembly.Components
       if (_pool == null) _pool = new InternalPool(this);
       this.OnDestroyAsObservable()
           .Subscribe(_ => _pool.Dispose());
-      OnInit();
+      Blueprint();
     }
     class InternalPool : UniRx.Toolkit.ObjectPool<T>
     {
@@ -61,12 +61,13 @@ namespace Assembly.Components
       {
         base.OnBeforeRent(instance);
         _super.OnBeforeSpawn(instance);
-        instance.Rebuild();
+        instance.Assemble();
       }
       protected override void OnBeforeReturn(T instance)
       {
-        base.OnBeforeReturn(instance);
+        instance.Disassemble();
         _super.OnBeforeDespawn(instance);
+        base.OnBeforeReturn(instance);
       }
     }
 

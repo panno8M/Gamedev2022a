@@ -21,7 +21,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] SpriteRenderer _renderer;
     [SerializeField] Collider _damagerCollider;
 
-    public void Rebuild()
+    public void Assemble()
     {
       transform.position = _defaultPosition;
       transform.rotation = Quaternion.identity;
@@ -32,6 +32,7 @@ namespace Assembly.Components.StageGimmicks
       _interactable.holdable.Activate();
       _damagable.Repair();
     }
+    public void Disassemble() { }
 
     void Start()
     {

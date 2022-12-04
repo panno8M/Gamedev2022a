@@ -12,12 +12,12 @@ namespace Assembly.Components.Actors
     [SerializeField] int _dmgAmountOverTime = 1;
     [SerializeField] float _msDmgInterval = 300;
 
-    protected override void OnRebuild()
+    protected override void OnAssemble()
     {
       _actor.damagable.Repair();
     }
 
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       Global.Control.Respawn
           .Where(_ => _actor.isControlAccepting)
