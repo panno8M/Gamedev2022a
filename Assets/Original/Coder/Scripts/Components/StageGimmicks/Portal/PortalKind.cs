@@ -5,5 +5,6 @@ namespace Assembly.Components.StageGimmicks
     Wormhole,
     Door,
     Passage,
+    AiWaypoint,
   }
 }
