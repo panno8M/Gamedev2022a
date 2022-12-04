@@ -12,12 +12,12 @@ namespace Assembly.Components.Actors
     [SerializeField] int _dmgAmountOverTime = 1;
     [SerializeField] float _msDmgInterval = 300;
 
-    protected override void OnRebuild()
+    protected override void OnAssemble()
     {
       _actor.damagable.Repair();
     }
 
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       Global.Control.Respawn
           .Where(_ => _actor.isControlAccepting)
@@ -33,18 +33,12 @@ namespace Assembly.Components.Actors
             _actor.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
 
             Observable.Timer(TimeSpan.FromMilliseconds(1000))
-              .Subscribe(_ => Global.PlayerRespawn.Return())
+              .Subscribe(_ => Global.PlayerPool.Despawn())
               .AddTo(this);
             Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerRespawn.Rent())
+              .Subscribe(_ => Global.PlayerPool.Spawn())
               .AddTo(this);
           }).AddTo(this);
-
-      Global.PlayerRespawn.OnSpawn
-        .Subscribe(instance =>
-        {
-          instance.Rebuild();
-        }).AddTo(this);
 
       this.FixedUpdateAsObservable()
         .ThrottleFirst(TimeSpan.FromMilliseconds(_msDmgInterval))

@@ -7,9 +7,6 @@ namespace Assembly.Components.Input
 {
   public class InputControl : UniqueBehaviour<InputControl>
   {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void Init() { instance = null; }
-
     InputControlProvider _provider;
     InputControlProvider provider => _provider ?? (_provider = new InputControlProvider());
 

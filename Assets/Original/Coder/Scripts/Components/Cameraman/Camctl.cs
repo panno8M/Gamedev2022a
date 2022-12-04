@@ -8,14 +8,11 @@ namespace Assembly.Components
 {
   public class Camctl : UniqueBehaviour<Camctl>
   {
-    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-    static void Init() { instance = null; }
-
     [SerializeField] CinemachineVirtualCamera cmDefault;
 
     void Awake()
     {
-      Global.PlayerRespawn?.OnSpawn
+      Global.PlayerPool?.OnSpawn
           .Subscribe(player =>
           {
             cmDefault.m_Follow = player.transform;

@@ -8,7 +8,7 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] PlayerBreath _breath;
     [SerializeField] Animator _anim;
-    protected override void OnInit()
+    protected override void Blueprint()
     {
       _actor.HorizontalMove
           .ThrottleFrame(5)

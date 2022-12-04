@@ -73,8 +73,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c112e9acebd65c45a362d0e8c09b160, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _prefPlayer: {fileID: 8353330523506930298, guid: 8c8b076293f7c694ab8c0776d8ee7594,
-    type: 3}
+  prefab: {fileID: 8353330523506930298, guid: 8c8b076293f7c694ab8c0776d8ee7594, type: 3}
   activeSpawnPoint: {fileID: 7946698944128784196}
 --- !u!114 &6092166074414875935
 MonoBehaviour:

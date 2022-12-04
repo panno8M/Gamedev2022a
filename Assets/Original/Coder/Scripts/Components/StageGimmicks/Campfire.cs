@@ -15,7 +15,7 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ =>
           {
             psBurnUp.Play();
-            Global.PlayerRespawn.activeSpawnPoint.position = transform.position;
+            Global.PlayerPool.activeSpawnPoint.position = transform.position;
           });
     }
   }
