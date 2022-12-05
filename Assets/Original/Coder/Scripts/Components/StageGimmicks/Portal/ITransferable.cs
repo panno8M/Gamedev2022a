@@ -1,12 +1,15 @@
+using Cysharp.Threading.Tasks;
+
 namespace Assembly.Components.StageGimmicks
 {
   public interface ITransferable
   {
-    void OnPortalEnter(Portal portal);
-    void OnPortalExit(Portal portal);
+    Portal closestPortal {get; set;}
 
-    void StartTransfer(Portal portal);
-    void ProcessTransfer(Portal portal);
-    void CompleteTransfer(Portal portal);
+    bool Handshake(Portal portal);
+
+    UniTask StartTransfer(Portal portal);
+    UniTask ProcessTransfer(Portal portal);
+    UniTask CompleteTransfer(Portal portal);
   }
 }

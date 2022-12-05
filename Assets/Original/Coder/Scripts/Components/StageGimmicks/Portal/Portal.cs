@@ -1,3 +1,4 @@
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 #if UNITY_EDITOR
@@ -10,8 +11,8 @@ namespace Assembly.Components.StageGimmicks
   public class Portal : MonoBehaviour
   {
 
-    [SerializeField] Portal _next;
-    [SerializeField] PortalKind _kind;
+    [SerializeField] protected Portal _next;
+    [SerializeField] protected PortalKind _kind;
 
     public Portal next => _next;
     public PortalKind kind => _kind;
@@ -25,19 +26,23 @@ namespace Assembly.Components.StageGimmicks
       return enabled && next;
     }
 
-    public void ReadyTransfer(ITransferable item)
+    public async UniTask Transfer(ITransferable item)
     {
-      item.ProcessTransfer(this);
-      item.CompleteTransfer(this);
+      if (item == null || !Handshake(item) || !item.Handshake(this)) { return; }
+      if (item != null) await item.StartTransfer(this);
+      if (item != null) await item.ProcessTransfer(this);
+      if (item != null) await item.CompleteTransfer(this);
     }
 
-    void OnTriggerEnter(Collider other)
+    protected virtual void OnTriggerEnter(Collider other)
     {
-      other.GetComponent<ITransferable>()?.OnPortalEnter(this);
+      var x = other.GetComponent<ITransferable>();
+      if (x != null) x.closestPortal = this;
     }
-    void OnTriggerExit(Collider other)
+    protected virtual void OnTriggerExit(Collider other)
     {
-      other.GetComponent<ITransferable>()?.OnPortalExit(this);
+      var x = other.GetComponent<ITransferable>();
+      if (x != null && x.closestPortal == this) x.closestPortal = null;
     }
 
 #if UNITY_EDITOR
@@ -61,7 +66,7 @@ namespace Assembly.Components.StageGimmicks
       }
     }
 
-    [CustomEditor(typeof(Portal))]
+    [CustomEditor(typeof(Portal), true)]
     public class PortalEditor : Editor
     {
       public override void OnInspectorGUI()

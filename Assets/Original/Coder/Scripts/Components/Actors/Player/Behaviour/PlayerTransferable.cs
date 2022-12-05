@@ -2,12 +2,14 @@ using System;
 using System.Linq;
 using UnityEngine;
 using UniRx;
+using Cysharp.Threading.Tasks;
 using Assembly.Components.StageGimmicks;
 
 namespace Assembly.Components.Actors.player
 {
   public sealed class PlayerTransferable : TransferableBase
   {
+    [SerializeField] Rigidbody rb;
 #if DEBUG
     [SerializeField] bool mumbling;
 #endif
@@ -19,40 +21,34 @@ namespace Assembly.Components.Actors.player
 #endif
     }
 
-    [SerializeField] float _transferDurationEnter = 0.25f;
-    [SerializeField] float _transferDurationExit = 0.25f;
+    [SerializeField] int _secTransferDurationEnter = 250;
+    [SerializeField] int _secTransferDurationExit = 250;
 
     void Start()
     {
       Global.Control.Interact
-          .Where(_ => nearestPortal && nearestPortal.kind == PortalKind.Door)
-          .Subscribe(Transition);
-    }
+          .Where(_ => closestPortal && closestPortal.kind == PortalKind.Door)
+          .Subscribe(Transfer);
 
-    public override void OnPortalEnter(Portal portal)
-    {
-      base.OnPortalEnter(portal);
-      Say("I found out the " + portal.kind + "!");
-      if (new[] { PortalKind.Passage, PortalKind.Wormhole }.Any(x => x == portal.kind))
+      OnPortalOverrap.Subscribe(portal =>
       {
-        Transition();
-      }
+        Say("I found out the " + portal.kind + "!");
+        if (new[] { PortalKind.Passage, PortalKind.Wormhole }.Any(x => x == portal.kind))
+        {
+          Transfer().Forget();
+        }
+
+      }).AddTo(this);
     }
 
-    protected override void OnStartTransfer(Portal portal)
+    protected override async UniTask OnStartTransfer(Portal portal)
     {
       Say("Gotcha! This portal seems work!");
-      Time.timeScale = 0.1f;
-      Observable.Timer(TimeSpan.FromSeconds(_transferDurationEnter))
-        .Subscribe(_ =>
-        {
-          Time.timeScale = 1;
-          Say("Let's go beyond!");
-          DoneStart();
-        }).AddTo(this);
+      await UniTask.Delay(_secTransferDurationEnter);
+      Say("Let's go beyond!");
     }
 
-    public override void ProcessTransfer(Portal portal)
+    protected override UniTask OnProcessTransfer(Portal portal)
     {
       switch (portal.kind)
       {
@@ -63,17 +59,24 @@ namespace Assembly.Components.Actors.player
           ProcessTransfer_SamePoint(portal);
           break;
       }
+      return UniTask.CompletedTask;
     }
 
-    protected override void OnCompleteTransfer(Portal portal)
+    protected override async UniTask OnCompleteTransfer(Portal portal)
     {
       Say("Wow, where is here...?");
-      Observable.Timer(TimeSpan.FromSeconds(_transferDurationExit))
-        .Subscribe(_ =>
-        {
-          Say("Oh, I know, I know here.");
-          DoneComplete();
-        }).AddTo(this);
+      await UniTask.Delay(_secTransferDurationExit);
+      Say("Oh, I know, I know here.");
     }
+
+    void ProcessTransfer_SamePoint(Portal portal)
+    {
+      rb.MovePosition(transform.position + portal.positionDelta);
+    }
+    void ProcessTransfer_Center(Portal portal)
+    {
+      rb.MovePosition(portal.next.transform.position);
+    }
+
   }
 }

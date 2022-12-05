@@ -1,71 +1,61 @@
+using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UniRx;
 
 namespace Assembly.Components.StageGimmicks
 {
-  [RequireComponent(typeof(Rigidbody))]
   public abstract class TransferableBase : MonoBehaviour, ITransferable
   {
-    [SerializeField] protected Rigidbody rb;
-    protected Portal nearestPortal;
-    bool _isTransfering;
-
-    protected virtual bool Handshake(Portal portal) { return true; }
-
-    bool Connectable(Portal portal)
+    ReactiveProperty<Portal> _ClosestPortal = new ReactiveProperty<Portal>();
+    public Portal closestPortal
     {
-      return !_isTransfering && portal &&
-          Handshake(portal) && portal.Handshake(this);
+      set
+      {
+        _ClosestPortal.Value = value;
+      }
+      get
+      {
+        return _ClosestPortal.Value;
+      }
     }
+    public IObservable<Portal> OnPortalOverrap => _ClosestPortal.Where(x => x);
 
-    protected abstract void OnStartTransfer(Portal portal);
-    protected abstract void OnCompleteTransfer(Portal portal);
+    Portal _processingPortal;
+    protected Portal processingPortal => _processingPortal;
 
-    protected void DoneStart() { nearestPortal.ReadyTransfer(this); }
-    protected void DoneComplete() { _isTransfering = false; }
 
-    public void StartTransfer(Portal portal)
-    {
-      if (_isTransfering) { return; }
-      _isTransfering = true;
-      OnStartTransfer(portal);
-    }
-    public virtual void ProcessTransfer(Portal portal)
-    {
-      ProcessTransfer_SamePoint(portal);
-    }
-    public void CompleteTransfer(Portal portal)
-    {
-      if (!_isTransfering) { return; }
-      OnCompleteTransfer(portal);
-    }
+    protected virtual UniTask OnStartTransfer(Portal portal) { return UniTask.CompletedTask; }
+    protected abstract UniTask OnProcessTransfer(Portal portal);
+    protected virtual UniTask OnCompleteTransfer(Portal portal) { return UniTask.CompletedTask; }
+    protected virtual void AfterCompleteTransfer(Portal portal) { }
 
-    protected void ProcessTransfer_SamePoint(Portal portal)
+    public async UniTask StartTransfer(Portal portal)
     {
-      rb.MovePosition(transform.position + portal.positionDelta);
+      if (processingPortal || !portal) { return; }
+      _processingPortal = portal;
+      await OnStartTransfer(portal);
     }
-    protected void ProcessTransfer_Center(Portal portal)
+    public virtual async UniTask ProcessTransfer(Portal portal)
     {
-      rb.MovePosition(portal.next.transform.position);
+      if (processingPortal != portal || !portal) { return; }
+      await OnProcessTransfer(portal);
     }
-
-    protected void Transition(Unit _) { Transition(); }
-    protected void Transition() { Transition(nearestPortal); }
-    protected void Transition(Portal portal)
+    public async UniTask CompleteTransfer(Portal portal)
     {
-      if (!Connectable(portal)) { return; }
-      StartTransfer(portal);
+      if (processingPortal != portal || !portal) { return; }
+      await OnCompleteTransfer(portal);
+      _processingPortal = null;
+      AfterCompleteTransfer(portal);
     }
 
-    public virtual void OnPortalEnter(Portal portal)
+    protected void Transfer(Unit _) { closestPortal.Transfer(this).Forget(); }
+    protected async UniTask Transfer() { await closestPortal.Transfer(this); }
+
+    public bool Handshake(Portal portal)
     {
-      if (_isTransfering) { return; }
-      nearestPortal = portal;
+      return !processingPortal && portal && CustomCheck(portal);
     }
-    public virtual void OnPortalExit(Portal portal)
-    {
-      if (_isTransfering) { return; }
-      nearestPortal = null;
-    }
+    protected virtual bool CustomCheck(Portal portal) { return true; }
   }
 }
