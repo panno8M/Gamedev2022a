@@ -44,15 +44,8 @@ namespace Assembly.Components.Actors
       _actor.OnJump.Subscribe(_ => Jump()).AddTo(this);
       _actor.OnFlapWhileFalling.Subscribe(_ => Jump()).AddTo(this);
 
-      _actor.WhileWalking
+      _actor.Behavior
           .Subscribe(MoveHorizontal);
-      _actor.WhileSkywalking
-          .Subscribe(MoveHorizontal);
-
-      Global.Control.HorizontalMoveInput
-          .Where(hmi => hmi == 0)
-          .Subscribe(hmi => StopHorizontal())
-          .AddTo(this);
 
       _actor.interactor.holder.RequestHold
           .Subscribe(_actor.interactor.holder.Grab);
@@ -74,16 +67,32 @@ namespace Assembly.Components.Actors
     }
 
 
-    void MoveHorizontal(PlayerAct.Direction dir)
+    void MoveHorizontal(PlayerAct pa)
     {
-      rb.velocity = new Vector3(
-          (float)dir * _actor.param.MoveSpeed(),
+      if (pa.horiMove == 0)
+      {
+        rb.velocity = rb.velocity._yz();
+        return;
+      }
+
+      if (pa.obstacleColliding)
+      {
+        if (pa.obstacleClimbable)
+        {
+          rb.velocity = pa.obstacleTangent * pa.param.MoveSpeed;
+        }
+        else
+        {
+          rb.velocity = rb.velocity._yz();
+        }
+      }
+      else
+      {
+        rb.velocity = new Vector3(
+          (float)pa.lookDirection.current * pa.param.MoveSpeed,
           rb.velocity.y,
           rb.velocity.z);
-    }
-    void StopHorizontal()
-    {
-      rb.velocity = rb.velocity._yz();
+      }
     }
   }
 }

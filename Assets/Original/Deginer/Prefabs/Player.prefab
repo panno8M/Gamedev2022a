@@ -5349,13 +5349,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
-  _HorizontalMove:
-    value: 0
-  _LookDir:
-    value: 1
   ControlMethod:
     value: 0
-  groundNormalDegreeThreshold: 50
   _damagable: {fileID: 2142224226}
   _interactor: {fileID: 819544960}
   _param:
@@ -5363,9 +5358,10 @@ MonoBehaviour:
     soarHeight: 3
     moveSpeedNormal: 3.5
     moveSpeedKnackered: 1.8
-    mobility: 0
-    secTransitionSpeed: 1
-  _isOnGround:
+    _degreeClimbableObstacle: 30
+    steppableBoxCenter: {x: 0.4, y: 0.6, z: 0}
+    steppableBoxExtents: {x: 0.1, y: 0.4, z: 0.2}
+  _IsOnGround:
     value: 0
   _flapCtl:
     _upperLimitInitial: 1
@@ -5373,7 +5369,9 @@ MonoBehaviour:
     _upperLimitOverriding: 0
     _currentCnt:
       value: 0
-  _wallCollidingDirection: 0
+  obstacleColliding: 0
+  obstacleClimbable: 0
+  obstacleTangent: {x: 0, y: 0, z: 0}
 --- !u!114 &1855202802
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 namespace Assembly.Components.Actors
 {
@@ -8,42 +10,57 @@ namespace Assembly.Components.Actors
   public class PlayerParam
   {
     public enum Mobility { Normal, knackered }
-    public PlayerParam(
-        float jumpHeight = 5,
-        float soarHeight = 3,
-        float moveSpeedNormal = 3.5f,
-        float moveSpeedKnackered = 1.8f)
+    public float jumpHeight = 5;
+    public float soarHeight = 3;
+    public float moveSpeedNormal = 3.5f;
+    public float moveSpeedKnackered = 1.8f;
+
+    public PlayerParam()
     {
-      this.jumpHeight = jumpHeight;
-      this.soarHeight = soarHeight;
-      this.moveSpeedNormal = moveSpeedNormal;
-      this.moveSpeedKnackered = moveSpeedKnackered;
-      this.mobility = Mobility.Normal;
-    }
-    public float jumpHeight;
-    public float soarHeight;
-    public float moveSpeedNormal;
-    public float moveSpeedKnackered;
-    public Mobility mobility;
-
-    [Range(0f, 1f)] float moveSpeedBlend;
-    [SerializeField] float secTransitionSpeed = 1;
-
-    float latestCallTime;
-
-    void CalcBlend()
-    {
-      var delta = Time.time - latestCallTime;
-      if (delta < 0.001) { return; }
-      latestCallTime = Time.time;
-      moveSpeedBlend = Mathf.Clamp01(moveSpeedBlend + (mobility == Mobility.Normal ? -1 : 1) * delta / secTransitionSpeed);
+      mobility = Mobility.Normal;
+      degreeClimbableObstacle = 30;
     }
 
-    public float MoveSpeed()
+    Mobility _mobility;
+    public Mobility mobility
     {
-      CalcBlend();
-      return moveSpeedNormal * (1 - moveSpeedBlend) + moveSpeedKnackered * moveSpeedBlend;
+      get
+      {
+        return _mobility;
+      }
+      set
+      {
+        moveSpeedLerp.SetAsIncrease(value == Mobility.knackered);
+        _mobility = value;
+      }
     }
+
+    [Range(0, 90)]
+    [SerializeField]
+    int _degreeClimbableObstacle = 30;
+    [Range(0, 90)]
+    int _degreeUnclimbableObstacle = 60;
+    public int degreeClimbableObstacle
+    {
+      get
+      {
+        return _degreeClimbableObstacle;
+      }
+      set
+      {
+        _degreeClimbableObstacle = value;
+        _degreeUnclimbableObstacle = 90 - value;
+      }
+    }
+    public int degreeUnclimbableObstacle => _degreeUnclimbableObstacle;
+
+    public Vector3 steppableBoxCenter = new Vector3(0.4f, 0.6f, 0f);
+    public Vector3 steppableBoxExtents = new Vector3(0.1f, 0.4f, 0.2f);
+
+    EzLerp moveSpeedLerp = new EzLerp(1);
+
+    public float MoveSpeed => moveSpeedLerp.Lerp(moveSpeedNormal, moveSpeedKnackered);
+
     public void SetAsNormal()
     {
       mobility = Mobility.Normal;
