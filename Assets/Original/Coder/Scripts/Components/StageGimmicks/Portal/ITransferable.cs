@@ -4,7 +4,7 @@ namespace Assembly.Components.StageGimmicks
 {
   public interface ITransferable
   {
-    Portal closestPortal {set;}
+    Portal closestPortal {get; set;}
 
     bool Handshake(Portal portal);
 

@@ -42,7 +42,7 @@ namespace Assembly.Components.StageGimmicks
     protected virtual void OnTriggerExit(Collider other)
     {
       var x = other.GetComponent<ITransferable>();
-      if (x != null) x.closestPortal = this;
+      if (x != null && x.closestPortal == this) x.closestPortal = null;
     }
 
 #if UNITY_EDITOR
