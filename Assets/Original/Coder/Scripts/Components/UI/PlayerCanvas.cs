@@ -17,8 +17,8 @@ namespace Assembly.Components.UI
     Vector3 posR;
     Vector3 posL;
     [SerializeField] float moveDelta;
-    float easeR;
-    float easeL;
+    [SerializeField] EzLerp easeR = new EzLerp(1);
+    [SerializeField] EzLerp easeL = new EzLerp(1);
 
     void Start()
     {
@@ -43,18 +43,18 @@ namespace Assembly.Components.UI
         .Select(_ => Global.Control.HorizontalMoveInput.Value)
         .Subscribe(hmi =>
         {
-          easeR = Mathf.Lerp(easeR, (hmi == -1 ? 0 : hmi), 0.1f);
-          easeL = Mathf.Lerp(easeL, (hmi == 1 ? 0 : hmi), 0.1f);
+          easeR.SetAsIncrease(hmi == 1);
+          easeL.SetAsIncrease(hmi == -1);
 
           if (!player.gameObject.activeSelf) { return; }
 
-          uiRightArrow.transform.localPosition = new Vector3(posR.x + moveDelta * easeR, posR.y, posR.z);
-          uiLeftArrow.transform.localPosition = new Vector3(posL.x + moveDelta * easeL, posL.y, posL.z);
+          uiRightArrow.transform.localPosition = easeR.AddX(posR, moveDelta);
+          uiLeftArrow.transform.localPosition = easeL.AddX(posL, -moveDelta);
         }).AddTo(this);
     }
     void LateUpdate()
     {
-        transform.position = player.transform.position;
+      transform.position = player.transform.position;
     }
   }
 }

@@ -10,13 +10,13 @@ public class PressurePlate : MonoBehaviour
 
   enum Mode { Relax = -1, Press = 1 }
   Mode targetMode = Mode.Relax;
-  float animateProgress = 0;
+  [SerializeField]
+  EzLerp animateProgress = new EzLerp(1);
 
   [SerializeField] GameObject _plateObject;
   Material _plateMaterial;
   Vector3 _positionDefault;
   [SerializeField] Vector3 _positionDelta;
-  [SerializeField] float _secDuration;
   Color _relaxColor;
   [SerializeField] Color _pressColor;
 
@@ -46,11 +46,11 @@ public class PressurePlate : MonoBehaviour
   {
     while (Application.isPlaying)
     {
-      animateProgress = Mathf.Clamp01(animateProgress + (int)targetMode * Time.fixedDeltaTime / _secDuration);
-      _plateObject.transform.localPosition = _positionDefault + _positionDelta * animateProgress;
+      animateProgress.mode = (EzLerp.Mode)targetMode;
+      _plateObject.transform.localPosition = animateProgress.Add(_positionDefault, _positionDelta);
       if (_plateMaterial)
       {
-        _plateMaterial.color = Color.Lerp(_relaxColor, _pressColor, animateProgress);
+        _plateMaterial.color = animateProgress.Mix(_relaxColor, _pressColor);
       }
       await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
     }
