@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 333109833103839658}
   - component: {fileID: 333109833103839659}
   - component: {fileID: 2544326560853072376}
+  - component: {fileID: 8764011154640064307}
   - component: {fileID: 6092166074414875935}
   - component: {fileID: 4294192549798087281}
-  - component: {fileID: 1100529486313228836}
   m_Layer: 0
   m_Name: PlayerInterface
   m_TagString: GameController
@@ -75,6 +75,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefab: {fileID: 8353330523506930298, guid: 8c8b076293f7c694ab8c0776d8ee7594, type: 3}
   activeSpawnPoint: {fileID: 7946698944128784196}
+--- !u!114 &8764011154640064307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 333109833103839668}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37f822990f4ec804fa661b68b1efb69f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &6092166074414875935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,18 +143,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!114 &1100529486313228836
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 333109833103839668}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 864ba85a8705d8f409d03cfa246c7668, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &6156693094528624745
 GameObject:
   m_ObjectHideFlags: 0

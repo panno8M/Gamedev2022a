@@ -1,9 +1,7 @@
 using System;
 using UniRx.Ex.InteractionTraits.Core;
 using System.Collections.Generic;
-#if DEBUG
 using UnityEngine;
-#endif
 
 namespace UniRx.Ex.InteractionTraits
 {

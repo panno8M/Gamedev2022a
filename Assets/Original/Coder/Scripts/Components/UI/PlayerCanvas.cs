@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.Components.Actors;
+using Utilities;
 
 namespace Assembly.Components.UI
 {

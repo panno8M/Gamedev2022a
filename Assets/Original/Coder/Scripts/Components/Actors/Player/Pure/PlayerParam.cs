@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {

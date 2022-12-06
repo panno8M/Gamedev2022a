@@ -3,7 +3,9 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits.Core;
-using Senses.Pain;
+using Assembly.GameSystem;
+using Assembly.GameSystem.Damage;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
