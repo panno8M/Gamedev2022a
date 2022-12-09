@@ -1,7 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UniRx;
-using Senses.Pain;
+using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.UI
 {

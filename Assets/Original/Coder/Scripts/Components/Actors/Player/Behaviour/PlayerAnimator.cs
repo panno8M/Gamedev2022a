@@ -10,7 +10,7 @@ namespace Assembly.Components.Actors
     [SerializeField] Animator _anim;
     protected override void Blueprint()
     {
-      _actor.HorizontalMove
+      _actor.HoriMove
           .ThrottleFrame(5)
           .Subscribe(Walk)
           .AddTo(this);
@@ -48,9 +48,9 @@ namespace Assembly.Components.Actors
     {
       _anim.SetBool("Walk", b);
     }
-    void Walk(float hmi)
+    void Walk(PlayerAct.HoriMoveStat move)
     {
-      Walk(hmi != 0);
+      Walk(move != 0);
     }
 
     void Hold(HoldableModule holdable)

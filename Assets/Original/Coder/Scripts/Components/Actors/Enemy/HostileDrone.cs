@@ -2,8 +2,8 @@ using System;
 using UnityEngine;
 
 using UniRx;
-using Senses.Pain;
 using Senses.Sight;
+using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.Actors
 {

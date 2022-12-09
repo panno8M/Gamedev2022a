@@ -1,4 +1,5 @@
 using UnityEngine;
+using Assembly.GameSystem;
 
 namespace Assembly.Components.Actors
 {

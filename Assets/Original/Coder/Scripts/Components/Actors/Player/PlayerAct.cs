@@ -3,159 +3,180 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using UniRx.Ex.InteractionTraits.Core;
-using Senses.Pain;
+using Assembly.GameSystem;
+using Assembly.GameSystem.Damage;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
   public class PlayerAct : ActorCore<PlayerAct>
   {
-    public enum Direction { Left = -1, Right = 1 }
     public enum ControlMethods { ActiveAll, IgnoreAnyInput }
+    public enum HoriMoveStat { Left = -1, Idle = 0, Right = 1 }
 
     #region forBehaviourControlling
     IObservable<Unit> _onJump;
     IObservable<Unit> _onLand;
 
-    Subject<Direction> _whileWalking = new Subject<Direction>();
-    Subject<Direction> _whileSkywalking = new Subject<Direction>();
-    Subject<Unit> _afterBehavior = new Subject<Unit>();
+    Subject<PlayerAct> _Behavior = new Subject<PlayerAct>();
+    public IObservable<PlayerAct> Behavior => _Behavior;
 
-    public IObservable<Direction> WhileWalking => _whileWalking;
-    public IObservable<Direction> WhileSkywalking => _whileSkywalking;
-    public IObservable<Unit> AfterBehavior => _afterBehavior;
-
-    public ReactiveProperty<float> _HorizontalMove = new ReactiveProperty<float>();
-    public IObservable<float> HorizontalMove => _HorizontalMove;
-    public float horizontalMove => _HorizontalMove.Value;
-
-    public ReactiveProperty<Direction> _LookDir = new ReactiveProperty<Direction>(Direction.Right);
-    public IObservable<Direction> LookDir => _LookDir;
-    public Direction lookDir => _LookDir.Value;
 
     public ReactiveProperty<ControlMethods> ControlMethod = new ReactiveProperty<ControlMethods>();
     public bool isControlAccepting => ControlMethod.Value != ControlMethods.IgnoreAnyInput;
 
     public IObservable<Unit> OnJump => _onJump ??
         (_onJump = Global.Control.GoUp
-            .Where(_ => _isOnGround.Value));
+            .Where(_ => isOnGround));
     public IObservable<int> OnFlapWhileFalling => OnFlap.Where(x => x == 1);
     public IObservable<int> OnFlap => _flapCtl.OnFlap;
     public IObservable<Unit> OnLand => _onLand ??
-        (_onLand = _isOnGround
+        (_onLand = IsOnGround
             .Where(x => x)
             .AsUnitObservable());
     #endregion
 
     #region editable params
-    [SerializeField] float groundNormalDegreeThreshold;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Interactor _interactor;
 
     [SerializeField] PlayerParam _param = new PlayerParam();
     public PlayerParam param => _param;
+
+    A2Dir _lookDirection = new A2Dir();
+    public A2Dir lookDirection => _lookDirection;
+    public Vector3 lookVector => (Vector3)_lookDirection;
     #endregion
 
     #region behaviour statements
-    [SerializeField] ReactiveProperty<bool> _isOnGround = new ReactiveProperty<bool>();
+    bool _isOnGroundSwap;
+    bool _obstacleCollidingSwap;
+    [SerializeField] ReactiveProperty<bool> _IsOnGround = new ReactiveProperty<bool>();
+    public IObservable<bool> IsOnGround => _IsOnGround;
+    public bool isOnGround => _IsOnGround.Value;
+
     [SerializeField] PlayerFlapCtl _flapCtl = new PlayerFlapCtl(1);
-    [SerializeField] float _wallCollidingDirection;
+    ReactiveProperty<HoriMoveStat> _HoriMove = new ReactiveProperty<HoriMoveStat>();
+    public IObservable<HoriMoveStat> HoriMove => _HoriMove;
+
+    public bool obstacleColliding;
+    public bool obstacleClimbable;
+    public Vector3 obstacleTangent;
     #endregion
 
     #region accessors
     public IDamagable damagable => _damagable;
     public Interactor interactor => _interactor;
     public PlayerFlapCtl flapCtl => _flapCtl;
-    public ReadOnlyReactiveProperty<bool> isOnGround => _isOnGround.ToReadOnlyReactiveProperty();
+
+    public HoriMoveStat horiMove
+    {
+      set
+      {
+        _HoriMove.Value = value;
+        var newDir = _lookDirection.CalcNewDirection((int)value);
+        if (newDir != _lookDirection.current)
+        {
+          transform.localScale = transform.localScale.Xyz();
+          _lookDirection.current = newDir;
+        }
+      }
+      get
+      {
+        return _HoriMove.Value;
+      }
+    }
     #endregion
 
     protected override void OnAssemble()
     {
       ControlMethod.Value = ControlMethods.ActiveAll;
       transform.position = Global.PlayerPool.activeSpawnPoint.position;
-      var ls = transform.localScale;
-      transform.localScale = new Vector3(Mathf.Abs(ls.x), ls.y, ls.z);
-      _LookDir.Value = Direction.Right;
-      _wallCollidingDirection = 0;
+
+      _HoriMove.Value = 0;
+      _lookDirection.Clear();
+      obstacleColliding = false;
+      obstacleClimbable = false;
+      obstacleTangent = Vector3.zero;
+
+      transform.localScale = _lookDirection.SignX(transform.localScale);
     }
 
     protected override void Blueprint()
     {
       this.OnCollisionStayAsObservable()
-          .Where(_ => isControlAccepting)
           .Subscribe(collision =>
           {
             foreach (var contact in collision.contacts)
             {
-              if (Vector2.Dot(contact.normal, Vector3.up) >= Mathf.Cos(groundNormalDegreeThreshold * Mathf.PI / 360f))
+              if (Vector3.Angle(contact.normal, Vector3.up) < param.degreeClimbableObstacle)
               {
-                _isOnGround.Value = true;
+                _isOnGroundSwap = true;
                 _flapCtl.ResetCount();
               }
-              else
+              else if (Vector3.Angle(contact.normal, -lookVector) < param.degreeUnclimbableObstacle)
               {
-                _wallCollidingDirection =
-                      (contact.normal.x > 0) ? -1 :
-                      (contact.normal.x < 0) ? 1 :
-                      0;
+                _obstacleCollidingSwap = true;
+                obstacleTangent = Quaternion.FromToRotation(Vector3.up, contact.normal) * lookVector;
               }
             }
           });
       this.OnCollisionExitAsObservable()
-          .Where(_ => isControlAccepting)
           .Subscribe(collision =>
           {
-            _isOnGround.Value = false;
-            _wallCollidingDirection = 0;
+            _IsOnGround.Value = false;
+            obstacleColliding = false;
           });
 
       this.FixedUpdateAsObservable()
-          .Where(_ => isControlAccepting)
-          .Select(_ => horizontalMove)
-          .Subscribe(hmi =>
-          {
-            if (hmi != 0 && hmi != _wallCollidingDirection)
-            {
-              if (isOnGround.Value)
-              {
-                _whileWalking.OnNext(lookDir);
-              }
-              else
-              {
-                _whileSkywalking.OnNext(lookDir);
-              }
-            }
-            _afterBehavior.OnNext(Unit.Default);
-          });
+        .Subscribe(_ =>
+        {
+
+          _IsOnGround.Value = _isOnGroundSwap;
+          obstacleColliding = _obstacleCollidingSwap;
+
+          _isOnGroundSwap = false;
+          _obstacleCollidingSwap = false;
+
+          if (!isControlAccepting) { return; }
+
+          _Behavior.OnNext(this);
+
+          obstacleClimbable = obstacleColliding && !Physics.CheckBox(
+            transform.position + lookDirection.FollowX(param.steppableBoxCenter),
+            param.steppableBoxExtents,
+            Quaternion.identity, new Layers(Layer.Stage, Layer.Dynamics));
+        });
 
       sbsc_MoveAndDirect();
 
       Global.Control.Interact
           .Where(_ => isControlAccepting)
-          .Subscribe(_ =>
-          {
-            _interactor.Process();
-          }).AddTo(this);
+              .Subscribe(_ =>
+              {
+                _interactor.Process();
+              }).AddTo(this);
 
       Global.Control.GoUp
           .Where(_ => isControlAccepting)
-          .Where(_ => !_isOnGround.Value)
-          .Subscribe(_ =>
-          {
-            _flapCtl.Inc();
-          }).AddTo(this);
+              .Where(_ => !isOnGround)
+              .Subscribe(_ =>
+              {
+                _flapCtl.Inc();
+              }).AddTo(this);
 
       _interactor.holder.HoldingItem
           .Subscribe(item =>
-          {
-            if (item)
-            {
-              _flapCtl.TightenLimit(0);
-            }
-            else
-            {
-              _flapCtl.ResetLimit();
-            }
-          }).AddTo(this);
+              {
+                if (item)
+                {
+                  _flapCtl.TightenLimit(0);
+                }
+                else
+                {
+                  _flapCtl.ResetLimit();
+                }
+              }).AddTo(this);
 
     }
 
@@ -163,26 +184,20 @@ namespace Assembly.Components.Actors
     {
       Global.Control.HorizontalMoveInput
         .Where(hmi => isControlAccepting)
-        .Subscribe(hmi => _HorizontalMove.Value = hmi)
+        .Subscribe(hmi => horiMove = (HoriMoveStat)hmi)
         .AddTo(this);
       ControlMethod
         .Where(x => x == ControlMethods.IgnoreAnyInput)
-        .Subscribe(hmi => _HorizontalMove.Value = 0);
+        .Subscribe(hmi => horiMove = 0);
+    }
 
-      HorizontalMove
-          .Select(CalcCurrentDirection)
-          .Where(dir => dir != lookDir)
-          .Subscribe(dir =>
-          {
-            transform.localScale = transform.localScale.Xyz();
-            _LookDir.Value = dir;
-          })
-          .AddTo(this);
-
-      Direction CalcCurrentDirection(float hmi)
-      {
-        return hmi != 0 ? (Direction)hmi : lookDir;
-      }
+    void OnDrawGizmos()
+    {
+      Gizmos.color = Color.cyan;
+      if (lookDirection != null)
+        Gizmos.DrawWireCube(
+          transform.position + lookDirection.FollowX(param.steppableBoxCenter),
+          param.steppableBoxExtents * 2);
     }
   }
 }

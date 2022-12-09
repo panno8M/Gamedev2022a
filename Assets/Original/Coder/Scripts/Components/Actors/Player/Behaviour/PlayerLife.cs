@@ -2,8 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Senses.Pain;
-using Senses;
+using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.Actors
 {

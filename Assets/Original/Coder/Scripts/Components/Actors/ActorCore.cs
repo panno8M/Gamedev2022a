@@ -1,7 +1,6 @@
 using System;
-using UnityEngine;
 using UniRx;
-using Senses.Pain;
+using Assembly.GameSystem;
 
 namespace Assembly.Components.Actors
 {
