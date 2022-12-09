@@ -8,9 +8,6 @@ namespace Assembly.Components.Actors
 {
   public class PlayerLife : ActorBehavior<PlayerAct>
   {
-    [SerializeField] int _dmgAmountOverTime = 1;
-    [SerializeField] float _msDmgInterval = 300;
-
     protected override void OnAssemble()
     {
       _actor.damagable.Repair();
@@ -38,13 +35,6 @@ namespace Assembly.Components.Actors
               .Subscribe(_ => Global.PlayerPool.Spawn())
               .AddTo(this);
           }).AddTo(this);
-
-      this.FixedUpdateAsObservable()
-        .ThrottleFirst(TimeSpan.FromMilliseconds(_msDmgInterval))
-        .Subscribe(_ =>
-        {
-          _actor.damagable.Affect(new DamageUnit(DamageKind.Water, _dmgAmountOverTime));
-        }).AddTo(this);
     }
   }
 }

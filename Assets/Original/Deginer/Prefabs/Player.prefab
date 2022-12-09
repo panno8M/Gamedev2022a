@@ -5110,8 +5110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   param:
-    stamina: 3
-    secCoolDownToNextDamage: 3
+    stamina: 1
+    secCoolDownToNextDamage: 0
     allowDamageSource: 2
     damageDisabled: 0
   inspector:
@@ -5417,8 +5417,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
-  _dmgAmountOverTime: 1
-  _msDmgInterval: 300
 --- !u!114 &281757296479911890
 MonoBehaviour:
   m_ObjectHideFlags: 0
