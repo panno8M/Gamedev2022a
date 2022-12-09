@@ -2,12 +2,15 @@ using System;
 using UniRx;
 using UniRx.Ex.InteractionTraits.Core;
 using UnityEngine;
+using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.StageGimmicks
 {
   public class Kandelaar : MonoBehaviour
   {
     [SerializeField] Interactable _interactable;
+    [SerializeField] DamagableComponent _damagable;
+    [SerializeField] ParticleSystem _psSmoke;
     [SerializeField] Rigidbody _rb;
 
     void Start()
@@ -30,6 +33,13 @@ namespace Assembly.Components.StageGimmicks
                 _rb.angularVelocity = Vector3.zero;
               });
           });
+      _damagable.OnBroken
+        .Subscribe(_ =>
+        {
+          Debug.Log("Kandelaar Broken!");
+          _psSmoke.Play();
+          Observable.TimerFrame(1).Subscribe(_ => _psSmoke.Stop());
+        }).AddTo(this);
     }
   }
 }
