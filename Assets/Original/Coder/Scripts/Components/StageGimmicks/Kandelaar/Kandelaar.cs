@@ -3,6 +3,7 @@ using UniRx;
 using UniRx.Ex.InteractionTraits.Core;
 using UnityEngine;
 using Assembly.GameSystem.Damage;
+using Assembly.Components.Actors;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -12,6 +13,9 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
     [SerializeField] Rigidbody _rb;
+
+    [SerializeField] SafetyTrigger _supplyFieldTrigger;
+    PlayerFlameReceptor _playerFlameReceptor;
 
     void Start()
     {
@@ -40,6 +44,19 @@ namespace Assembly.Components.StageGimmicks
           _psSmoke.Play();
           Observable.TimerFrame(1).Subscribe(_ => _psSmoke.Stop());
         }).AddTo(this);
+
+      _supplyFieldTrigger.Triggers.ObserveAdd()
+        .Subscribe(trigger =>
+        {
+          if (!_playerFlameReceptor)
+          {
+            _playerFlameReceptor = trigger.Value.GetComponent<PlayerFlameReceptor>();
+          }
+          if (_playerFlameReceptor)
+          {
+            _playerFlameReceptor.flameAvailable = true;
+          }
+        });
     }
   }
 }

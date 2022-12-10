@@ -16,7 +16,7 @@ TagManager:
   - UI
   - Physics/Stage
   - Ctlvol/Trigger
-  - 
+  - Ctlvol/ForPlayer
   - Senses/AiVisible
   - Senses/Damagable
   - ScreenToStageConverter
@@ -25,7 +25,7 @@ TagManager:
   - Senses/Interactor
   - Physics/Item
   - Senses/Damager
-  - 
+  - Physics/Player
   - 
   - 
   - 
