@@ -15,7 +15,6 @@ public class HitToStageTransition : MonoBehaviour
 
     void OnTriggerEnter(Collider other){
         if(other.gameObject.tag == "Player"){
-            Debug.Log("HIT");
             switch(reaction_Type){
                 case REACTION_TYPE.Load :
                     if(!stageTransition.CheckAlreadySceneLoaded(stageTransitionMgr.nextStageName)){

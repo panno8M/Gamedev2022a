@@ -540,6 +540,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7342979973684559179, guid: 950810521f06e1b48867f5c64c4a4d6d,
+        type: 3}
+      propertyPath: nextStageName
+      value: temporaryEndingScene
+      objectReference: {fileID: 0}
     - target: {fileID: 7342979973684559189, guid: 950810521f06e1b48867f5c64c4a4d6d,
         type: 3}
       propertyPath: m_Name
