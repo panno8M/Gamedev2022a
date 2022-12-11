@@ -97,7 +97,8 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: d19beb2b50c87b444a9fb2e0dcc4b6bb,
+    type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -3524,6 +3525,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: SceneTransition
+      objectReference: {fileID: 0}
+    - target: {fileID: 4893421281839908149, guid: 9a14cc8004eb3ea45b218450fb57188f,
+        type: 3}
+      propertyPath: sceneName.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4893421281839908149, guid: 9a14cc8004eb3ea45b218450fb57188f,
+        type: 3}
+      propertyPath: sceneName.Array.data[0]
+      value: temporaryStage2
       objectReference: {fileID: 0}
     - target: {fileID: 4893421281839908151, guid: 9a14cc8004eb3ea45b218450fb57188f,
         type: 3}
