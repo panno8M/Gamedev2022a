@@ -13,4 +13,18 @@ public class StageTransition
     public void Transition(AsyncOperation nextScene){
         nextScene.allowSceneActivation = true;
     }
+
+    public bool CheckAlreadySceneLoaded(string sceneName){
+
+        bool alreadyLoaded = false;
+
+        for(int i = 0; i < UnityEngine.SceneManagement.SceneManager.sceneCount; i++){
+            string loadedSceneName = UnityEngine.SceneManagement.SceneManager.GetSceneAt(i).name;
+            if(loadedSceneName == sceneName){
+                alreadyLoaded = true;
+            }
+        }
+
+        return alreadyLoaded;
+    }
 }
