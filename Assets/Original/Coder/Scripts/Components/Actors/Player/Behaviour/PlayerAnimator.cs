@@ -1,6 +1,7 @@
 using UnityEngine;
 using UniRx;
 using UniRx.Ex.InteractionTraits;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
@@ -19,7 +20,7 @@ namespace Assembly.Components.Actors
           .Subscribe(Hold)
           .AddTo(this);
 
-      _breath.IsExhaling
+      _breath.exhalingProgress.OnModeChanged
           .Subscribe(Breath)
           .AddTo(this);
 
@@ -59,6 +60,7 @@ namespace Assembly.Components.Actors
     }
 
     void Breath(bool b) { _anim.SetBool("Fire", b); }
+    void Breath(EzLerp.Mode mode) { _anim.SetBool("Fire", mode == EzLerp.Mode.Increase); }
     void Die(bool b) { _anim.SetBool("Die", b); }
     void Die(Unit _) { Die(true); }
     void Revival(Unit _) { Die(false); }

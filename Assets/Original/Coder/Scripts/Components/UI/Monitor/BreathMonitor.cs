@@ -17,15 +17,16 @@ public class BreathMonitor : MonoBehaviour
 
   void Update()
   {
-    if (_breath.isCoolingDown)
+    string timeString = "[" + ((int)(_breath.exhalingProgress.elapsedSeconds * 1000)).ToString().PadLeft(4, '0') + " ms]";
+    if (_breath.exhalingProgress.isIncreasing)
     {
-      _text.SetText("Breath: Cooling Down [" + _breath.msecCooldown.ToString().PadLeft(4, '0') + " ms]");
-      _text.color = Color.cyan;
-    }
-    else if (_breath.IsExhaling.Value)
-    {
-      _text.SetText("Breath: Exhaling     [" + _breath.msecExhaling.ToString().PadLeft(4, '0') + " ms]");
+      _text.SetText("Breath: Exhaling     " + timeString);
       _text.color = Color.red;
+    }
+    else if (_breath.exhalingProgress != 0)
+    {
+      _text.SetText("Breath: Cooling Down " + timeString);
+      _text.color = Color.cyan;
     }
     else
     {

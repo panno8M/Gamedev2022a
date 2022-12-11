@@ -1,4 +1,7 @@
+using System;
 using UnityEngine;
+using UniRx;
+
 namespace Utilities
 {
 
@@ -7,10 +10,10 @@ namespace Utilities
   {
     public enum Mode { Increase = 1, Decrease = -1 }
 
-    public EzLerp(float secDuration)
+    public EzLerp(float secDuration, Mode mode = Mode.Increase)
     {
       this.secDuration = secDuration;
-      this.mode = Mode.Increase;
+      this.mode = mode;
     }
     public EzLerp()
     {
@@ -19,32 +22,61 @@ namespace Utilities
     }
 
     float latestCallTime;
-    [Range(0f, 1f)] float _alpha;
-    float _curvedAplha;
-    [SerializeField] public float secDuration;
-    float alpha => useCurve ? _curvedAplha : _alpha;
-    public Mode mode { get; set; }
+
     public bool useCurve;
     public AnimationCurve curve;
 
+    [SerializeField][Range(0f, 1f)] float _basisAlpha;
+    float _curvedAplha;
+    float alpha => useCurve ? _curvedAplha : _basisAlpha;
+
+    [SerializeField] public float secDuration;
+
+    [SerializeField] ReactiveProperty<Mode> _mode = new ReactiveProperty<Mode>();
+    public Mode mode
+    {
+      get { return _mode.Value; }
+      set { _mode.Value = value; }
+    }
+
+    public IObservable<Mode> OnModeChanged => _mode;
+    public IObservable<Unit> OnIncrease => _mode
+      .Where(x => x == Mode.Increase)
+      .AsUnitObservable();
+    public IObservable<Unit> OnDecrease => _mode
+      .Where(x => x == Mode.Decrease)
+      .AsUnitObservable();
+
+    public bool isIncreasing => mode == Mode.Increase;
+    public bool isDecreasing => mode == Mode.Decrease;
+
+    public float elapsedSeconds => alpha * secDuration;
+
+    public float CalcAlpha()
+    {
+      var delta = Time.time - latestCallTime;
+      if (delta < 0.001) { return alpha; }
+      latestCallTime = Time.time;
+      _basisAlpha = Mathf.Clamp01(_basisAlpha + (float)mode * delta / secDuration);
+      if (useCurve)
+      {
+        _curvedAplha = curve.Evaluate(_basisAlpha);
+        return _curvedAplha;
+      }
+      return _basisAlpha;
+    }
+
     public static implicit operator float(EzLerp ezlerp)
     {
-      var delta = Time.time - ezlerp.latestCallTime;
-      if (delta < 0.001) { return ezlerp.alpha; }
-      ezlerp.latestCallTime = Time.time;
-      ezlerp._alpha = Mathf.Clamp01(ezlerp._alpha + (float)ezlerp.mode * delta / ezlerp.secDuration);
-      if (ezlerp.useCurve)
-      {
-        ezlerp._curvedAplha = ezlerp.curve.Evaluate(ezlerp._alpha);
-        return ezlerp._curvedAplha;
-      }
-      return ezlerp._alpha;
+      return ezlerp.CalcAlpha();
     }
 
     public void SetAsIncrease(bool b)
     {
       mode = b ? Mode.Increase : Mode.Decrease;
     }
+    public void SetAsIncrease() { mode = Mode.Increase; }
+    public void SetAsDecrease() { mode = Mode.Decrease; }
 
     #region Mixers
     public float Mix(float from, float to)
