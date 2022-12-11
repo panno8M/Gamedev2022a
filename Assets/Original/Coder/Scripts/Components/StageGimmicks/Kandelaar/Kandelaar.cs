@@ -54,7 +54,7 @@ namespace Assembly.Components.StageGimmicks
           }
           if (_playerFlameReceptor)
           {
-            _playerFlameReceptor.flameAvailable = true;
+            _playerFlameReceptor.flameQuantity = 1;
           }
         });
     }

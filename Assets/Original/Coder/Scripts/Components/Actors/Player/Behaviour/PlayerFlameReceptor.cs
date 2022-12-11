@@ -6,21 +6,26 @@ namespace Assembly.Components.Actors
 {
   public class PlayerFlameReceptor : ActorBehavior<PlayerAct>
   {
-    bool _flameAvailable;
-    public bool flameAvailable
+    [SerializeField] Renderer _flame;
+    Vector3 flameDefaultScale;
+
+    [SerializeField][Range(0, 1)] float _flameQuantity;
+
+    public float flameQuantity
     {
-      get
-      {
-        return _flameAvailable;
-      }
+      get { return _flameQuantity; }
       set
       {
-        _flame.enabled = value;
-        _flameAvailable = value;
+        _flameQuantity = value;
+        _flame.enabled = value != 0;
+        if (flameDefaultScale == Vector3.zero)
+        {
+          flameDefaultScale = _flame.transform.localScale;
+        }
+        _flame.transform.localScale = flameDefaultScale * value;
       }
     }
 
-    [SerializeField] Renderer _flame;
     protected override void Blueprint()
     {
       _flame.enabled = false;

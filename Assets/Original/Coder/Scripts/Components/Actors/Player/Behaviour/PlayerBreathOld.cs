@@ -5,9 +5,8 @@ using Utilities;
 
 namespace Assembly.Components.Actors
 {
-  public class PlayerBreath : ActorBehavior<PlayerAct>
+  public class PlayerBreathOld: ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerFlameReceptor _flameReceptor;
     [SerializeField] ParticleSystem psFlameBreath;
 
     public EzLerp exhalingProgress = new EzLerp(3, EzLerp.Mode.Decrease);
@@ -20,7 +19,6 @@ namespace Assembly.Components.Actors
             if (exhalingProgress.isIncreasing)
             {
               psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-              _flameReceptor.flameQuantity = 1 - exhalingProgress;
               if (exhalingProgress == 1)
               {
                 exhalingProgress.SetAsDecrease();
@@ -50,15 +48,20 @@ namespace Assembly.Components.Actors
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => _flameReceptor.flameQuantity != 0)
           .Where(_ => !_actor.interactor.holder.hasItem)
+          .Where(_ => exhalingProgress.isDecreasing)
           .Subscribe(_ => exhalingProgress.SetAsIncrease())
           .AddTo(this);
 
       _actor.interactor.holder.RequestHold
+          .Where(_ => Global.Control.BreathInput.Value)
+          .AsUnitObservable()
+          .Merge(Global.Control.BreathRelease)
+          .Where(_ => exhalingProgress.isIncreasing)
           .Subscribe(_ => exhalingProgress.SetAsDecrease())
           .AddTo(this);
     }
+
 
     void SetOveruseLimitation()
     {
@@ -75,7 +78,6 @@ namespace Assembly.Components.Actors
 
     void CooldownStart()
     {
-      _flameReceptor.flameQuantity = 0;
       psFlameBreath.Stop();
     }
   }

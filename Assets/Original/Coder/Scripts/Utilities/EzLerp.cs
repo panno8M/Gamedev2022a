@@ -28,7 +28,23 @@ namespace Utilities
 
     [SerializeField][Range(0f, 1f)] float _basisAlpha;
     float _curvedAplha;
-    float alpha => useCurve ? _curvedAplha : _basisAlpha;
+
+    public float alpha
+    {
+      get { return useCurve ? _curvedAplha : _basisAlpha; }
+    }
+    public float BasisAlpha
+    {
+      get { return _basisAlpha; }
+      set
+      {
+        _basisAlpha = value;
+        if (useCurve)
+        {
+          _curvedAplha = curve.Evaluate(_basisAlpha);
+        }
+      }
+    }
 
     [SerializeField] public float secDuration;
 
@@ -57,13 +73,8 @@ namespace Utilities
       var delta = Time.time - latestCallTime;
       if (delta < 0.001) { return alpha; }
       latestCallTime = Time.time;
-      _basisAlpha = Mathf.Clamp01(_basisAlpha + (float)mode * delta / secDuration);
-      if (useCurve)
-      {
-        _curvedAplha = curve.Evaluate(_basisAlpha);
-        return _curvedAplha;
-      }
-      return _basisAlpha;
+      BasisAlpha = Mathf.Clamp01(_basisAlpha + (float)mode * delta / secDuration);
+      return alpha;
     }
 
     public static implicit operator float(EzLerp ezlerp)
