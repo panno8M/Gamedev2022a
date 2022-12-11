@@ -144,12 +144,13 @@ GameObject:
   m_Component:
   - component: {fileID: 1210545985916033634}
   - component: {fileID: 1210545985916033635}
+  - component: {fileID: 8505779054731305054}
+  - component: {fileID: 9119622892683133504}
   - component: {fileID: 3232116125892301783}
   - component: {fileID: 2306078447278281753}
   - component: {fileID: 1210545985916033644}
   - component: {fileID: 1210545985916033645}
   - component: {fileID: 202388476017288612}
-  - component: {fileID: 8505779054731305054}
   m_Layer: 3
   m_Name: HostileDrone
   m_TagString: Untagged
@@ -196,6 +197,33 @@ MonoBehaviour:
   sight: {fileID: 889259706891757632}
   damagable: {fileID: 9026324072695872059}
   patrol: {fileID: 8505779054731305054}
+--- !u!114 &8505779054731305054
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210545985916033633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3c0b20f122165d408e229bd70974c06, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0.03
+--- !u!114 &9119622892683133504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210545985916033633}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2ae5d603dcdd142874b175c2470d58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  moveSpeed: 0.03
 --- !u!114 &3232116125892301783
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,19 +294,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _next: {fileID: 0}
   _kind: 3
---- !u!114 &8505779054731305054
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1210545985916033633}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3c0b20f122165d408e229bd70974c06, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 0.03
 --- !u!1 &1210545986345958735
 GameObject:
   m_ObjectHideFlags: 0
