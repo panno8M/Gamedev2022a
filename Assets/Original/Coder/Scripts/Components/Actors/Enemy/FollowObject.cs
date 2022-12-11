@@ -19,39 +19,32 @@ namespace Assembly.Components.Actors
     float sqrFurthestDistance => _furthestDistance * _furthestDistance;
     void FixedUpdate()
     {
-      if (!this || !isActiveAndEnabled) { return; }
       var rot = Quaternion.LookRotation(target.position - transform.position);
-      if (transform.rotation != rot)
-      {
-        transform.rotation = Quaternion.RotateTowards(
-          transform.rotation,
-          rot,
-          2f);
-      }
+      transform.rotation = Quaternion.RotateTowards(
+        transform.rotation,
+        rot,
+        2f);
       hose.LookAt(target);
 
 
       float sqrDistance = (target.position - transform.position).sqrMagnitude;
       if (sqrDistance < sqrClosestDistance)
       {
-        MoveBackWard();
+        weight = -1;
       }
       else if (sqrFurthestDistance < sqrDistance)
       {
-        MoveForward();
+        weight = 1;
       }
-      else
-      {
-        _emitter.Launch();
-      }
+      else { weight = 0; }
+
+      Move();
+      _emitter.Launch();
     }
-    void MoveForward()
+    float weight;
+    void Move()
     {
-      rb.MovePosition(transform.position + transform.forward * moveSpeed);
-    }
-    void MoveBackWard()
-    {
-      rb.MovePosition(transform.position - transform.forward * moveSpeed);
+      transform.position += transform.forward * moveSpeed * weight * Time.deltaTime;
     }
   }
 }

@@ -8,7 +8,6 @@ namespace Assembly.Components.Actors
 {
   public class WaterEmitter : MonoBehaviour
   {
-    [SerializeField] GameObject prefab;
     [SerializeField] Transform emitterTransform;
     [SerializeField] float power;
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);

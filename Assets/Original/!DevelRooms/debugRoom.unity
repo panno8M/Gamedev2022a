@@ -2297,6 +2297,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
         type: 3}
+      propertyPath: moveSpeed
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
+        type: 3}
       propertyPath: _closestDistance
       value: 3
       objectReference: {fileID: 0}
@@ -2314,11 +2319,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.x
       value: -10
-      objectReference: {fileID: 0}
-    - target: {fileID: 3092124501620257172, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: power
-      value: 300
       objectReference: {fileID: 0}
     - target: {fileID: 7661285658798842535, guid: 5c64d533f670d294580964bc48fcc253,
         type: 3}
