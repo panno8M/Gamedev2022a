@@ -1,5 +1,4 @@
-using System;
-using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
@@ -33,7 +32,7 @@ namespace Assembly.Components.Actors.player
       OnPortalOverrap.Subscribe(portal =>
       {
         Say("I found out the " + portal.kind + "!");
-        if (new[] { PortalKind.Passage, PortalKind.Wormhole }.Any(x => x == portal.kind))
+        if (portal.kind == PortalKind.Passage || portal.kind == PortalKind.Wormhole)
         {
           Transfer().Forget();
         }
@@ -41,14 +40,14 @@ namespace Assembly.Components.Actors.player
       }).AddTo(this);
     }
 
-    protected override async UniTask OnStartTransfer(Portal portal)
+    protected override async UniTask OnStartTransfer(Portal portal, CancellationToken token)
     {
       Say("Gotcha! This portal seems work!");
       await UniTask.Delay(_secTransferDurationEnter);
       Say("Let's go beyond!");
     }
 
-    protected override UniTask OnProcessTransfer(Portal portal)
+    protected override UniTask OnProcessTransfer(Portal portal, CancellationToken token)
     {
       switch (portal.kind)
       {
@@ -62,7 +61,7 @@ namespace Assembly.Components.Actors.player
       return UniTask.CompletedTask;
     }
 
-    protected override async UniTask OnCompleteTransfer(Portal portal)
+    protected override async UniTask OnCompleteTransfer(Portal portal, CancellationToken token)
     {
       Say("Wow, where is here...?");
       await UniTask.Delay(_secTransferDurationExit);

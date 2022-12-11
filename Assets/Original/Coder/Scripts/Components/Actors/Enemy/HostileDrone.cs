@@ -24,14 +24,14 @@ namespace Assembly.Components.Actors
           {
             if (damagable.isBroken) { return; }
             psWater.Play();
-            patrol.Stop();
+            patrol.enabled = false;
           }).AddTo(this);
       sight.OnLost
           .Subscribe(_ =>
           {
             if (damagable.isBroken) { return; }
             psWater.Stop();
-            patrol.Play();
+            patrol.enabled = true;
           }).AddTo(this);
 
       damagable.TotalDamage
@@ -50,7 +50,7 @@ namespace Assembly.Components.Actors
     {
       GetComponent<Rigidbody>().useGravity = true;
       GetComponent<Rigidbody>().isKinematic = false;
-      patrol.Stop();
+      patrol.enabled = false;
       psWater.Stop();
     }
   }

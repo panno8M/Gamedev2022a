@@ -3453,6 +3453,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Kandelaar
       objectReference: {fileID: 0}
+    - target: {fileID: 6081656079857309210, guid: 499b7c0e359b0f24eb9cb396d4c50d9d,
+        type: 3}
+      propertyPath: m_TagString
+      value: Kandelaar
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 499b7c0e359b0f24eb9cb396d4c50d9d, type: 3}
 --- !u!1001 &4801503378837062300

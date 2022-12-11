@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Utilities;
@@ -26,12 +27,12 @@ namespace Assembly.Components.StageGimmicks
       return enabled && next;
     }
 
-    public async UniTask Transfer(ITransferable item)
+    public async UniTask Transfer(ITransferable item, CancellationToken token = default(CancellationToken))
     {
       if (item == null || !Handshake(item) || !item.Handshake(this)) { return; }
-      if (item != null) await item.StartTransfer(this);
-      if (item != null) await item.ProcessTransfer(this);
-      if (item != null) await item.CompleteTransfer(this);
+      if (item != null) await item.StartTransfer(this, token);
+      if (item != null) await item.ProcessTransfer(this, token);
+      if (item != null) await item.CompleteTransfer(this, token);
     }
 
     protected virtual void OnTriggerEnter(Collider other)
