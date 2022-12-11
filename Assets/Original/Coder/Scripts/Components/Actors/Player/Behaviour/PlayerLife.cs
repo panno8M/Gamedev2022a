@@ -1,8 +1,6 @@
 using System;
-using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
-using Assembly.GameSystem.Damage;
+using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.Actors
 {
@@ -32,7 +30,7 @@ namespace Assembly.Components.Actors
               .Subscribe(_ => Global.PlayerPool.Despawn())
               .AddTo(this);
             Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerPool.Spawn())
+              .Subscribe(_ => Global.PlayerPool.Spawn(ObjectCreateInfo.None))
               .AddTo(this);
           }).AddTo(this);
     }

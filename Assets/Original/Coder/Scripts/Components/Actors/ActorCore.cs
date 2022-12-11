@@ -1,6 +1,6 @@
 using System;
 using UniRx;
-using Assembly.GameSystem;
+using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.Actors
 {

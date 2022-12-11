@@ -11,7 +11,7 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(PatrolWaypoint))]
   public class HostileDrone : MonoBehaviour
   {
-    [SerializeField] ParticleSystem psWater;
+    [SerializeField] WaterEmitter _emitter;
     [SerializeField] ParticleSystem psBurnUp;
     [SerializeField] AiSight sight;
     [SerializeField] DamagableComponent damagable;
@@ -23,14 +23,13 @@ namespace Assembly.Components.Actors
           .Subscribe(_ =>
           {
             if (damagable.isBroken) { return; }
-            psWater.Play();
+            _emitter.Launch();
             patrol.enabled = false;
           }).AddTo(this);
       sight.OnLost
           .Subscribe(_ =>
           {
             if (damagable.isBroken) { return; }
-            psWater.Stop();
             patrol.enabled = true;
           }).AddTo(this);
 
@@ -51,7 +50,6 @@ namespace Assembly.Components.Actors
       GetComponent<Rigidbody>().useGravity = true;
       GetComponent<Rigidbody>().isKinematic = false;
       patrol.enabled = false;
-      psWater.Stop();
     }
   }
 }

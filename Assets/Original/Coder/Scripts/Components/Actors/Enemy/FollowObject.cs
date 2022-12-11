@@ -2,25 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowObject : MonoBehaviour
+namespace Assembly.Components.Actors
 {
-  public Transform target;
-  [SerializeField] float moveSpeed = 0.03f;
-  [SerializeField] Rigidbody rb;
-  [SerializeField] Transform hose;
-  void FixedUpdate()
+  public class FollowObject : MonoBehaviour
   {
-    if (!this || !isActiveAndEnabled) { return; }
-    var rot = Quaternion.LookRotation(target.position - transform.position);
-    if (transform.rotation != rot)
-    {
-      transform.rotation = Quaternion.RotateTowards(
-        transform.rotation,
-        rot,
-        2f);
-    }
-    hose.LookAt(target);
+    public Transform target;
+    [SerializeField] float moveSpeed = 0.03f;
+    [SerializeField] Rigidbody rb;
+    [SerializeField] Transform hose;
+    [SerializeField] WaterEmitter _emitter;
 
-    rb.MovePosition(transform.position + transform.forward * moveSpeed);
+    [SerializeField] float _closestDistance;
+    [SerializeField] float _furthestDistance;
+
+    float sqrClosestDistance => _closestDistance * _closestDistance;
+    float sqrFurthestDistance => _furthestDistance * _furthestDistance;
+    void FixedUpdate()
+    {
+      if (!this || !isActiveAndEnabled) { return; }
+      var rot = Quaternion.LookRotation(target.position - transform.position);
+      if (transform.rotation != rot)
+      {
+        transform.rotation = Quaternion.RotateTowards(
+          transform.rotation,
+          rot,
+          2f);
+      }
+      hose.LookAt(target);
+
+
+      float sqrDistance = (target.position - transform.position).sqrMagnitude;
+      if (sqrDistance < sqrClosestDistance)
+      {
+        MoveBackWard();
+      }
+      else if (sqrFurthestDistance < sqrDistance)
+      {
+        MoveForward();
+      }
+      else
+      {
+        _emitter.Launch();
+      }
+    }
+    void MoveForward()
+    {
+      rb.MovePosition(transform.position + transform.forward * moveSpeed);
+    }
+    void MoveBackWard()
+    {
+      rb.MovePosition(transform.position - transform.forward * moveSpeed);
+    }
   }
 }

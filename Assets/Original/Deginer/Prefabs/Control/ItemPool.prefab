@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3852363058420940264}
   - component: {fileID: 3852363058420940265}
+  - component: {fileID: 7381366844613435194}
   m_Layer: 0
   m_Name: ItemPool
   m_TagString: Untagged
@@ -45,3 +46,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefab: {fileID: 7171335578761235701, guid: d1fb1d47056dcd84083c902081edeff5, type: 3}
+--- !u!114 &7381366844613435194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852363058420940266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78104361f0af08b47bd3070ae5e44e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 989460611246697144, guid: 0a1b6ee91ce29c84fad0ed6da5c9a77e, type: 3}

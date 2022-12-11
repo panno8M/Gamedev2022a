@@ -1,4 +1,4 @@
-namespace Assembly.GameSystem
+namespace Assembly.GameSystem.ObjectPool
 {
   public interface IPoolCollectable
   {

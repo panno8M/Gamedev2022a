@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Ex.InteractionTraits.Core;
 using Assembly.GameSystem;
+using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.StageGimmicks

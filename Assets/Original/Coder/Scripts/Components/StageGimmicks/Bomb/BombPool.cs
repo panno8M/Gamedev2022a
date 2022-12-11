@@ -1,5 +1,6 @@
+using System.Collections.Generic;
 using UniRx;
-using Assembly.GameSystem;
+using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -9,15 +10,19 @@ namespace Assembly.Components.StageGimmicks
     {
       throw new System.NotImplementedException();
     }
+    protected override void InfuseInfoOnSpawn(Bomb newObj, ObjectCreateInfo info)
+    {
+      newObj.transform.position = info.position;
+    }
     protected override void Blueprint()
     {
       Global.PlayerPool.OnSpawn.Subscribe(_ =>
       {
         try
         {
-          while (true) Spawn();
+          while (true) { Spawn(ObjectCreateInfo.None); }
         }
-        catch (System.NotImplementedException) {}
+        catch (System.NotImplementedException) { }
 
       }).AddTo(this);
     }
