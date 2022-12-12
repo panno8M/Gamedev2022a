@@ -7,19 +7,15 @@ namespace Assembly.Components.Actors
 {
   public class FollowObject : MonoBehaviour
   {
+    [SerializeField] HostileDrone _actor;
     public Transform target;
-    [SerializeField] float moveSpeed = 0.03f;
     [SerializeField] Rigidbody rb;
     [SerializeField] Transform hose;
     [SerializeField] WaterEmitter _emitter;
+    [SerializeField] PositionConstraints _constraints;
 
-    [SerializeField] float _closestDistance;
-    [SerializeField] float _furthestDistance;
 
-    [SerializeField] float _relativeHeightFromGround;
 
-    float sqrClosestDistance => _closestDistance * _closestDistance;
-    float sqrFurthestDistance => _furthestDistance * _furthestDistance;
     void FixedUpdate()
     {
       var rot = Quaternion.LookRotation(target.position - transform.position);
@@ -32,11 +28,11 @@ namespace Assembly.Components.Actors
       Vector3 dir;
 
       float sqrDistance = (target.position - transform.position).sqrMagnitude;
-      if (sqrDistance < sqrClosestDistance)
+      if (sqrDistance < _constraints.sqrClosestDistance)
       {
         dir = -transform.forward;
       }
-      else if (sqrFurthestDistance < sqrDistance)
+      else if (_constraints.sqrFurthestDistance < sqrDistance)
       {
         dir = transform.forward;
       }
@@ -45,17 +41,34 @@ namespace Assembly.Components.Actors
         dir = Vector3.zero;
       }
 
-      if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, _relativeHeightFromGround, new Layers(Layer.Stage)))
+      if (!_constraints.HasEnoughHight(transform, out RaycastHit hit))
       {
         dir += Vector3.up;
       }
 
-      Move(dir);
+      _actor.Move(dir);
       _emitter.Launch();
     }
-    void Move(Vector3 UnnormalizedDirection)
+    [System.Serializable]
+    class PositionConstraints
     {
-      transform.position += UnnormalizedDirection.normalized * moveSpeed * Time.deltaTime;
+      public float closestDistance = 3;
+      public float furthestDistance = 4;
+
+      public float relativeHeightFromGround = 1;
+
+      public float sqrClosestDistance => closestDistance * closestDistance;
+      public float sqrFurthestDistance => furthestDistance * furthestDistance;
+
+      public bool HasEnoughHight(Transform transform, out RaycastHit hit)
+      {
+        return !Physics.Raycast(
+          transform.position,
+          Vector3.down,
+          out hit,
+          relativeHeightFromGround,
+          new Layers(Layer.Stage));
+      }
     }
   }
 }

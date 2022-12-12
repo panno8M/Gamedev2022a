@@ -9,10 +9,10 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(InstantPortal))]
   public class PatrolWaypoint : TransferableBase
   {
+    [SerializeField] HostileDrone _actor;
     bool _actable = true;
     Portal defaultPortal;
 
-    [SerializeField] float moveSpeed = 0.03f;
 
     async UniTask Yield(CancellationToken token)
     {
@@ -39,10 +39,6 @@ namespace Assembly.Components.Actors
         await Yield(token);
       }
     }
-    void MoveForward()
-    {
-      transform.position += transform.forward * moveSpeed;
-    }
 
     void Awake()
     {
@@ -61,7 +57,7 @@ namespace Assembly.Components.Actors
       while (portal && (transform.position - portal.next.transform.position).sqrMagnitude >= 0.01f)
       {
         if (!this || !isActiveAndEnabled) { return; }
-        MoveForward();
+        _actor.Move(transform.forward);
         await Yield(token);
       }
     }

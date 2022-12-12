@@ -198,6 +198,7 @@ MonoBehaviour:
   sight: {fileID: 889259706891757632}
   damagable: {fileID: 9026324072695872059}
   patrol: {fileID: 8505779054731305054}
+  moveSpeed: 1
 --- !u!114 &8505779054731305054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -210,7 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3c0b20f122165d408e229bd70974c06, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 0.03
+  _actor: {fileID: 1210545985916033635}
 --- !u!114 &9119622892683133504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -223,8 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2ae5d603dcdd142874b175c2470d58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _actor: {fileID: 1210545985916033635}
   target: {fileID: 0}
-  moveSpeed: 1
   rb: {fileID: 1210545985916033645}
   hose: {fileID: 1210545986821765796}
   _emitter: {fileID: 5798258383893932439}

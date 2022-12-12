@@ -16,6 +16,7 @@ namespace Assembly.Components.Actors
     [SerializeField] AiSight sight;
     [SerializeField] DamagableComponent damagable;
     [SerializeField] PatrolWaypoint patrol;
+    [SerializeField] float moveSpeed = 1f;
 
     void Start()
     {
@@ -43,6 +44,10 @@ namespace Assembly.Components.Actors
           .Delay(TimeSpan.FromSeconds(0.5))
           .Subscribe(_ => Dead())
           .AddTo(this);
+    }
+    public void Move(Vector3 UnnormalizedDirection)
+    {
+      transform.position += UnnormalizedDirection.normalized * moveSpeed * Time.deltaTime;
     }
 
     void Dead()
