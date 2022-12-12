@@ -16,6 +16,7 @@ namespace Assembly.Components.Actors
     [SerializeField] AiSight sight;
     [SerializeField] DamagableComponent damagable;
     [SerializeField] PatrolWaypoint patrol;
+    [SerializeField] FollowObject follow;
     [SerializeField] float moveSpeed = 1f;
 
     public Transform target;
@@ -27,6 +28,7 @@ namespace Assembly.Components.Actors
           {
             if (damagable.isBroken) { return; }
             patrol.enabled = !visible;
+            follow.enabled = visible;
             if (visible)
             {
               _emitter.Launch();
