@@ -5,16 +5,9 @@ using Assembly.GameSystem;
 
 namespace Assembly.Components.Actors
 {
-  public class FollowObject : MonoBehaviour
+  public class FollowObjectModule : ActorBehavior<HostileDrone>
   {
-    [SerializeField] HostileDrone _actor;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] Transform hose;
-    [SerializeField] Transform sight;
-    [SerializeField] WaterEmitter _emitter;
     [SerializeField] PositionConstraints _constraints;
-
-
 
     void FixedUpdate()
     {
@@ -24,8 +17,6 @@ namespace Assembly.Components.Actors
         transform.rotation,
         rot,
         2f);
-      hose.LookAt(_actor.target);
-      sight.LookAt(_actor.target);
 
       Vector3 dir;
 
@@ -49,7 +40,6 @@ namespace Assembly.Components.Actors
       }
 
       _actor.Move(dir);
-      _emitter.Launch();
     }
     [System.Serializable]
     class PositionConstraints

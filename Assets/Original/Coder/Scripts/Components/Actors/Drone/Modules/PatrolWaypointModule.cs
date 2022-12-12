@@ -7,7 +7,7 @@ using Assembly.Components.StageGimmicks;
 namespace Assembly.Components.Actors
 {
   [RequireComponent(typeof(InstantPortal))]
-  public class PatrolWaypoint : TransferableBase
+  public class PatrolWaypointModule : TransferableBase
   {
     [SerializeField] HostileDrone _actor;
     bool _actable = true;

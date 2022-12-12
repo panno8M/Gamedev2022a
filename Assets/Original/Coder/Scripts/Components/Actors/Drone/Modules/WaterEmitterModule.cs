@@ -6,14 +6,14 @@ using Utilities;
 
 namespace Assembly.Components.Actors
 {
-  public class WaterEmitter : MonoBehaviour
+  public class WaterEmitterModule : ActorBehavior<HostileDrone>
   {
     [SerializeField] Transform emitterTransform;
     [SerializeField] float power;
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);
     ObjectCreateInfo _info;
 
-    void Start()
+    protected override void Blueprint()
     {
       _info = new ObjectCreateInfo
       {
@@ -28,6 +28,14 @@ namespace Assembly.Components.Actors
         WaterBall result = WaterBallPool.Instance.Spawn(_info);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
         launchCoolDown.BasisAlpha = 1;
+      }
+    }
+
+    void FixedUpdate()
+    {
+      if (_actor.aim.target)
+      {
+        Launch();
       }
     }
 
