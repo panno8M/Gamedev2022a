@@ -8,9 +8,9 @@ namespace Assembly.Components.Actors
   public class FollowObject : MonoBehaviour
   {
     [SerializeField] HostileDrone _actor;
-    public Transform target;
     [SerializeField] Rigidbody rb;
     [SerializeField] Transform hose;
+    [SerializeField] Transform sight;
     [SerializeField] WaterEmitter _emitter;
     [SerializeField] PositionConstraints _constraints;
 
@@ -18,16 +18,18 @@ namespace Assembly.Components.Actors
 
     void FixedUpdate()
     {
-      var rot = Quaternion.LookRotation(target.position - transform.position);
+      if (!_actor.target) { return; }
+      var rot = Quaternion.LookRotation(_actor.target.position - transform.position);
       transform.rotation = Quaternion.RotateTowards(
         transform.rotation,
         rot,
         2f);
-      hose.LookAt(target);
+      hose.LookAt(_actor.target);
+      sight.LookAt(_actor.target);
 
       Vector3 dir;
 
-      float sqrDistance = (target.position - transform.position).sqrMagnitude;
+      float sqrDistance = (_actor.target.position - transform.position).sqrMagnitude;
       if (sqrDistance < _constraints.sqrClosestDistance)
       {
         dir = -transform.forward;

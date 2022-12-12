@@ -2261,16 +2261,6 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
         type: 3}
-      propertyPath: target
-      value: 
-      objectReference: {fileID: 1615431584}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: _psWater
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -3069,12 +3059,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 928d50fb18217c640af5021d70ef8134,
     type: 3}
   m_PrefabInstance: {fileID: 301075964}
-  m_PrefabAsset: {fileID: 0}
---- !u!4 &1615431584 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1628132770560807817, guid: 8c8b076293f7c694ab8c0776d8ee7594,
-    type: 3}
-  m_PrefabInstance: {fileID: 667937735}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &1683283696 stripped
 Transform:

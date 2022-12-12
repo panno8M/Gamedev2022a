@@ -4,42 +4,35 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
+using Utilities;
 
 namespace Senses.Sight
 {
   public class AiSight : MonoBehaviour
   {
     public float eyesight = 20;
-    public float sightCooldown = .5f;
+    public float secSightCooldown = .1f;
+    public float secToNotice = 1f;
 
     public Layer layerTarget = Layer.AiVisible;
     public Layer layerObstacle = Layer.Stage;
     public Layers lsEyeRay => new Layers(layerTarget, layerObstacle);
     public List<Tag> tags = new List<Tag>();
 
-    public ReactiveProperty<AiVisible> LastSeen;
-    public IObservable<AiVisible> OnSeen;
-    public IObservable<AiVisible> OnLost;
+    ReactiveProperty<AiVisible> _InTheUnconscious = new ReactiveProperty<AiVisible>();
+    ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
 
-    void Awake()
-    {
-      OnSeen = LastSeen
-          .Where(x => x)
-          .Share();
-      OnLost = LastSeen
-          .Pairwise()
-          .Where(x => !x.Current)
-          .Select(x => x.Previous)
-          .Share();
+    public AiVisible inTheUnconscious => _InTheUnconscious.Value;
+    public AiVisible inSight => _InSight.Value;
+    public IObservable<AiVisible> InSight => _InSight;
 
-      this.FixedUpdateAsObservable()
-          .ThrottleFirst(TimeSpan.FromSeconds(sightCooldown))
-          .Subscribe(_ => LookFor());
-    }
+    float secElapsedViewing;
+
     void Start()
     {
-      OnSeen.Subscribe(visible => visible?.Find()).AddTo(this);
-      OnLost.Subscribe(visible => visible?.Find(false)).AddTo(this);
+      this.FixedUpdateAsObservable()
+          .ThrottleFirst(TimeSpan.FromSeconds(secSightCooldown))
+          .Subscribe(_ => LookFor());
     }
 
     bool Find(RaycastHit hit)
@@ -52,16 +45,48 @@ namespace Senses.Sight
     {
       var ray = new Ray(transform.position, transform.forward);
       RaycastHit hit;
-      if (Physics.Raycast(ray, out hit, eyesight, lsEyeRay) && Find(hit))
+      bool hitAny = Physics.Raycast(ray, out hit, eyesight, lsEyeRay);
+
+      AiVisible previousSeen = inTheUnconscious;
+
+      _InTheUnconscious.Value = (hitAny && Find(hit))
+        ? hit.collider.GetComponent<AiVisible>()
+        : null;
+
+      if (inTheUnconscious && previousSeen == inTheUnconscious)
       {
-        Debug.DrawRay(ray.origin, ray.direction * eyesight, Color.blue, sightCooldown);
-        LastSeen.Value = hit.collider.GetComponent<AiVisible>() ?? LastSeen.Value;
+        secElapsedViewing += secSightCooldown;
+        if (secElapsedViewing > secToNotice)
+        {
+          _InSight.Value = inTheUnconscious;
+          inSight.Find();
+        }
       }
       else
       {
-        Debug.DrawRay(ray.origin, ray.direction * eyesight, Color.red, sightCooldown);
-        LastSeen.Value = null;
+        if (inSight)
+        {
+          inSight.Find(false);
+          _InSight.Value = null;
+        }
+        secElapsedViewing = 0;
       }
+
+
+      Debug.DrawLine(
+        ray.origin,
+        (hitAny ? hit.point : ray.origin + ray.direction * eyesight),
+        (inSight ? Color.red :
+         inTheUnconscious ? Color.blue :
+         Color.gray),
+        secSightCooldown);
+
+
+    }
+
+    void OnDrawGizmos()
+    {
+      Gizmos.DrawRay(transform.position, transform.forward);
     }
   }
 }

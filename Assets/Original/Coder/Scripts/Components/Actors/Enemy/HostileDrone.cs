@@ -18,20 +18,20 @@ namespace Assembly.Components.Actors
     [SerializeField] PatrolWaypoint patrol;
     [SerializeField] float moveSpeed = 1f;
 
+    public Transform target;
+
     void Start()
     {
-      sight.OnSeen
-          .Subscribe(_ =>
+      sight.InSight
+          .Subscribe(visible =>
           {
             if (damagable.isBroken) { return; }
-            _emitter.Launch();
-            patrol.enabled = false;
-          }).AddTo(this);
-      sight.OnLost
-          .Subscribe(_ =>
-          {
-            if (damagable.isBroken) { return; }
-            patrol.enabled = true;
+            patrol.enabled = !visible;
+            if (visible)
+            {
+              _emitter.Launch();
+              target = visible.center;
+            }
           }).AddTo(this);
 
       damagable.TotalDamage
