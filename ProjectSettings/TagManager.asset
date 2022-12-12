@@ -8,6 +8,7 @@ TagManager:
   - Ctlvol/Camera
   - Ground
   - Item/Kandelaar
+  - Kandelaar
   layers:
   - Default
   - TransparentFX
@@ -27,7 +28,7 @@ TagManager:
   - Physics/Item
   - Senses/Damager
   - Physics/Player
-  - 
+  - Ctlvol/ForDynamic
   - 
   - 
   - 
