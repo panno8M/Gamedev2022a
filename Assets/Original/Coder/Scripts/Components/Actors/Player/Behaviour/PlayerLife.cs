@@ -23,7 +23,7 @@ namespace Assembly.Components.Actors
       _actor.damagable.OnBroken
           .Subscribe(_ =>
           {
-            _actor.interactor.Forget();
+            _actor.holder.Forget();
             _actor.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
 
             Observable.Timer(TimeSpan.FromMilliseconds(1000))

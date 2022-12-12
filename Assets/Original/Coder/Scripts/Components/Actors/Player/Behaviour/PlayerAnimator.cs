@@ -1,6 +1,5 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Ex.InteractionTraits;
 using Utilities;
 
 namespace Assembly.Components.Actors
@@ -16,7 +15,7 @@ namespace Assembly.Components.Actors
           .Subscribe(Walk)
           .AddTo(this);
 
-      _actor.interactor.holder.HoldingItem
+      _actor.holder.HoldingItem
           .Subscribe(Hold)
           .AddTo(this);
 
@@ -54,7 +53,7 @@ namespace Assembly.Components.Actors
       Walk(move != 0);
     }
 
-    void Hold(HoldableModule holdable)
+    void Hold(Holdable holdable)
     {
       _anim.SetBool("Grab", holdable);
     }

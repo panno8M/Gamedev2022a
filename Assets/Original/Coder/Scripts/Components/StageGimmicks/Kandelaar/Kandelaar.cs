@@ -1,40 +1,39 @@
 using System;
 using UniRx;
-using UniRx.Ex.InteractionTraits.Core;
 using UnityEngine;
+using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.Components.Actors;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class Kandelaar : MonoBehaviour
+  public class Kandelaar : DiBehavior
   {
-    [SerializeField] Interactable _interactable;
+    [SerializeField] Holdable _holdable;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
-    [SerializeField] Rigidbody _rb;
 
     [SerializeField] SafetyTrigger _supplyFieldTrigger;
     PlayerFlameReceptor _playerFlameReceptor;
 
     void Start()
     {
-      _interactable.holdable.OnHold
+      _holdable.OnHold
           .Subscribe(_ =>
           {
-            _rb.useGravity = false;
-            _rb.isKinematic = true;
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
           });
-      _interactable.holdable.OnRelease
+      _holdable.OnRelease
           .Subscribe(_ =>
           {
-            _rb.useGravity = true;
-            _rb.isKinematic = false;
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
             Observable.Timer(TimeSpan.FromMilliseconds(100))
               .Subscribe(_ =>
               {
-                _rb.velocity = Vector3.zero;
-                _rb.angularVelocity = Vector3.zero;
+                rigidbody.velocity = Vector3.zero;
+                rigidbody.angularVelocity = Vector3.zero;
               });
           });
       _damagable.OnBroken
@@ -45,12 +44,12 @@ namespace Assembly.Components.StageGimmicks
           Observable.TimerFrame(1).Subscribe(_ => _psSmoke.Stop());
         }).AddTo(this);
 
-      _supplyFieldTrigger.Triggers.ObserveAdd()
+      _supplyFieldTrigger.OnEnter
         .Subscribe(trigger =>
         {
           if (!_playerFlameReceptor)
           {
-            _playerFlameReceptor = trigger.Value.GetComponent<PlayerFlameReceptor>();
+            _playerFlameReceptor = trigger.GetComponent<PlayerFlameReceptor>();
           }
           if (_playerFlameReceptor)
           {

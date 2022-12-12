@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UniRx;
-using UniRx.Ex.InteractionTraits.Core;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
@@ -16,10 +15,9 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
     [SerializeField] DamagableComponent _damagable;
-    [SerializeField] Interactable _interactable;
+    [SerializeField] Holdable _holdable;
     [SerializeField] float secExplosionDelay = 4;
 
-    Rigidbody _rb;
     [SerializeField] SpriteRenderer _renderer;
     [SerializeField] Collider _damagerCollider;
 
@@ -31,22 +29,21 @@ namespace Assembly.Components.StageGimmicks
       _damagable.enabled = true;
       _renderer.enabled = true;
       GetComponent<Collider>().enabled = true;
-      _interactable.holdable.Activate();
+      _holdable.enabled = true;
       _damagable.Repair();
     }
-    public void Disassemble() { }
+    public void Disassemble() {}
 
     void Start()
     {
       _defaultPosition = transform.position;
 
-      _rb = GetComponent<Rigidbody>();
       _damagerCollider.enabled = false;
 
       _damagable.OnBroken
           .Subscribe(_ =>
           {
-            _interactable.holdable.Disactivate();
+            _holdable.enabled = false;
           }).AddTo(this);
 
       _damagable.OnBroken
@@ -68,24 +65,24 @@ namespace Assembly.Components.StageGimmicks
           })
           .AddTo(this);
 
-      _interactable.holdable.OnHold
+      _holdable.OnHold
           .Subscribe(_ =>
           {
-            _rb.useGravity = false;
-            _rb.isKinematic = true;
+            rigidbody.useGravity = false;
+            rigidbody.isKinematic = true;
           });
-      _interactable.holdable.OnRelease
+      _holdable.OnRelease
           .Subscribe(_ =>
           {
-            _rb.useGravity = true;
-            _rb.isKinematic = false;
+            rigidbody.useGravity = true;
+            rigidbody.isKinematic = false;
           });
-      _interactable.holdable.OnRelease
+      _holdable.OnRelease
           .Delay(TimeSpan.FromMilliseconds(100))
           .Subscribe(_ =>
           {
-            _rb.velocity = Vector3.zero;
-            _rb.angularVelocity = Vector3.zero;
+            rigidbody.velocity = Vector3.zero;
+            rigidbody.angularVelocity = Vector3.zero;
           });
     }
 

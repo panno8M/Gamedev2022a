@@ -33,15 +33,15 @@ namespace Assembly.Components.StageGimmicks
       _relaxColor = _plateMaterial.color;
       AnimatePress().Forget();
 
-      SafetyTrigger.Triggers.ObserveAdd()
+      SafetyTrigger.OnEnter
         .Subscribe(trigger =>
         {
           targetMode = Mode.Press;
         }).AddTo(this);
-      SafetyTrigger.Triggers.ObserveRemove()
+      SafetyTrigger.OnExit
         .Subscribe(trigger =>
         {
-          if (SafetyTrigger.Triggers.Count == 0)
+          if (SafetyTrigger.triggers.Count == 0)
           {
             targetMode = Mode.Relax;
           }

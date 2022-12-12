@@ -2,7 +2,6 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using UniRx.Ex.InteractionTraits.Core;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Utilities;
@@ -38,7 +37,7 @@ namespace Assembly.Components.Actors
 
     #region editable params
     [SerializeField] DamagableComponent _damagable;
-    [SerializeField] Interactor _interactor;
+    [SerializeField] Holder _holder;
 
     [SerializeField] PlayerParam _param = new PlayerParam();
     public PlayerParam param => _param;
@@ -66,7 +65,7 @@ namespace Assembly.Components.Actors
 
     #region accessors
     public IDamagable damagable => _damagable;
-    public Interactor interactor => _interactor;
+    public Holder holder => _holder;
     public PlayerFlapCtl flapCtl => _flapCtl;
 
     public HoriMoveStat horiMove
@@ -154,7 +153,10 @@ namespace Assembly.Components.Actors
           .Where(_ => isControlAccepting)
               .Subscribe(_ =>
               {
-                _interactor.Process();
+                if (_holder.hasItem)
+                { _holder.ReleaseForce(); }
+                else
+                { _holder.AttemptToHold(); }
               }).AddTo(this);
 
       Global.Control.GoUp
@@ -165,7 +167,7 @@ namespace Assembly.Components.Actors
                 _flapCtl.Inc();
               }).AddTo(this);
 
-      _interactor.holder.HoldingItem
+      _holder.HoldingItem
           .Subscribe(item =>
               {
                 if (item)

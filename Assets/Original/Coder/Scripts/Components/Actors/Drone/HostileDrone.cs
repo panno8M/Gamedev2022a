@@ -22,7 +22,6 @@ namespace Assembly.Components.Actors
     public LifeModule life;
 
     public AiSight sight;
-    public new Rigidbody rigidbody;
     [SerializeField] float moveSpeed = 1f;
 
     public Transform target;

@@ -1,12 +1,12 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using UniRx;
+using Assembly.GameSystem;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public abstract class TransferableBase : MonoBehaviour, ITransferable
+  public abstract class TransferableBase : DiBehavior, ITransferable
   {
     ReactiveProperty<Portal> _ClosestPortal = new ReactiveProperty<Portal>();
 

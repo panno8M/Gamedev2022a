@@ -48,12 +48,12 @@ namespace Assembly.Components.Actors
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => !_actor.interactor.holder.hasItem)
+          .Where(_ => !_actor.holder.hasItem)
           .Where(_ => exhalingProgress.isDecreasing)
           .Subscribe(_ => exhalingProgress.SetAsIncrease())
           .AddTo(this);
 
-      _actor.interactor.holder.RequestHold
+      _actor.holder.RequestHold
           .Where(_ => Global.Control.BreathInput.Value)
           .AsUnitObservable()
           .Merge(Global.Control.BreathRelease)

@@ -6,7 +6,6 @@ using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 public class WaterBall : DiBehavior, IPoolCollectable
 {
-  public new Rigidbody rigidbody;
   [SerializeField] ParticleSystem psImpactSplash;
 
   [SerializeField] Collider _physicsCollider;

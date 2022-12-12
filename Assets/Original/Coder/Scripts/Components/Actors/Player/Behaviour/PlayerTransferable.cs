@@ -8,7 +8,6 @@ namespace Assembly.Components.Actors.player
 {
   public sealed class PlayerTransferable : TransferableBase
   {
-    [SerializeField] Rigidbody rb;
 #if DEBUG
     [SerializeField] bool mumbling;
 #endif
@@ -70,11 +69,11 @@ namespace Assembly.Components.Actors.player
 
     void ProcessTransfer_SamePoint(Portal portal)
     {
-      rb.MovePosition(transform.position + portal.positionDelta);
+      rigidbody.MovePosition(transform.position + portal.positionDelta);
     }
     void ProcessTransfer_Center(Portal portal)
     {
-      rb.MovePosition(portal.next.transform.position);
+      rigidbody.MovePosition(portal.next.transform.position);
     }
 
   }

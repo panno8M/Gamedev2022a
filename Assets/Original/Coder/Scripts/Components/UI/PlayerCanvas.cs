@@ -33,7 +33,7 @@ namespace Assembly.Components.UI
 
       Observable
           .EveryUpdate()
-          .Select(_ => player.interactor.isInteractable)
+          .Select(_ => !player.holder.hasItem && player.holder.accessibles.Count != 0)
           .DistinctUntilChanged()
           .Subscribe(b => uiQuestion.SetActive(b));
 

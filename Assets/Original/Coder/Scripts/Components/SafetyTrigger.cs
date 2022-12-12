@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
@@ -6,7 +7,46 @@ using UniRx.Triggers;
 [RequireComponent(typeof(Collider))]
 public class SafetyTrigger : MonoBehaviour
 {
-  public ReactiveCollection<SafetyTrigger> Triggers;
+  public List<SafetyTrigger> triggers = new List<SafetyTrigger>();
+
+  Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
+  Subject<SafetyTrigger> _OnExit = new Subject<SafetyTrigger>();
+
+  public IObservable<SafetyTrigger> OnEnter => _OnEnter;
+  public IObservable<SafetyTrigger> OnExit => _OnExit;
+
+  List<SafetyTrigger> exitNotifyQueue = new List<SafetyTrigger>();
+  Queue<SafetyTrigger> enterNotifyQueue = new Queue<SafetyTrigger>();
+  void Remove(SafetyTrigger trigger)
+  {
+    exitNotifyQueue.Add(trigger);
+  }
+  void Add(SafetyTrigger trigger)
+  {
+    if (!exitNotifyQueue.Remove(trigger))
+    {
+      enterNotifyQueue.Enqueue(trigger);
+    }
+  }
+  void NoticeExit()
+  {
+    if (exitNotifyQueue.Count == 0) { return; }
+    foreach (SafetyTrigger trigger in exitNotifyQueue)
+    {
+      triggers.Remove(trigger);
+      _OnExit.OnNext(trigger);
+    }
+    exitNotifyQueue.Clear();
+  }
+  void NoticeEnter()
+  {
+    while (enterNotifyQueue.Count != 0)
+    {
+      SafetyTrigger trigger = enterNotifyQueue.Dequeue();
+      triggers.Add(trigger);
+      _OnEnter.OnNext(trigger);
+    }
+  }
 
   void Start()
   {
@@ -14,25 +54,32 @@ public class SafetyTrigger : MonoBehaviour
       .Subscribe(other =>
       {
         SafetyTrigger x = other.GetComponent<SafetyTrigger>();
-        if (x) Triggers.Add(x);
+        if (x) Add(x);
       });
 
     this.OnTriggerExitAsObservable()
       .Subscribe(other =>
       {
         SafetyTrigger x = other.GetComponent<SafetyTrigger>();
-        if (x) Triggers.Remove(x);
+        if (x) Remove(x);
       });
 
     this.OnDisableAsObservable().Subscribe(WhenDisabled);
 
     void WhenDisabled(Unit _)
     {
-      foreach (SafetyTrigger col in Triggers)
+      foreach (SafetyTrigger col in triggers)
       {
-        col?.Triggers?.Remove(this);
+        col?.Remove(this);
+        Remove(col);
       }
-      Triggers.Clear();
     }
+
+    Observable.EveryFixedUpdate()
+        .Subscribe(_ =>
+        {
+          NoticeEnter();
+          NoticeExit();
+        }).AddTo(this);
   }
 }

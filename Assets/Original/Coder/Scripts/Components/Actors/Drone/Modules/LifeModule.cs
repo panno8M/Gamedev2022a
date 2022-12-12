@@ -26,8 +26,8 @@ namespace Assembly.Components.Actors
     }
     void Dead()
     {
-      _actor.rigidbody.useGravity = true;
-      _actor.rigidbody.isKinematic = false;
+      rigidbody.useGravity = true;
+      rigidbody.isKinematic = false;
       _actor.patrol.enabled = false;
       _actor.follow.enabled = false;
       _actor.emitter.enabled = false;
