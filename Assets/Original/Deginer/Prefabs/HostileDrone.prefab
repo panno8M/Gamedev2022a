@@ -224,12 +224,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
-  moveSpeed: 0.03
-  rb: {fileID: 0}
-  hose: {fileID: 0}
-  _emitter: {fileID: 0}
-  _closestDistance: 0
-  _furthestDistance: 0
+  moveSpeed: 1
+  rb: {fileID: 1210545985916033645}
+  hose: {fileID: 1210545986821765796}
+  _emitter: {fileID: 5798258383893932439}
+  _closestDistance: 3
+  _furthestDistance: 4
+  _relativeHeightFromGround: 1
 --- !u!114 &3232116125892301783
 MonoBehaviour:
   m_ObjectHideFlags: 0

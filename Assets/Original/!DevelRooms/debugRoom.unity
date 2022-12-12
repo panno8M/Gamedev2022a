@@ -1109,12 +1109,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 878897954}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &467809337 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7661285658798842535, guid: 5c64d533f670d294580964bc48fcc253,
-    type: 3}
-  m_PrefabInstance: {fileID: 1134999377}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &590845520
 GameObject:
   m_ObjectHideFlags: 0
@@ -2267,24 +2261,9 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
         type: 3}
-      propertyPath: rb
-      value: 
-      objectReference: {fileID: 1775565859}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: hose
-      value: 
-      objectReference: {fileID: 467809337}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
       propertyPath: target
       value: 
       objectReference: {fileID: 1615431584}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: _emitter
-      value: 
-      objectReference: {fileID: 1775565866}
     - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
         type: 3}
       propertyPath: _psWater
@@ -2294,21 +2273,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: moveSpeed
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: _closestDistance
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 293168478633908803, guid: 5c64d533f670d294580964bc48fcc253,
-        type: 3}
-      propertyPath: _furthestDistance
-      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 906485087867074653, guid: 5c64d533f670d294580964bc48fcc253,
         type: 3}
@@ -3124,24 +3088,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 162424718}
   m_PrefabAsset: {fileID: 0}
---- !u!54 &1775565859 stripped
-Rigidbody:
-  m_CorrespondingSourceObject: {fileID: 7661285660241298030, guid: 5c64d533f670d294580964bc48fcc253,
-    type: 3}
-  m_PrefabInstance: {fileID: 1134999377}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1775565866 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3092124501620257172, guid: 5c64d533f670d294580964bc48fcc253,
-    type: 3}
-  m_PrefabInstance: {fileID: 1134999377}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a1496e2bd60161a459f5e49709e7ad1e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1786635415 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3455425196961680924, guid: 1fd8131d443d42749b361337a4ae7c2f,

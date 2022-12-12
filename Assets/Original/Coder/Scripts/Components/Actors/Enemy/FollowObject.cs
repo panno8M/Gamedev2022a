@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assembly.GameSystem;
 
 namespace Assembly.Components.Actors
 {
@@ -15,6 +16,8 @@ namespace Assembly.Components.Actors
     [SerializeField] float _closestDistance;
     [SerializeField] float _furthestDistance;
 
+    [SerializeField] float _relativeHeightFromGround;
+
     float sqrClosestDistance => _closestDistance * _closestDistance;
     float sqrFurthestDistance => _furthestDistance * _furthestDistance;
     void FixedUpdate()
@@ -26,25 +29,33 @@ namespace Assembly.Components.Actors
         2f);
       hose.LookAt(target);
 
+      Vector3 dir;
 
       float sqrDistance = (target.position - transform.position).sqrMagnitude;
       if (sqrDistance < sqrClosestDistance)
       {
-        weight = -1;
+        dir = -transform.forward;
       }
       else if (sqrFurthestDistance < sqrDistance)
       {
-        weight = 1;
+        dir = transform.forward;
       }
-      else { weight = 0; }
+      else
+      {
+        dir = Vector3.zero;
+      }
 
-      Move();
+      if (Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, _relativeHeightFromGround, new Layers(Layer.Stage)))
+      {
+        dir += Vector3.up;
+      }
+
+      Move(dir);
       _emitter.Launch();
     }
-    float weight;
-    void Move()
+    void Move(Vector3 UnnormalizedDirection)
     {
-      transform.position += transform.forward * moveSpeed * weight * Time.deltaTime;
+      transform.position += UnnormalizedDirection.normalized * moveSpeed * Time.deltaTime;
     }
   }
 }
