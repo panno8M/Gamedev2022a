@@ -29,7 +29,13 @@ namespace Utilities
     [SerializeField][Range(0f, 1f)] float _basisAlpha;
     float _curvedAplha;
     bool _needsCalc = true;
-    public bool needsCalc => _needsCalc;
+    public bool needsCalc
+    {
+      get
+      {
+        return _needsCalc;
+      }
+    }
 
     public float alpha
     {
@@ -77,12 +83,12 @@ namespace Utilities
 
     public float CalcAlpha()
     {
-      if (!_needsCalc) { return alpha; }
-
+      if (latestCallTime == 0) { latestCallTime = Time.time; return 0; }
       var delta = Time.time - latestCallTime;
       if (delta < 0.001) { return alpha; }
-
       latestCallTime = Time.time;
+      if (!_needsCalc) { return alpha; }
+
       BasisAlpha = Mathf.Clamp01(_basisAlpha + (float)mode * delta / secDuration);
 
       if ((isIncreasing && _basisAlpha == 1)
