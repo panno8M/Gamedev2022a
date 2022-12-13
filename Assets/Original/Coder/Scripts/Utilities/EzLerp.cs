@@ -28,6 +28,8 @@ namespace Utilities
 
     [SerializeField][Range(0f, 1f)] float _basisAlpha;
     float _curvedAplha;
+    bool _needsCalc = true;
+    public bool needsCalc => _needsCalc;
 
     public float alpha
     {
@@ -39,6 +41,7 @@ namespace Utilities
       set
       {
         _basisAlpha = value;
+        _needsCalc = true;
         if (useCurve)
         {
           _curvedAplha = curve.Evaluate(_basisAlpha);
@@ -52,7 +55,11 @@ namespace Utilities
     public Mode mode
     {
       get { return _mode.Value; }
-      set { _mode.Value = value; }
+      set
+      {
+        _needsCalc = true;
+        _mode.Value = value;
+      }
     }
 
     public IObservable<Mode> OnModeChanged => _mode;
@@ -70,10 +77,18 @@ namespace Utilities
 
     public float CalcAlpha()
     {
+      if (!_needsCalc) { return alpha; }
+
       var delta = Time.time - latestCallTime;
       if (delta < 0.001) { return alpha; }
+
       latestCallTime = Time.time;
       BasisAlpha = Mathf.Clamp01(_basisAlpha + (float)mode * delta / secDuration);
+
+      if ((isIncreasing && _basisAlpha == 1)
+       || (isDecreasing && _basisAlpha == 0))
+      { _needsCalc = false; }
+
       return alpha;
     }
 

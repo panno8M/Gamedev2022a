@@ -53,7 +53,7 @@ namespace Assembly.Components.StageGimmicks
       while (Application.isPlaying)
       {
         animateProgress.mode = (EzLerp.Mode)targetMode;
-        if (_OnPress.message.signalPower != animateProgress)
+        if (animateProgress.needsCalc)
         {
           _OnPress.message.signalPower = animateProgress;
           _OnPress.Dispatch();
