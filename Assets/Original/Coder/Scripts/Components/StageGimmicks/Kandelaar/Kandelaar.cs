@@ -12,16 +12,18 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] Holdable _holdable;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
-
-    [SerializeField] SafetyTrigger _supplyFieldTrigger;
-    PlayerFlameReceptor _playerFlameReceptor;
+    public KandelaarSupply supply;
 
     protected override void Blueprint()
     {
       throw new NotImplementedException();
     }
-
     void Start()
+    {
+      Prepare();
+      supply.Initialize();
+    }
+    void Prepare()
     {
       _holdable.OnHold
           .Subscribe(_ =>
@@ -48,19 +50,6 @@ namespace Assembly.Components.StageGimmicks
           _psSmoke.Play();
           Observable.TimerFrame(1).Subscribe(_ => _psSmoke.Stop());
         }).AddTo(this);
-
-      _supplyFieldTrigger.OnEnter
-        .Subscribe(trigger =>
-        {
-          if (!_playerFlameReceptor)
-          {
-            _playerFlameReceptor = trigger.GetComponent<PlayerFlameReceptor>();
-          }
-          if (_playerFlameReceptor)
-          {
-            _playerFlameReceptor.flameQuantity = 1;
-          }
-        });
     }
   }
 }

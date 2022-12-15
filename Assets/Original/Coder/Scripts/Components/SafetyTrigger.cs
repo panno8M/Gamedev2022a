@@ -7,6 +7,8 @@ using UniRx.Triggers;
 [RequireComponent(typeof(Collider))]
 public class SafetyTrigger : MonoBehaviour
 {
+  Collider _raw;
+  public Collider raw => _raw ?? (_raw = GetComponent<Collider>());
   public List<SafetyTrigger> triggers = new List<SafetyTrigger>();
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();

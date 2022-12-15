@@ -14623,6 +14623,7 @@ GameObject:
   - component: {fileID: 90027096121108900}
   - component: {fileID: 6488916430696255840}
   - component: {fileID: 8460910476692670317}
+  - component: {fileID: 8780044804172447482}
   m_Layer: 15
   m_Name: Kandelaar
   m_TagString: Kandelaar
@@ -14709,6 +14710,21 @@ MonoBehaviour:
   _holdable: {fileID: 7125065938233342713}
   _damagable: {fileID: 3161180090914910615}
   _psSmoke: {fileID: 943568434043890879}
+  supply: {fileID: 8780044804172447482}
+--- !u!114 &8780044804172447482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6081656079857309210}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 84caf876f71aff64d8e72289ff320f15, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 8460910476692670317}
+  _psSupplyField: {fileID: 1393641226755538857}
   _supplyFieldTrigger: {fileID: 9067961498390252188}
 --- !u!1 &7241865630952255379
 GameObject:
