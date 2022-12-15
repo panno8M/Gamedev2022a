@@ -18,6 +18,11 @@ namespace Assembly.Components.StageGimmicks
     MessageDispatcher _OnPutKandelaar = new MessageDispatcher(MessageKind.Power);
 
     EzLerp powerProgress = new EzLerp(3);
+
+    protected override void Blueprint()
+    {
+      throw new NotImplementedException();
+    }
     void Start()
     {
       _collider = GetComponent<Collider>();

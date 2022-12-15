@@ -22,6 +22,11 @@ namespace Assembly.Components.Actors.player
     [SerializeField] int _secTransferDurationEnter = 250;
     [SerializeField] int _secTransferDurationExit = 250;
 
+    protected override void Blueprint()
+    {
+      throw new System.NotImplementedException();
+    }
+
     void Start()
     {
       Global.Control.Interact

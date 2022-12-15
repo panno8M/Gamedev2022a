@@ -16,6 +16,11 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] SafetyTrigger _supplyFieldTrigger;
     PlayerFlameReceptor _playerFlameReceptor;
 
+    protected override void Blueprint()
+    {
+      throw new NotImplementedException();
+    }
+
     void Start()
     {
       _holdable.OnHold

@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
 using Assembly.GameSystem;
 
 namespace Assembly.Components.Actors
@@ -9,38 +11,44 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] PositionConstraints _constraints;
 
-    void FixedUpdate()
+    protected override void Blueprint()
     {
-      if (!_actor.target) { return; }
-      var rot = Quaternion.LookRotation(_actor.target.position - transform.position);
-      transform.rotation = Quaternion.RotateTowards(
-        transform.rotation,
-        rot,
-        2f);
-
-      Vector3 dir;
-
-      float sqrDistance = (_actor.target.position - transform.position).sqrMagnitude;
-      if (sqrDistance < _constraints.sqrClosestDistance)
+      this.FixedUpdateAsObservable()
+      .Subscribe(_ =>
       {
-        dir = -transform.forward;
-      }
-      else if (_constraints.sqrFurthestDistance < sqrDistance)
-      {
-        dir = transform.forward;
-      }
-      else
-      {
-        dir = Vector3.zero;
-      }
 
-      if (!_constraints.HasEnoughHight(transform, out RaycastHit hit))
-      {
-        dir += Vector3.up;
-      }
+        if (!_actor.target) { return; }
+        var rot = Quaternion.LookRotation(_actor.target.position - transform.position);
+        transform.rotation = Quaternion.RotateTowards(
+          transform.rotation,
+          rot,
+          2f);
 
-      _actor.Move(dir);
+        Vector3 dir;
+
+        float sqrDistance = (_actor.target.position - transform.position).sqrMagnitude;
+        if (sqrDistance < _constraints.sqrClosestDistance)
+        {
+          dir = -transform.forward;
+        }
+        else if (_constraints.sqrFurthestDistance < sqrDistance)
+        {
+          dir = transform.forward;
+        }
+        else
+        {
+          dir = Vector3.zero;
+        }
+
+        if (!_constraints.HasEnoughHight(transform, out RaycastHit hit))
+        {
+          dir += Vector3.up;
+        }
+
+        _actor.Move(dir);
+      });
     }
+
     [System.Serializable]
     class PositionConstraints
     {

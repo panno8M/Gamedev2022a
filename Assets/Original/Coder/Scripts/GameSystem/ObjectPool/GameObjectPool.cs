@@ -27,14 +27,26 @@ namespace Assembly.GameSystem.ObjectPool
       if (result) _OnSpawn.OnNext(result);
       return result;
     }
+    public T Spawn() { return Spawn(ObjectCreateInfo.None); }
     public void Despawn(T obj)
     {
-      if (obj)
+      if (obj && obj.isActiveAndEnabled)
       {
         _OnDespawn.OnNext(obj);
         pool.Return(obj);
       }
     }
+    public void Respawn(T obj, ObjectCreateInfo info, TimeSpan wait)
+    {
+      Despawn(obj);
+      Observable.Timer(wait).Subscribe(_ => Spawn(info));
+    }
+    public void Respawn(T obj, ObjectCreateInfo info)
+    {
+      Despawn(obj);
+      Spawn(info);
+    }
+    public void Respawn(T obj) { Despawn(obj); Spawn(); }
 
     protected abstract void InfuseInfoOnSpawn(T newObj, ObjectCreateInfo info);
 
@@ -45,7 +57,7 @@ namespace Assembly.GameSystem.ObjectPool
       if (_pool == null) _pool = new InternalPool(this);
       this.OnDestroyAsObservable()
           .Subscribe(_ => _pool.Dispose());
-      Blueprint();
+      Initialize();
     }
     class InternalPool : UniRx.Toolkit.ObjectPool<T>
     {

@@ -8,6 +8,10 @@ namespace Assembly.Components
   public class Camctl : UniqueBehaviour<Camctl>
   {
     [SerializeField] CinemachineVirtualCamera cmDefault;
+    protected override void Blueprint()
+    {
+      throw new System.NotImplementedException();
+    }
 
     void Awake()
     {

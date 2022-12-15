@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 public class WaterBall : DiBehavior, IPoolCollectable
@@ -10,6 +10,16 @@ public class WaterBall : DiBehavior, IPoolCollectable
 
   [SerializeField] Collider _physicsCollider;
   [SerializeField] Renderer _renderer;
+
+  protected override void Blueprint()
+  {
+    this.FixedUpdateAsObservable()
+    .Subscribe(_ =>
+    {
+      rigidbody.AddForce(new Vector3(0, -2f, 0), ForceMode.Acceleration);
+    });
+  }
+
   public void Assemble()
   {
     _physicsCollider.enabled = true;
@@ -18,10 +28,6 @@ public class WaterBall : DiBehavior, IPoolCollectable
   public void Disassemble()
   {
     rigidbody.velocity = Vector3.zero;
-  }
-  void FixedUpdate()
-  {
-    rigidbody.AddForce(new Vector3(0, -2f, 0), ForceMode.Acceleration);
   }
 
   void OnCollisionEnter(Collision other)

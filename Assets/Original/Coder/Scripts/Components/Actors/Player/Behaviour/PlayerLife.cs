@@ -30,7 +30,7 @@ namespace Assembly.Components.Actors
               .Subscribe(_ => Global.PlayerPool.Despawn())
               .AddTo(this);
             Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerPool.Spawn(ObjectCreateInfo.None))
+              .Subscribe(_ => Global.PlayerPool.Spawn())
               .AddTo(this);
           }).AddTo(this);
     }

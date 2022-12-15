@@ -7,7 +7,7 @@ namespace Assembly.Components.Actors
   {
     public Transform activeSpawnPoint;
     PlayerAct _player;
-    public PlayerAct player => _player ?? Spawn(ObjectCreateInfo.None);
+    public PlayerAct player => _player ?? Spawn();
 
     protected override PlayerAct CreateInstance()
     {
@@ -33,7 +33,7 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
-      Spawn(ObjectCreateInfo.None);
+      Spawn();
     }
   }
 }

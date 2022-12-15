@@ -21,7 +21,7 @@ namespace Assembly.Components.Actors
     {
       SetActor();
       _actor.OnAssembleObservable.Subscribe(_ => OnAssemble());
-      Blueprint();
+      Initialize();
     }
     protected void Reset()
     {
