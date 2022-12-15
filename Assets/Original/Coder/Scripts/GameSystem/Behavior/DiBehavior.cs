@@ -48,5 +48,13 @@ namespace Assembly.GameSystem
       result.Initialize();
       return result;
     }
+
+    public static T Instantiate<T>(this GameObject prefab, Transform parent)
+      where T : DiBehavior
+    {
+      T result = prefab.Instantiate<T>();
+      result.transform.SetParent(parent);
+      return result;
+    }
   }
 }

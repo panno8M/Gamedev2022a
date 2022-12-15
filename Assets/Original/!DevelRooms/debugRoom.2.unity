@@ -817,6 +817,18 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2935057176092752277}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &285054945 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3883346463381662687, guid: 68d9bf5a4da5d6a4c91a7abf7628b414,
+    type: 3}
+  m_PrefabInstance: {fileID: 2935057176092752277}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c808cf7bc42db8b42aa37f99ea6326bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &301075964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1793,7 +1805,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &755704427
 Transform:
@@ -2938,7 +2950,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 4162164826716764455, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &1836439246
 Transform:
@@ -3396,6 +3408,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1964348690}
     m_Modifications:
+    - target: {fileID: 2913387314438102229, guid: 68d9bf5a4da5d6a4c91a7abf7628b414,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     - target: {fileID: 2935057175825198666, guid: 68d9bf5a4da5d6a4c91a7abf7628b414,
         type: 3}
       propertyPath: m_RootOrder
@@ -3654,6 +3671,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: PlayerInterface
       objectReference: {fileID: 0}
+    - target: {fileID: 2544326560853072376, guid: b91bf1f830a0ecc42986fa8ac7ccee29,
+        type: 3}
+      propertyPath: _OnRespawn.receivers.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2544326560853072376, guid: b91bf1f830a0ecc42986fa8ac7ccee29,
+        type: 3}
+      propertyPath: _OnRespawn.receivers.Array.data[0]
+      value: 
+      objectReference: {fileID: 285054945}
     - target: {fileID: 9194512790380227558, guid: b91bf1f830a0ecc42986fa8ac7ccee29,
         type: 3}
       propertyPath: m_IsActive

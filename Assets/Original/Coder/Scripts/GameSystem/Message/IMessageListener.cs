@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Assembly.GameSystem.Message
 {
-  public interface IMessageReceiver
+  public interface IMessageListener
   {
     public void ReceiveMessage(MessageUnit message);
   }

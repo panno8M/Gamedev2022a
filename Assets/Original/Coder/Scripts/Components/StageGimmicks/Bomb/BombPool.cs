@@ -8,21 +8,23 @@ namespace Assembly.Components.StageGimmicks
 {
   public class BombPool : GameObjectPool<Bomb>
   {
-    [SerializeField] Subject<Unit> _OnClear = new Subject<Unit>();
-    public void Clear() { _OnClear.OnNext(Unit.Default); }
-    public IObservable<Unit> OnClear => _OnClear;
     protected override Bomb CreateInstance()
     {
       return prefab.Instantiate<Bomb>();
     }
     protected override void InfuseInfoOnSpawn(Bomb newObj, ObjectCreateInfo info)
     {
-      newObj.transform.position = (info.userData as Transform).position;
-      newObj.transform.rotation = (info.userData as Transform).rotation;
+      Transform t = info.userData as Transform;
+      if (newObj.transform.parent != t)
+      {
+        newObj.transform.SetParent(t);
+      }
+      newObj.transform.localPosition = Vector3.zero;
+      newObj.transform.localRotation = Quaternion.identity;
+      newObj.transform.localScale = Vector3.one;
     }
     protected override void Blueprint()
     {
-      Global.PlayerPool.OnSpawn.Subscribe(_ => Clear());
     }
   }
 }

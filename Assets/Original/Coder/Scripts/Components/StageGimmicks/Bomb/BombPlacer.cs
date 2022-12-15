@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.GameSystem.Message;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class BombPlacer : MonoBehaviour
+  public class BombPlacer : MonoBehaviour, IMessageListener
   {
     List<ObjectCreateInfo> infos;
     List<Bomb> instances;
@@ -24,12 +25,19 @@ namespace Assembly.Components.StageGimmicks
         });
         instances.Add(BombPool.Instance.Spawn(infos[i]));
       }
-      (BombPool.Instance as BombPool).OnClear.Subscribe(_ =>
+    }
+    public void ReceiveMessage(MessageUnit message)
+    {
+      switch (message.kind)
       {
-        for (int i = 0; i < instances.Count; i++)
-          BombPool.Instance.Respawn(instances[i], infos[i]);
+        case MessageKind.Invoke:
+          for (int i = 0; i < instances.Count; i++)
+          {
+            BombPool.Instance.Respawn(instances[i], infos[i]);
+          }
+          break;
+
       }
-      );
     }
   }
 }

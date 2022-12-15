@@ -12,7 +12,7 @@ namespace Assembly.GameSystem.Message
 
     void Start()
     {
-      foreach (IMessageReceiver receiver in gameObject.GetComponentsInChildren<IMessageReceiver>())
+      foreach (IMessageListener receiver in gameObject.GetComponentsInChildren<IMessageListener>())
       {
         OnMessageRecieve.Subscribe(receiver.ReceiveMessage);
       }

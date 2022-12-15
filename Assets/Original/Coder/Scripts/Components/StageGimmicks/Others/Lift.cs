@@ -3,7 +3,7 @@ using Assembly.GameSystem.Message;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class Lift : MonoBehaviour, IMessageReceiver
+  public class Lift : MonoBehaviour, IMessageListener
   {
     Vector3 _positionDefault;
     [SerializeField] Vector3 _positionDelta;

@@ -1,5 +1,7 @@
 using UnityEngine;
+using UniRx;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.GameSystem.Message;
 
 namespace Assembly.Components.Actors
 {
@@ -8,6 +10,7 @@ namespace Assembly.Components.Actors
     public Transform activeSpawnPoint;
     PlayerAct _player;
     public PlayerAct player => _player ?? Spawn();
+    [SerializeField] MessageDispatcher _OnRespawn = new MessageDispatcher(MessageKind.Invoke);
 
     protected override PlayerAct CreateInstance()
     {
@@ -34,6 +37,12 @@ namespace Assembly.Components.Actors
     protected override void Blueprint()
     {
       Spawn();
+      OnSpawn.Subscribe(_ => _OnRespawn.Dispatch());
+    }
+
+    void OnDrawGizmos()
+    {
+      _OnRespawn.DrawArrow(transform);
     }
   }
 }
