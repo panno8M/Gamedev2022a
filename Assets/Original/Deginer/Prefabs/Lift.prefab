@@ -49,6 +49,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _positionDelta: {x: 0, y: 2, z: 0}
+  _power: 0
+  _plateObject: {fileID: 6593485100501450072}
+  _acitivatedColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!65 &8889518633315064098
 BoxCollider:
   m_ObjectHideFlags: 0

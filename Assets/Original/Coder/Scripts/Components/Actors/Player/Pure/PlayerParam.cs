@@ -57,7 +57,7 @@ namespace Assembly.Components.Actors
 
     EzLerp moveSpeedLerp = new EzLerp(1);
 
-    public float MoveSpeed => moveSpeedLerp.Mix(moveSpeedNormal, moveSpeedKnackered);
+    public float MoveSpeed => moveSpeedLerp.UpdMix(moveSpeedNormal, moveSpeedKnackered);
 
     public void SetAsNormal()
     {

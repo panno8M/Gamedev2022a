@@ -60,10 +60,10 @@ namespace Assembly.Components.StageGimmicks
         {
           _OnPress.Dispatch();
 
-          _plateObject.transform.localPosition = animateProgress.Add(_positionDefault, _positionDelta);
+          _plateObject.transform.localPosition = animateProgress.UpdAdd(_positionDefault, _positionDelta);
           if (_plateMaterial)
           {
-            _plateMaterial.color = animateProgress.Mix(_relaxColor, _pressColor);
+            _plateMaterial.color = animateProgress.UpdMix(_relaxColor, _pressColor);
           }
         }
 

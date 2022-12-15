@@ -9739,6 +9739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1 &5352395264603370434
 GameObject:
   m_ObjectHideFlags: 0
@@ -14624,7 +14625,7 @@ GameObject:
   - component: {fileID: 8460910476692670317}
   m_Layer: 15
   m_Name: Kandelaar
-  m_TagString: Untagged
+  m_TagString: Kandelaar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -14692,6 +14693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggers: []
 --- !u!114 &8460910476692670317
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -19,15 +19,21 @@ namespace Assembly.Components.StageGimmicks
       switch (message.kind)
       {
         case MessageKind.Signal:
-          if (!active && message.intensity.factor != 0)
+          if (message.intensity.UpdFactor() == 0)
           {
-            active = true;
-            ps.Play();
+            if (active)
+            {
+              active = false;
+              ps.Stop();
+            }
           }
-          else if (active && message.intensity.factor == 0)
+          else
           {
-            active = false;
-            ps.Stop();
+            if (!active)
+            {
+              active = true;
+              ps.Play();
+            }
           }
           break;
       }

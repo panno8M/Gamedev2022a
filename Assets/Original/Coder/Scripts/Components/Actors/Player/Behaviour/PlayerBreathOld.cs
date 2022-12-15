@@ -19,14 +19,14 @@ namespace Assembly.Components.Actors
             if (exhalingProgress.isIncreasing)
             {
               psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-              if (exhalingProgress.factor == 1)
+              if (exhalingProgress.UpdFactor() == 1)
               {
                 exhalingProgress.SetAsDecrease();
               }
             }
             else
             {
-              if (exhalingProgress.factor == 0)
+              if (exhalingProgress.UpdFactor() == 0)
               {
                 RemoveOveruseLimitation();
               }

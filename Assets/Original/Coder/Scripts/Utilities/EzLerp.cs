@@ -10,7 +10,7 @@ namespace Utilities
   {
     public enum Mode { Increase = 1, Decrease = -1 }
 
-    public EzLerp(float secDuration, Mode mode = Mode.Increase)
+    public EzLerp(float secDuration, Mode mode = Mode.Decrease)
     {
       this.secDuration = secDuration;
       this.mode = mode;
@@ -18,7 +18,6 @@ namespace Utilities
     public EzLerp()
     {
       this.secDuration = 1;
-      this.mode = Mode.Increase;
     }
 
     float latestCallTime;
@@ -31,37 +30,36 @@ namespace Utilities
     public bool needsCalc => _needsCalc;
 
     public float alpha => useCurve ? _curvedAplha : _factor;
-    public override float factor
+    public override float UpdFactor()
     {
-      get
-      {
-        if (latestCallTime == 0) { latestCallTime = Time.time; return 0; }
-        var delta = Time.time - latestCallTime;
-        if (delta < 0.001) { return alpha; }
-        latestCallTime = Time.time;
-        if (!_needsCalc) { return alpha; }
+      if (latestCallTime == 0) { latestCallTime = Time.time; return 0; }
 
-        factor = _factor + (float)mode * delta / secDuration;
+      var delta = Time.time - latestCallTime;
+      if (delta < 0.001) { return alpha; }
+      latestCallTime = Time.time;
 
-        return alpha;
-      }
-      set
+      if (!_needsCalc) { return alpha; }
+
+      SetFactor(_factor + (float)mode * delta / secDuration);
+
+      return alpha;
+    }
+    public override void SetFactor(float value)
+    {
+      base.SetFactor(value);
+      _needsCalc = ((isDecreasing && 0 < _factor) || (isIncreasing && _factor < 1));
+      if (useCurve)
       {
-        base.factor = value;
-        _needsCalc = ((isDecreasing && 0 < _factor) || (isIncreasing && _factor < 1));
-        if (useCurve)
-        {
-          _curvedAplha = curve.Evaluate(_factor);
-        }
+        _curvedAplha = curve.Evaluate(_factor);
       }
     }
-    public override void Set0()
+    public override void SetFactor0()
     {
       _factor = 0;
       if (useCurve) { _curvedAplha = curve.Evaluate(0); }
       _needsCalc = isIncreasing;
     }
-    public override void Set1()
+    public override void SetFactor1()
     {
       _factor = 1;
       if (useCurve) { _curvedAplha = curve.Evaluate(1); }
@@ -70,13 +68,17 @@ namespace Utilities
 
     [SerializeField] public float secDuration;
 
-    [SerializeField] ReactiveProperty<Mode> _mode = new ReactiveProperty<Mode>();
+    [SerializeField] ReactiveProperty<Mode> _mode = new ReactiveProperty<Mode>(Mode.Decrease);
     public Mode mode
     {
       get { return _mode.Value; }
       set
       {
         _needsCalc = true;
+        if (mode != value && latestCallTime != 0)
+        {
+          latestCallTime = Time.time;
+        }
         _mode.Value = value;
       }
     }

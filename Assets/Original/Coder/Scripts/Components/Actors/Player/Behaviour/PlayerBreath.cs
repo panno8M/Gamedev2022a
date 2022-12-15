@@ -20,15 +20,15 @@ namespace Assembly.Components.Actors
             if (exhalingProgress.isIncreasing)
             {
               psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-              _flameReceptor.flameQuantity = 1 - exhalingProgress.factor;
-              if (exhalingProgress.factor == 1)
+              _flameReceptor.flameQuantity = 1 - exhalingProgress.UpdFactor();
+              if (exhalingProgress.PeekFactor() == 1)
               {
                 exhalingProgress.SetAsDecrease();
               }
             }
             else
             {
-              if (exhalingProgress.factor == 0)
+              if (exhalingProgress.PeekFactor() == 0)
               {
                 RemoveOveruseLimitation();
               }
