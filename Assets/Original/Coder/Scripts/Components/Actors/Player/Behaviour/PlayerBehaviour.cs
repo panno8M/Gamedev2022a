@@ -31,13 +31,8 @@ namespace Assembly.Components.Actors
     }
     #endregion
 
-    #region assets
-    Rigidbody rb;
-    #endregion
-
     protected override void Blueprint()
     {
-      rb = GetComponent<Rigidbody>();
       _actor = Global.Player;
 
       sbsc_AddGravity();
@@ -47,9 +42,6 @@ namespace Assembly.Components.Actors
 
       _actor.Behavior
           .Subscribe(MoveHorizontal);
-
-      _actor.interactor.holder.RequestHold
-          .Subscribe(_actor.interactor.holder.Grab);
     }
 
     void sbsc_AddGravity()
@@ -57,14 +49,14 @@ namespace Assembly.Components.Actors
       this.FixedUpdateAsObservable()
           .Subscribe(_ =>
           {
-            rb.AddForce((G * _scaleGravity.normal)._y_(), ForceMode.Acceleration);
+            rigidbody.AddForce((G * _scaleGravity.normal)._y_(), ForceMode.Acceleration);
           });
     }
 
     void Jump()
     {
-      rb.velocity = rb.velocity.x_z();
-      rb.AddForce(_actor.param.jumpHeight._y_(), ForceMode.Impulse);
+      rigidbody.velocity = rigidbody.velocity.x_z();
+      rigidbody.AddForce(_actor.param.jumpHeight._y_(), ForceMode.Impulse);
     }
 
 
@@ -72,7 +64,7 @@ namespace Assembly.Components.Actors
     {
       if (pa.horiMove == 0)
       {
-        rb.velocity = rb.velocity._yz();
+        rigidbody.velocity = rigidbody.velocity._yz();
         return;
       }
 
@@ -80,19 +72,19 @@ namespace Assembly.Components.Actors
       {
         if (pa.obstacleClimbable)
         {
-          rb.velocity = pa.obstacleTangent * pa.param.MoveSpeed;
+          rigidbody.velocity = pa.obstacleTangent * pa.param.MoveSpeed;
         }
         else
         {
-          rb.velocity = rb.velocity._yz();
+          rigidbody.velocity = rigidbody.velocity._yz();
         }
       }
       else
       {
-        rb.velocity = new Vector3(
+        rigidbody.velocity = new Vector3(
           (float)pa.lookDirection.current * pa.param.MoveSpeed,
-          rb.velocity.y,
-          rb.velocity.z);
+          rigidbody.velocity.y,
+          rigidbody.velocity.z);
       }
     }
   }

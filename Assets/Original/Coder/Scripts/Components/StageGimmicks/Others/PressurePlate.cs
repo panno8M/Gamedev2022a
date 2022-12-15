@@ -2,6 +2,7 @@ using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using Utilities;
+using Assembly.GameSystem.Message;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -11,6 +12,7 @@ namespace Assembly.Components.StageGimmicks
     SafetyTrigger SafetyTrigger;
 
     enum Mode { Relax = -1, Press = 1 }
+    [SerializeField] MessageDispatcher _OnPress = new MessageDispatcher();
     Mode targetMode = Mode.Relax;
     [SerializeField]
     EzLerp animateProgress = new EzLerp(1);
@@ -29,17 +31,20 @@ namespace Assembly.Components.StageGimmicks
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
+
+      _OnPress.message.intensity = animateProgress;
+
       AnimatePress().Forget();
 
-      SafetyTrigger.Triggers.ObserveAdd()
+      SafetyTrigger.OnEnter
         .Subscribe(trigger =>
         {
           targetMode = Mode.Press;
         }).AddTo(this);
-      SafetyTrigger.Triggers.ObserveRemove()
+      SafetyTrigger.OnExit
         .Subscribe(trigger =>
         {
-          if (SafetyTrigger.Triggers.Count == 0)
+          if (SafetyTrigger.triggers.Count == 0)
           {
             targetMode = Mode.Relax;
           }
@@ -51,14 +56,25 @@ namespace Assembly.Components.StageGimmicks
       while (Application.isPlaying)
       {
         animateProgress.mode = (EzLerp.Mode)targetMode;
-        _plateObject.transform.localPosition = animateProgress.Add(_positionDefault, _positionDelta);
-        if (_plateMaterial)
+        if (animateProgress.needsCalc)
         {
-          _plateMaterial.color = animateProgress.Mix(_relaxColor, _pressColor);
+          _OnPress.Dispatch();
+
+          _plateObject.transform.localPosition = animateProgress.UpdAdd(_positionDefault, _positionDelta);
+          if (_plateMaterial)
+          {
+            _plateMaterial.color = animateProgress.UpdMix(_relaxColor, _pressColor);
+          }
         }
+
         await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
       }
       _plateObject.transform.localPosition = _positionDefault;
+    }
+
+    void OnDrawGizmos()
+    {
+      _OnPress.DrawArrow(transform);
     }
   }
 }

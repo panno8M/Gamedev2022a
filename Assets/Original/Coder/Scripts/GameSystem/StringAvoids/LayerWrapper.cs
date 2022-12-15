@@ -21,6 +21,8 @@ namespace Assembly.GameSystem
     [Description("Senses/Interactable")] Interactable,
     [Description("Senses/Interactor")] Interactor,
     [Description("Physics/Item")] Item,
+    [Description("Senses/Damager")] Damager,
+    [Description("Physics/Player")] Player,
   }
 
   public struct Layers

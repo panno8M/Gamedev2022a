@@ -1,16 +1,11 @@
 using System;
-using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
-using Assembly.GameSystem.Damage;
+using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.Actors
 {
   public class PlayerLife : ActorBehavior<PlayerAct>
   {
-    [SerializeField] int _dmgAmountOverTime = 1;
-    [SerializeField] float _msDmgInterval = 300;
-
     protected override void OnAssemble()
     {
       _actor.damagable.Repair();
@@ -28,23 +23,16 @@ namespace Assembly.Components.Actors
       _actor.damagable.OnBroken
           .Subscribe(_ =>
           {
-            _actor.interactor.Forget();
+            _actor.holder.Forget();
             _actor.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
 
             Observable.Timer(TimeSpan.FromMilliseconds(1000))
               .Subscribe(_ => Global.PlayerPool.Despawn())
               .AddTo(this);
             Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerPool.Spawn())
+              .Subscribe(_ => Global.PlayerPool.Spawn(ObjectCreateInfo.None))
               .AddTo(this);
           }).AddTo(this);
-
-      this.FixedUpdateAsObservable()
-        .ThrottleFirst(TimeSpan.FromMilliseconds(_msDmgInterval))
-        .Subscribe(_ =>
-        {
-          _actor.damagable.Affect(new DamageUnit(DamageKind.Water, _dmgAmountOverTime));
-        }).AddTo(this);
     }
   }
 }

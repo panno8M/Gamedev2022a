@@ -1,82 +1,106 @@
+using System;
 using UnityEngine;
+using UniRx;
+
 namespace Utilities
 {
 
-  [System.Serializable]
-  public class EzLerp
+  [Serializable]
+  public class EzLerp : MixFactor
   {
     public enum Mode { Increase = 1, Decrease = -1 }
 
-    public EzLerp(float secDuration)
+    public EzLerp(float secDuration, Mode mode = Mode.Decrease)
     {
       this.secDuration = secDuration;
-      this.mode = Mode.Increase;
+      this.mode = mode;
     }
     public EzLerp()
     {
       this.secDuration = 1;
-      this.mode = Mode.Increase;
     }
 
     float latestCallTime;
-    [Range(0f, 1f)] float _alpha;
-    float _curvedAplha;
-    [SerializeField] public float secDuration;
-    float alpha => useCurve ? _curvedAplha : _alpha;
-    public Mode mode { get; set; }
+
     public bool useCurve;
     public AnimationCurve curve;
 
-    public static implicit operator float(EzLerp ezlerp)
+    float _curvedAplha;
+    bool _needsCalc = true;
+    public bool needsCalc => _needsCalc;
+
+    public float alpha => useCurve ? _curvedAplha : _factor;
+    public override float UpdFactor()
     {
-      var delta = Time.time - ezlerp.latestCallTime;
-      if (delta < 0.001) { return ezlerp.alpha; }
-      ezlerp.latestCallTime = Time.time;
-      ezlerp._alpha = Mathf.Clamp01(ezlerp._alpha + (float)ezlerp.mode * delta / ezlerp.secDuration);
-      if (ezlerp.useCurve)
-      {
-        ezlerp._curvedAplha = ezlerp.curve.Evaluate(ezlerp._alpha);
-        return ezlerp._curvedAplha;
-      }
-      return ezlerp._alpha;
+      if (latestCallTime == 0) { latestCallTime = Time.time; return 0; }
+
+      var delta = Time.time - latestCallTime;
+      if (delta < 0.001) { return alpha; }
+      latestCallTime = Time.time;
+
+      if (!_needsCalc) { return alpha; }
+
+      SetFactor(_factor + (float)mode * delta / secDuration);
+
+      return alpha;
     }
+    public override void SetFactor(float value)
+    {
+      base.SetFactor(value);
+      _needsCalc = ((isDecreasing && 0 < _factor) || (isIncreasing && _factor < 1));
+      if (useCurve)
+      {
+        _curvedAplha = curve.Evaluate(_factor);
+      }
+    }
+    public override void SetFactor0()
+    {
+      _factor = 0;
+      if (useCurve) { _curvedAplha = curve.Evaluate(0); }
+      _needsCalc = isIncreasing;
+    }
+    public override void SetFactor1()
+    {
+      _factor = 1;
+      if (useCurve) { _curvedAplha = curve.Evaluate(1); }
+      _needsCalc = isDecreasing;
+    }
+
+    [SerializeField] public float secDuration;
+
+    [SerializeField] ReactiveProperty<Mode> _mode = new ReactiveProperty<Mode>(Mode.Decrease);
+    public Mode mode
+    {
+      get { return _mode.Value; }
+      set
+      {
+        _needsCalc = true;
+        if (mode != value && latestCallTime != 0)
+        {
+          latestCallTime = Time.time;
+        }
+        _mode.Value = value;
+      }
+    }
+
+    public IObservable<Mode> OnModeChanged => _mode;
+    public IObservable<Unit> OnIncrease => _mode
+      .Where(x => x == Mode.Increase)
+      .AsUnitObservable();
+    public IObservable<Unit> OnDecrease => _mode
+      .Where(x => x == Mode.Decrease)
+      .AsUnitObservable();
+
+    public bool isIncreasing => mode == Mode.Increase;
+    public bool isDecreasing => mode == Mode.Decrease;
+
+    public float elapsedSeconds => alpha * secDuration;
 
     public void SetAsIncrease(bool b)
     {
       mode = b ? Mode.Increase : Mode.Decrease;
     }
-
-    #region Mixers
-    public float Mix(float from, float to)
-    {
-      return Mathf.Lerp(from, to, this);
-    }
-    public float Add(float from, float to)
-    {
-      return from + (to * this);
-    }
-
-    public Color Mix(Color from, Color to)
-    {
-      return Color.Lerp(from, to, this);
-    }
-    public Color Add(Color from, Color to)
-    {
-      return from + (to * this);
-    }
-
-    public Vector3 Mix(Vector3 from, Vector3 to)
-    {
-      return Vector3.Lerp(from, to, this);
-    }
-    public Vector3 Add(Vector3 from, Vector3 to)
-    {
-      return from + (to * this);
-    }
-    public Vector3 AddX(Vector3 from, float to)
-    {
-      return new Vector3(from.x + (to * this), from.y, from.z);
-    }
-    #endregion // Mixers
+    public void SetAsIncrease() { mode = Mode.Increase; }
+    public void SetAsDecrease() { mode = Mode.Decrease; }
   }
 }

@@ -33,7 +33,7 @@ namespace Assembly.Components.UI
 
       Observable
           .EveryUpdate()
-          .Select(_ => player.interactor.isInteractable)
+          .Select(_ => !player.holder.hasItem && player.holder.accessibles.Count != 0)
           .DistinctUntilChanged()
           .Subscribe(b => uiQuestion.SetActive(b));
 
@@ -47,8 +47,8 @@ namespace Assembly.Components.UI
 
           if (!player.gameObject.activeSelf) { return; }
 
-          uiRightArrow.transform.localPosition = easeR.AddX(posR, moveDelta);
-          uiLeftArrow.transform.localPosition = easeL.AddX(posL, -moveDelta);
+          uiRightArrow.transform.localPosition = easeR.UpdAddX(posR, moveDelta);
+          uiLeftArrow.transform.localPosition = easeL.UpdAddX(posL, -moveDelta);
         }).AddTo(this);
     }
     void LateUpdate()

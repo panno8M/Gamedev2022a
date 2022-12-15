@@ -36,7 +36,10 @@ namespace Assembly.Components.StageGimmicks
     {
       if (Vector2.Dot(other.contacts[0].normal, -Vector3.up) >= Mathf.Cos(degThreshold * Mathf.PI / 360f))
       {
-        _rbs.Add(other.rigidbody);
+        if (other.rigidbody)
+        {
+          _rbs.Add(other.rigidbody);
+        }
       }
     }
     void OnCollisionExit(Collision other)

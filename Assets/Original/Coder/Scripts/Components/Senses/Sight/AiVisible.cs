@@ -6,6 +6,8 @@ namespace Senses
 {
   public class AiVisible : MonoBehaviour
   {
+    [SerializeField] Transform _center;
+    public Transform center => _center;
     public ReactiveProperty<bool> IsSeen;
     public IObservable<Unit> OnSeen;
     public IObservable<Unit> OnLost;

@@ -3,7 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
-namespace Assembly.GameSystem
+namespace Assembly.GameSystem.ObjectPool
 {
   public abstract class GameObjectPool<T> : UniqueBehaviour<GameObjectPool<T>>
     where T : DiBehavior, IPoolCollectable
@@ -20,9 +20,10 @@ namespace Assembly.GameSystem
     Subject<T> _OnDespawn = new Subject<T>();
     public IObservable<T> OnDespawn => _OnDespawn;
 
-    public T Spawn()
+    public T Spawn(ObjectCreateInfo info)
     {
       var result = pool.Rent();
+      InfuseInfoOnSpawn(result, info);
       if (result) _OnSpawn.OnNext(result);
       return result;
     }
@@ -35,6 +36,7 @@ namespace Assembly.GameSystem
       }
     }
 
+    protected abstract void InfuseInfoOnSpawn(T newObj, ObjectCreateInfo info);
 
     InternalPool _pool;
     InternalPool pool => _pool ?? (_pool = new InternalPool(this));

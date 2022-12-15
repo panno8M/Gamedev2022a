@@ -6,6 +6,7 @@ namespace Assembly.GameSystem
   {
     Untagged,
     Player,
+    Kandelaar,
     CtlvolDroneMovable,
     CtlvolCamera,
   }
@@ -15,6 +16,7 @@ namespace Assembly.GameSystem
     static string[] names = {
     "Untagged",
     "Player",
+    "Kandelaar",
     "Ctlvol/DroneMovable",
     "Ctlvol/Camera",
   };

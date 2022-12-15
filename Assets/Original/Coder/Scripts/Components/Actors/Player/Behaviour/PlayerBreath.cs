@@ -1,55 +1,44 @@
-using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
   public class PlayerBreath : ActorBehavior<PlayerAct>
   {
+    [SerializeField] PlayerFlameReceptor _flameReceptor;
     [SerializeField] ParticleSystem psFlameBreath;
 
-    ReactiveProperty<bool> _IsExhaling = new ReactiveProperty<bool>();
-    public ReactiveProperty<bool> IsExhaling => _IsExhaling;
-
-
-    [SerializeField] float _msecExhalableLimit = 3000;
-    float _msecExhaling;
-    float _msecCooldown;
-    public float msecExhalableLimit => _msecExhalableLimit;
-    public float msecExhaling => _msecExhaling;
-    public float msecCooldown => _msecCooldown;
-    public bool isCoolingDown => msecCooldown != 0;
+    public EzLerp exhalingProgress = new EzLerp(3, EzLerp.Mode.Decrease);
 
     protected override void Blueprint()
     {
       this.FixedUpdateAsObservable()
-          .TimeInterval()
-          .Where(_ => IsExhaling.Value)
-          .Subscribe(delta =>
+          .Subscribe(_ =>
           {
-            psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-            _msecExhaling += delta.Interval.Milliseconds;
-          }).AddTo(this);
-
-      this.FixedUpdateAsObservable()
-          .FrameTimeInterval()
-          .Where(_ => isCoolingDown)
-          .Subscribe(delta =>
-          {
-            _msecCooldown -= delta.Interval.Milliseconds;
-
-            if (msecCooldown <= 0)
+            if (exhalingProgress.isIncreasing)
             {
-              _msecCooldown = 0;
-              RemoveOveruseLimitation();
+              psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
+              _flameReceptor.flameQuantity = 1 - exhalingProgress.UpdFactor();
+              if (exhalingProgress.PeekFactor() == 1)
+              {
+                exhalingProgress.SetAsDecrease();
+              }
+            }
+            else
+            {
+              if (exhalingProgress.PeekFactor() == 0)
+              {
+                RemoveOveruseLimitation();
+              }
             }
           }).AddTo(this);
 
-      IsExhaling
-          .Subscribe(b =>
+      exhalingProgress.OnModeChanged
+          .Subscribe(mode =>
           {
-            if (b)
+            if (mode == EzLerp.Mode.Increase)
             {
               psFlameBreath.Play();
               SetOveruseLimitation();
@@ -61,24 +50,15 @@ namespace Assembly.Components.Actors
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => !_actor.interactor.holder.hasItem)
-          .Where(_ => !isCoolingDown)
-          .Subscribe(_ => _IsExhaling.Value = true)
+          .Where(_ => _flameReceptor.flameQuantity != 0)
+          .Where(_ => !_actor.holder.hasItem)
+          .Subscribe(_ => exhalingProgress.SetAsIncrease())
           .AddTo(this);
 
-      Observable
-          .Merge(
-              Global.Control.BreathRelease,
-              _actor.interactor.holder.RequestHold
-                  .Where(_ => Global.Control.BreathInput.Value)
-                  .AsUnitObservable(),
-              this.FixedUpdateAsObservable()
-                  .Where(_ => msecExhaling > msecExhalableLimit))
-          .Where(_ => !isCoolingDown)
-          .Subscribe(_ => _IsExhaling.Value = false)
+      _actor.holder.RequestHold
+          .Subscribe(_ => exhalingProgress.SetAsDecrease())
           .AddTo(this);
     }
-
 
     void SetOveruseLimitation()
     {
@@ -95,9 +75,8 @@ namespace Assembly.Components.Actors
 
     void CooldownStart()
     {
+      _flameReceptor.flameQuantity = 0;
       psFlameBreath.Stop();
-      _msecCooldown = msecExhaling;
-      _msecExhaling = 0;
     }
   }
 }

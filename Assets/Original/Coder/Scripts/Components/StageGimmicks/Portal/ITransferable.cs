@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Assembly.Components.StageGimmicks
@@ -8,8 +9,8 @@ namespace Assembly.Components.StageGimmicks
 
     bool Handshake(Portal portal);
 
-    UniTask StartTransfer(Portal portal);
-    UniTask ProcessTransfer(Portal portal);
-    UniTask CompleteTransfer(Portal portal);
+    UniTask StartTransfer(Portal portal, CancellationToken token);
+    UniTask ProcessTransfer(Portal portal, CancellationToken token);
+    UniTask CompleteTransfer(Portal portal, CancellationToken token);
   }
 }

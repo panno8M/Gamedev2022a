@@ -1,5 +1,5 @@
 using UnityEngine;
-using Assembly.GameSystem;
+using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.Actors
 {
@@ -7,7 +7,7 @@ namespace Assembly.Components.Actors
   {
     public Transform activeSpawnPoint;
     PlayerAct _player;
-    public PlayerAct player => _player ?? Spawn();
+    public PlayerAct player => _player ?? Spawn(ObjectCreateInfo.None);
 
     protected override PlayerAct CreateInstance()
     {
@@ -25,12 +25,15 @@ namespace Assembly.Components.Actors
 
       return _player;
     }
+    protected override void InfuseInfoOnSpawn(PlayerAct newObj, ObjectCreateInfo info)
+    {
+    }
 
     public void Despawn() { Despawn(_player); }
 
     protected override void Blueprint()
     {
-      Spawn();
+      Spawn(ObjectCreateInfo.None);
     }
   }
 }
