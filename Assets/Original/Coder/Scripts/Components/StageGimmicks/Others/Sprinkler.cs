@@ -17,6 +17,6 @@ public class Sprinkler : MonoBehaviour, IMessageReceiver
 
   public void ReceiveMessage(MessageUnit message)
   {
-    emission.rateOverTime = defaultRate * (1 - Mathf.Clamp01(message.signalPower));
+    emission.rateOverTime = message.intensity.Mix(defaultRate, 0);
   }
 }

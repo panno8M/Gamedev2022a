@@ -23,7 +23,7 @@ public class BreathMonitor : MonoBehaviour
       _text.SetText("Breath: Exhaling     " + timeString);
       _text.color = Color.red;
     }
-    else if (_breath.exhalingProgress != 0)
+    else if (_breath.exhalingProgress.factor != 0)
     {
       _text.SetText("Breath: Cooling Down " + timeString);
       _text.color = Color.cyan;

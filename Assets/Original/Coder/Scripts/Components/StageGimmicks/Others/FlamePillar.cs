@@ -16,15 +16,20 @@ namespace Assembly.Components.StageGimmicks
     }
     public void ReceiveMessage(MessageUnit message)
     {
-      if (!active && message.signalPower != 0)
+      switch (message.kind)
       {
-        active = true;
-        ps.Play();
-      }
-      else if (active && message.signalPower == 0)
-      {
-        active = false;
-        ps.Stop();
+        case MessageKind.Signal:
+          if (!active && message.intensity.factor != 0)
+          {
+            active = true;
+            ps.Play();
+          }
+          else if (active && message.intensity.factor == 0)
+          {
+            active = false;
+            ps.Stop();
+          }
+          break;
       }
     }
 

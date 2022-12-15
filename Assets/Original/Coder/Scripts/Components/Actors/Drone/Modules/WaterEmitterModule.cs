@@ -23,11 +23,11 @@ namespace Assembly.Components.Actors
 
     public void Launch()
     {
-      if (launchCoolDown == 0)
+      if (launchCoolDown.factor == 0)
       {
         WaterBall result = WaterBallPool.Instance.Spawn(_info);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
-        launchCoolDown.BasisAlpha = 1;
+        launchCoolDown.Set1();
       }
     }
 

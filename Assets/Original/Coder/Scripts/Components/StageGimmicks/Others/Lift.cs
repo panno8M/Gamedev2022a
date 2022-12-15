@@ -14,7 +14,7 @@ namespace Assembly.Components.StageGimmicks
 
     public void ReceiveMessage(MessageUnit message)
     {
-      transform.localPosition = _positionDefault +  _positionDelta * Mathf.Clamp01(message.signalPower);
+      transform.localPosition = message.intensity.Add(_positionDefault, _positionDelta);
     }
   }
 }

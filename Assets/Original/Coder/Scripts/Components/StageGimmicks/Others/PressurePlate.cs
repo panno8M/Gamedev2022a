@@ -31,6 +31,9 @@ namespace Assembly.Components.StageGimmicks
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
+
+      _OnPress.message.intensity = animateProgress;
+
       AnimatePress().Forget();
 
       SafetyTrigger.OnEnter
@@ -55,7 +58,6 @@ namespace Assembly.Components.StageGimmicks
         animateProgress.mode = (EzLerp.Mode)targetMode;
         if (animateProgress.needsCalc)
         {
-          _OnPress.message.signalPower = animateProgress;
           _OnPress.Dispatch();
 
           _plateObject.transform.localPosition = animateProgress.Add(_positionDefault, _positionDelta);
