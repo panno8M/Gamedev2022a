@@ -166,9 +166,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571b2995c5ea1434d83f20991e71ba9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _holdables: []
-  inspector:
-    Holding: {fileID: 0}
+  _safetyTrigger: {fileID: 0}
+  _accessibles: []
 --- !u!114 &5294640173728383470
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -181,6 +180,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1 &847327825
 GameObject:
   m_ObjectHideFlags: 0
@@ -5244,6 +5244,7 @@ GameObject:
   - component: {fileID: 8353330523143646253}
   - component: {fileID: 8353330523143646252}
   - component: {fileID: 73556070}
+  - component: {fileID: 1487445353059367722}
   m_Layer: 0
   m_Name: Point Light
   m_TagString: Untagged
@@ -5277,7 +5278,7 @@ Light:
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
-  m_Color: {r: 1, g: 0.59604275, b: 0.41037738, a: 1}
+  m_Color: {r: 1, g: 0.79411423, b: 0.7490566, a: 1}
   m_Intensity: 0.3
   m_Range: 3
   m_SpotAngle: 30
@@ -5317,12 +5318,12 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 4
+  m_Lightmapping: 1
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
-  m_ColorTemperature: 6570
-  m_UseColorTemperature: 0
+  m_ColorTemperature: 2759
+  m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1
@@ -5348,6 +5349,43 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
+--- !u!114 &1487445353059367722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523143646254}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04bbf1a93035ce744b6c9d4a9e066472, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shiftSpeed: 0.5
+  curve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8353330523506930298
 GameObject:
   m_ObjectHideFlags: 0
@@ -5513,7 +5551,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 320cea006ad073746aa9e7041279a09f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 1855202800}
   mumbling: 0
   _secTransferDurationEnter: 250
   _secTransferDurationExit: 250
@@ -5544,6 +5581,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  triggers: []
 --- !u!114 &643919809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5560,6 +5598,7 @@ MonoBehaviour:
   _flameReceptor: {fileID: 3218184137464799008}
   psFlameBreath: {fileID: 5944828297956823533}
   exhalingProgress:
+    _factor: 0
     useCurve: 0
     curve:
       serializedVersion: 2
@@ -5567,7 +5606,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    _basisAlpha: 0
     secDuration: 2
     _mode:
       value: -1
