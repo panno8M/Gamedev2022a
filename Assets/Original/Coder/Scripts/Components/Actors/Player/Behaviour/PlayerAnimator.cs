@@ -6,41 +6,40 @@ namespace Assembly.Components.Actors
 {
   public class PlayerAnimator : ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerBreath _breath;
     [SerializeField] Animator _anim;
     protected override void Blueprint()
     {
-      _actor.HoriMove
+      _actor.ctl.Horizontal
           .ThrottleFrame(5)
           .Subscribe(Walk)
           .AddTo(this);
 
-      _actor.holder.HoldingItem
+      _actor.hand.holder.HoldingItem
           .Subscribe(Hold)
           .AddTo(this);
 
-      _breath.exhalingProgress.OnModeChanged
+      _actor.mouse.exhalingProgress.OnModeChanged
           .Subscribe(Breath)
           .AddTo(this);
 
-      _actor.damagable.OnBroken
+      _actor.life.OnDead
           .Subscribe(Die)
           .AddTo(this);
 
-      _actor.damagable.OnRepaired
+      _actor.life.OnRevived
           .Subscribe(Revival)
           .AddTo(this);
 
-      _actor.OnJump
+      _actor.behavior.OnJump
           .Subscribe(Jump)
           .AddTo(this);
 
-      _actor.OnLand
-          .Subscribe(Land)
+      _actor.behavior.OnFlap1
+          .Subscribe(Flap)
           .AddTo(this);
 
-      _actor.OnFlapWhileFalling
-          .Subscribe(Flap)
+      _actor.physics.OnLand
+          .Subscribe(Land)
           .AddTo(this);
     }
 
@@ -48,7 +47,7 @@ namespace Assembly.Components.Actors
     {
       _anim.SetBool("Walk", b);
     }
-    void Walk(PlayerAct.HoriMoveStat move)
+    void Walk(float move)
     {
       Walk(move != 0);
     }

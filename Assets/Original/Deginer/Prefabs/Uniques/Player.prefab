@@ -5361,6 +5361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04bbf1a93035ce744b6c9d4a9e066472, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yShift: 0
   shiftSpeed: 0.5
   curve:
     serializedVersion: 2
@@ -5398,13 +5399,17 @@ GameObject:
   - component: {fileID: 1855202800}
   - component: {fileID: 1855202804}
   - component: {fileID: 1855202803}
+  - component: {fileID: 8070644116307393165}
+  - component: {fileID: 6921632980762690573}
   - component: {fileID: 1855202802}
   - component: {fileID: 3112990356196485283}
+  - component: {fileID: 4445889402597593005}
   - component: {fileID: 281757296479911890}
-  - component: {fileID: 1168846669}
   - component: {fileID: 3218184137464799008}
-  - component: {fileID: 15780796179480652}
   - component: {fileID: 643919809}
+  - component: {fileID: 7140775411709922365}
+  - component: {fileID: 1168846669}
+  - component: {fileID: 15780796179480652}
   m_Layer: 17
   m_Name: Player
   m_TagString: Untagged
@@ -5472,26 +5477,43 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
-  ControlMethod:
-    value: 0
-  _damagable: {fileID: 2142224226}
-  _holder: {fileID: 819544959}
-  _param:
-    jumpHeight: 5
-    soarHeight: 3
-    moveSpeedNormal: 3.5
-    moveSpeedKnackered: 1.8
-    _degreeClimbableObstacle: 30
-    steppableBoxCenter: {x: 0.4, y: 0.6, z: 0}
-    steppableBoxExtents: {x: 0.1, y: 0.4, z: 0.2}
+  _ctl: {fileID: 8070644116307393165}
+  _physics: {fileID: 6921632980762690573}
+  _hand: {fileID: 7140775411709922365}
+  _mouse: {fileID: 643919809}
+  _flame: {fileID: 3218184137464799008}
+  _wings: {fileID: 4445889402597593005}
+  _life: {fileID: 3112990356196485283}
+  _behavior: {fileID: 1855202802}
+--- !u!114 &8070644116307393165
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c6caa5b07d9eec045aef3aeb44268d5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 1855202803}
+--- !u!114 &6921632980762690573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c00e6729c1d5e1b499f546bb0cf9795c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 1855202803}
+  _degreeClimbableObstacle: 30
   _IsOnGround:
     value: 0
-  _flapCtl:
-    _upperLimitInitial: 1
-    _upperLimitOverride: 0
-    _upperLimitOverriding: 0
-    _currentCnt:
-      value: 0
   obstacleColliding: 0
   obstacleClimbable: 0
   obstacleTangent: {x: 0, y: 0, z: 0}
@@ -5508,9 +5530,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
-  _scaleGravity:
-    normal: 1.3
-    flying: 0.1
 --- !u!114 &3112990356196485283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5524,6 +5543,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
+  _damagable: {fileID: 2142224226}
+--- !u!114 &4445889402597593005
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 652fff23bae090340b9642d82d148496, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 1855202803}
+  _upperLimitInitial: 1
+  _upperLimitOverride: 0
+  _upperLimitOverriding: 0
+  _FlapCount:
+    value: 0
 --- !u!114 &281757296479911890
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5537,23 +5575,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
-  _breath: {fileID: 643919809}
   _anim: {fileID: 8353330523695600826}
---- !u!114 &1168846669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8353330523506930298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 320cea006ad073746aa9e7041279a09f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mumbling: 0
-  _secTransferDurationEnter: 250
-  _secTransferDurationExit: 250
 --- !u!114 &3218184137464799008
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5569,19 +5591,6 @@ MonoBehaviour:
   _actor: {fileID: 1855202803}
   _flame: {fileID: 2308102551494283101}
   _flameQuantity: 0
---- !u!114 &15780796179480652
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8353330523506930298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggers: []
 --- !u!114 &643919809
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5595,7 +5604,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
-  _flameReceptor: {fileID: 3218184137464799008}
   psFlameBreath: {fileID: 5944828297956823533}
   exhalingProgress:
     _factor: 0
@@ -5609,6 +5617,48 @@ MonoBehaviour:
     secDuration: 2
     _mode:
       value: -1
+--- !u!114 &7140775411709922365
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 566b954f4c85bf34a9d0d6abfbec4b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 1855202803}
+  _holder: {fileID: 819544959}
+--- !u!114 &1168846669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 320cea006ad073746aa9e7041279a09f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mumbling: 0
+  _secTransferDurationEnter: 250
+  _secTransferDurationExit: 250
+--- !u!114 &15780796179480652
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1001 &1516644082
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -7,7 +7,6 @@ namespace Assembly.Components.Actors
 {
   public class PlayerBreath : ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerFlameReceptor _flameReceptor;
     [SerializeField] ParticleSystem psFlameBreath;
 
     public EzLerp exhalingProgress = new EzLerp(3, EzLerp.Mode.Decrease);
@@ -20,7 +19,7 @@ namespace Assembly.Components.Actors
             if (exhalingProgress.isIncreasing)
             {
               psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-              _flameReceptor.flameQuantity = 1 - exhalingProgress.UpdFactor();
+              _actor.flame.flameQuantity = 1 - exhalingProgress.UpdFactor();
               if (exhalingProgress.PeekFactor() == 1)
               {
                 exhalingProgress.SetAsDecrease();
@@ -37,18 +36,18 @@ namespace Assembly.Components.Actors
             }
             else
             {
-              _flameReceptor.flameQuantity = 0;
+              _actor.flame.flameQuantity = 0;
               psFlameBreath.Stop();
             }
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => _flameReceptor.flameQuantity != 0)
-          .Where(_ => !_actor.holder.hasItem)
+          .Where(_ => _actor.flame.flameQuantity != 0)
+          .Where(_ => !_actor.hand.holder.hasItem)
           .Subscribe(_ => exhalingProgress.SetAsIncrease())
           .AddTo(this);
 
-      _actor.holder.RequestHold
+      _actor.hand.holder.RequestHold
           .Subscribe(_ => exhalingProgress.SetAsDecrease())
           .AddTo(this);
     }
