@@ -26,13 +26,6 @@ namespace Assembly.Components.Actors
                 exhalingProgress.SetAsDecrease();
               }
             }
-            else
-            {
-              if (exhalingProgress.PeekFactor() == 0)
-              {
-                RemoveOveruseLimitation();
-              }
-            }
           }).AddTo(this);
 
       exhalingProgress.OnModeChanged
@@ -41,11 +34,11 @@ namespace Assembly.Components.Actors
             if (mode == EzLerp.Mode.Increase)
             {
               psFlameBreath.Play();
-              SetOveruseLimitation();
             }
             else
             {
-              CooldownStart();
+              _flameReceptor.flameQuantity = 0;
+              psFlameBreath.Stop();
             }
           }).AddTo(this);
 
@@ -58,25 +51,6 @@ namespace Assembly.Components.Actors
       _actor.holder.RequestHold
           .Subscribe(_ => exhalingProgress.SetAsDecrease())
           .AddTo(this);
-    }
-
-    void SetOveruseLimitation()
-    {
-      _actor.flapCtl.TightenLimit(0);
-      _actor.param.SetAsKnackered();
-    }
-
-    void RemoveOveruseLimitation()
-    {
-      _actor.flapCtl.ResetLimit();
-      _actor.param.SetAsNormal();
-    }
-
-
-    void CooldownStart()
-    {
-      _flameReceptor.flameQuantity = 0;
-      psFlameBreath.Stop();
     }
   }
 }
