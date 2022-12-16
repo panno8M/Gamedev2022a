@@ -5485,6 +5485,7 @@ MonoBehaviour:
   _wings: {fileID: 4445889402597593005}
   _life: {fileID: 3112990356196485283}
   _behavior: {fileID: 1855202802}
+  _animator: {fileID: 281757296479911890}
 --- !u!114 &8070644116307393165
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5512,8 +5513,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
   _degreeClimbableObstacle: 30
-  _IsOnGround:
-    value: 0
   obstacleColliding: 0
   obstacleClimbable: 0
   obstacleTangent: {x: 0, y: 0, z: 0}

@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.Damage;
+using Cysharp.Threading.Tasks;
 
 namespace Assembly.Components.Actors.Player
 {
@@ -30,24 +31,32 @@ namespace Assembly.Components.Actors.Player
         }).AddTo(this);
 
       damagable.OnBroken
-          .Subscribe(_ =>
-          {
-            _actor.ctl.enabled = false;
-            _actor.hand.holder.Forget();
-            _OnDead.OnNext(Unit.Default);
-
-            Observable.Timer(TimeSpan.FromMilliseconds(1000))
-              .Subscribe(_ => Global.PlayerPool.Despawn())
-              .AddTo(this);
-            Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerPool.Spawn())
-              .AddTo(this);
-          }).AddTo(this);
+          .Subscribe(_ => DieSequence().Forget());
 
       damagable.OnRepaired.Subscribe(_ =>
           {
             _OnRevived.OnNext(Unit.Default);
           }).AddTo(this);
+    }
+    async UniTask DieSequence()
+    {
+      _actor.ctl.enabled = false;
+      _actor.hand.holder.Forget();
+      _OnDead.OnNext(Unit.Default);
+
+      await UniTask.Delay(500);
+
+      UI.SimpleFader.Instance.progress.secDuration = 0.5f;
+      UI.SimpleFader.Instance.progress.SetAsIncrease();
+
+      await UniTask.Delay(500);
+
+      Global.PlayerPool.Despawn();
+
+      await UniTask.Delay(1000);
+
+      Global.PlayerPool.Spawn();
+      UI.SimpleFader.Instance.progress.SetAsDecrease();
     }
   }
 }

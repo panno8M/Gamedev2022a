@@ -15,7 +15,6 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
-      throw new NotImplementedException();
     }
 
     async UniTask Yield(CancellationToken token)
