@@ -1,7 +1,7 @@
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Assembly.Components.Actors;
+using Assembly.Components.Actors.Player;
 using Utilities;
 
 namespace Assembly.Components.UI

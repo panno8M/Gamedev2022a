@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using Assembly.Components;
-using Assembly.Components.Actors;
+using Assembly.Components.Actors.Player;
 
 public class BreathMonitor : MonoBehaviour
 {

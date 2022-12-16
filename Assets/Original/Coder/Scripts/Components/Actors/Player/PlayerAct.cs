@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerAct : ActorCore<PlayerAct>
   {

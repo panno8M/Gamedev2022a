@@ -2,7 +2,7 @@ using System;
 using UniRx;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerController : ActorBehavior<PlayerAct>
   {

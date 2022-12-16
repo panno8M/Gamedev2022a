@@ -2,7 +2,7 @@ using UnityEngine;
 using UniRx;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerAnimator : ActorBehavior<PlayerAct>
   {

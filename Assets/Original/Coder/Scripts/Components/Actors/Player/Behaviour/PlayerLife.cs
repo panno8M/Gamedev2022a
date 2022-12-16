@@ -3,7 +3,7 @@ using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.Damage;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerLife : ActorBehavior<PlayerAct>
   {

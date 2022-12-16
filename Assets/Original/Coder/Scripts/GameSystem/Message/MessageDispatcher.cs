@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UniRx;
 using Utilities;
 
 namespace Assembly.GameSystem.Message

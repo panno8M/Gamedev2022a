@@ -3,7 +3,7 @@ using UnityEngine;
 using UniRx;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   [RequireComponent(typeof(Rigidbody))]
   public class PlayerBehavior : ActorBehavior<PlayerAct>
@@ -17,6 +17,7 @@ namespace Assembly.Components.Actors
     public float MoveSpeed => moveSpeedLerp.UpdMix(moveSpeedNormal, moveSpeedKnackered);
     public IObservable<Unit> OnJump => _actor.ctl.Up.Where(_ => _actor.physics.isOnGround);
     public IObservable<int> OnFlap1 => _actor.wings.FlapCount.Where(x => x == 1);
+    public Mobility mobility => _mobility;
 
     public void SetAsNormal()
     {

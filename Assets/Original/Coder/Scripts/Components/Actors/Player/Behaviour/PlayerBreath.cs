@@ -3,7 +3,7 @@ using UniRx;
 using UniRx.Triggers;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerBreath : ActorBehavior<PlayerAct>
   {

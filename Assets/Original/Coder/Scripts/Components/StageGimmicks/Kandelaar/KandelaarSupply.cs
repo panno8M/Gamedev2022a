@@ -1,9 +1,7 @@
-using System;
 using UniRx;
 using UnityEngine;
 using Assembly.GameSystem;
-using Assembly.GameSystem.Damage;
-using Assembly.Components.Actors;
+using Assembly.Components.Actors.Player;
 
 namespace Assembly.Components.StageGimmicks
 {

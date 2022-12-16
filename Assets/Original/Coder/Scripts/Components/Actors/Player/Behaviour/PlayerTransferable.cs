@@ -4,7 +4,7 @@ using UniRx;
 using Cysharp.Threading.Tasks;
 using Assembly.Components.StageGimmicks;
 
-namespace Assembly.Components.Actors.player
+namespace Assembly.Components.Actors.Player
 {
   public sealed class PlayerTransferable : TransferableBase
   {

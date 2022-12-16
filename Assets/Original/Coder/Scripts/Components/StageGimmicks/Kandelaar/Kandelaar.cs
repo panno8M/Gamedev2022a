@@ -3,7 +3,6 @@ using UniRx;
 using UnityEngine;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
-using Assembly.Components.Actors;
 
 namespace Assembly.Components.StageGimmicks
 {

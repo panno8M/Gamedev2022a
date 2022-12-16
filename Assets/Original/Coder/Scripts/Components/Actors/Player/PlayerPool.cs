@@ -3,7 +3,7 @@ using UniRx;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Message;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerPool : GameObjectPool<PlayerAct>
   {

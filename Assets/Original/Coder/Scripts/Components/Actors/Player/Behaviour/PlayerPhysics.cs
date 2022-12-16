@@ -5,7 +5,7 @@ using UniRx.Triggers;
 using Assembly.GameSystem;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerPhysics : ActorBehavior<PlayerAct>
   {
