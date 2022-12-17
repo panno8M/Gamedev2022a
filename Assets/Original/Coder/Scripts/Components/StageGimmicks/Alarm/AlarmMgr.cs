@@ -8,16 +8,24 @@ public class AlarmMgr : MonoBehaviour
 {
     public ReactiveProperty<bool> IsAlarm;
     //public BoolReactiveProperty IsAlarm = new BoolReactiveProperty();
-    public EzLerp alarmRemainingTime = new EzLerp(1, EzLerp.Mode.Increase);
+    public ReactiveProperty<float> alarmRemainingTime;
+    public float alarmLength;
 
     void Start(){
         IsAlarm.Where(x => x==true).Subscribe(_ => AlarmStart());
     }
 
     void AlarmStart(){
-        alarmRemainingTime.SetFactor1();
+        alarmRemainingTime.Value = alarmLength;
         Debug.Log("ALARM!!!");
     }
 
+    void FixedUpdate(){
+        if(alarmRemainingTime.Value > 0){
+            alarmRemainingTime.Value = alarmRemainingTime.Value - 1 * Time.deltaTime;
+        } else{
+            IsAlarm.Value = false;
+        }
+    }
     
 }

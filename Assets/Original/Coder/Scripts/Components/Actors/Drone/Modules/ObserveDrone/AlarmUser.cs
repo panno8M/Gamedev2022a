@@ -12,9 +12,10 @@ namespace Assembly.Components.Actors{
         public AlarmMgr alarmMgr; 
 
         public void AlarmUse()
-        {
-            if (alarmMgr.alarmRemainingTime.UpdFactor() == 0)
-            {
+        {            
+            if(alarmMgr.IsAlarm.Value){
+                alarmMgr.alarmRemainingTime.Value = alarmMgr.alarmLength;
+            }else{
                 alarmMgr.IsAlarm.Value = true;
             }
         }
