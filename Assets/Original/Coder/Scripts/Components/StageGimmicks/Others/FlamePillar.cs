@@ -1,11 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Assembly.GameSystem.Message;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class FlamePillar : MonoBehaviour, IMessageReceiver
+  public class FlamePillar : MonoBehaviour, IMessageListener
   {
     ParticleSystem ps;
     bool active;

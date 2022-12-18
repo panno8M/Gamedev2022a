@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Assembly.GameSystem.Message;
 
-public class Sprinkler : MonoBehaviour, IMessageReceiver
+public class Sprinkler : MonoBehaviour, IMessageListener
 {
   [SerializeField] ParticleSystem _psWater;
   ParticleSystem.EmissionModule emission;

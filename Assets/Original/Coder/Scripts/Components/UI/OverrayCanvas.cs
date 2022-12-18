@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
-using Assembly.Components.Actors;
 
 namespace Assembly.Components.UI
 {

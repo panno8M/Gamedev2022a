@@ -1,4 +1,4 @@
-using Assembly.Components.Actors;
+using Assembly.Components.Actors.Player;
 using Assembly.GameSystem.Input;
 
 namespace Assembly.Components

@@ -18,6 +18,11 @@ namespace Assembly.Components.StageGimmicks
     MessageDispatcher _OnPutKandelaar = new MessageDispatcher(MessageKind.Power);
 
     EzLerp powerProgress = new EzLerp(3);
+
+    protected override void Blueprint()
+    {
+      throw new NotImplementedException();
+    }
     void Start()
     {
       _collider = GetComponent<Collider>();
@@ -32,6 +37,7 @@ namespace Assembly.Components.StageGimmicks
           if (trigger.CompareTag(Tag.Kandelaar.GetName()))
           {
             powerProgress.SetAsIncrease();
+            trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = true;
           }
         }).AddTo(this);
       _safetyTrigger.OnExit
@@ -40,6 +46,7 @@ namespace Assembly.Components.StageGimmicks
           if (trigger.CompareTag(Tag.Kandelaar.GetName()))
           {
             powerProgress.SetAsDecrease();
+            trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = false;
           }
         }).AddTo(this);
 

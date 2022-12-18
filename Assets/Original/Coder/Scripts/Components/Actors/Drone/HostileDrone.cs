@@ -28,6 +28,12 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
+      emitter.Initialize();
+      aim.Initialize();
+      patrol.Initialize();
+      follow.Initialize();
+      life.Initialize();
+
       sight.InSight
           .Subscribe(visible =>
           {

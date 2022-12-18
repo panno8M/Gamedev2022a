@@ -1,5 +1,5 @@
-using System.Collections.Generic;
-using UniRx;
+using UnityEngine;
+using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.StageGimmicks
@@ -8,23 +8,21 @@ namespace Assembly.Components.StageGimmicks
   {
     protected override Bomb CreateInstance()
     {
-      throw new System.NotImplementedException();
+      return prefab.Instantiate<Bomb>();
     }
     protected override void InfuseInfoOnSpawn(Bomb newObj, ObjectCreateInfo info)
     {
-      newObj.transform.position = info.position;
+      Transform t = info.userData as Transform;
+      if (newObj.transform.parent != t)
+      {
+        newObj.transform.SetParent(t);
+      }
+      newObj.transform.localPosition = Vector3.zero;
+      newObj.transform.localRotation = Quaternion.identity;
+      newObj.transform.localScale = Vector3.one;
     }
     protected override void Blueprint()
     {
-      Global.PlayerPool.OnSpawn.Subscribe(_ =>
-      {
-        try
-        {
-          while (true) { Spawn(ObjectCreateInfo.None); }
-        }
-        catch (System.NotImplementedException) { }
-
-      }).AddTo(this);
     }
   }
 }

@@ -30,6 +30,10 @@ namespace Assembly.GameSystem.Input
     public ReadOnlyReactiveProperty<bool> InteractInput => provider.InteractInput;
     public IObservable<Unit> Interact => provider.Interact;
 
+    protected override void Blueprint()
+    {
+      throw new NotImplementedException();
+    }
 
 #if DEBUG
     void Awake()

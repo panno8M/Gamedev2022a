@@ -4,7 +4,14 @@ namespace Assembly.GameSystem
 {
   public abstract class DiBehavior : MonoBehaviour
   {
-    protected virtual void Blueprint() { }
+    bool initialized;
+    public void Initialize()
+    {
+      if (initialized) { return; }
+      Blueprint();
+      initialized = true;
+    }
+    protected abstract void Blueprint();
 
     Rigidbody _rigidbody;
     Transform _transform;
@@ -30,6 +37,24 @@ namespace Assembly.GameSystem
         }
         return _transform;
       }
+    }
+  }
+  public static class GameObjectExtensions
+  {
+    public static T Instantiate<T>(this GameObject prefab)
+      where T : DiBehavior
+    {
+      T result = GameObject.Instantiate(prefab).GetComponent<T>();
+      result.Initialize();
+      return result;
+    }
+
+    public static T Instantiate<T>(this GameObject prefab, Transform parent)
+      where T : DiBehavior
+    {
+      T result = prefab.Instantiate<T>();
+      result.transform.SetParent(parent);
+      return result;
     }
   }
 }

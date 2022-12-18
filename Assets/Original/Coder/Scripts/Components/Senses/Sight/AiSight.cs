@@ -4,7 +4,6 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
-using Utilities;
 
 namespace Senses.Sight
 {

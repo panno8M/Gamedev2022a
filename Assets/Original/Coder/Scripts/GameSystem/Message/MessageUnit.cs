@@ -13,5 +13,6 @@ namespace Assembly.GameSystem.Message
   {
     Signal,
     Power,
+    Invoke,
   }
 }
