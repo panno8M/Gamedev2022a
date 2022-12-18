@@ -11,6 +11,12 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] ParticleSystem _psSupplyField;
     [SerializeField] SafetyTrigger _supplyFieldTrigger;
     PlayerFlameReceptor _playerFlameReceptor;
+    ReactiveProperty<bool> _IsBeingAbsorbed = new ReactiveProperty<bool>();
+    public bool isBeingAbsorbed
+    {
+      get { return _IsBeingAbsorbed.Value; }
+      set { _IsBeingAbsorbed.Value = value; }
+    }
     protected override void Blueprint()
     {
 
@@ -27,9 +33,19 @@ namespace Assembly.Components.StageGimmicks
             _playerFlameReceptor.flameQuantity = 1;
           }
         });
+      _IsBeingAbsorbed.Subscribe(b =>
+      {
+        if (b) { OnDisable(); }
+        else
+        {
+          if (!isActiveAndEnabled) { return; }
+          OnEnable();
+        }
+      });
     }
     void OnEnable()
     {
+      if (isBeingAbsorbed) { return; }
       _psSupplyField.Play();
       _supplyFieldTrigger.raw.enabled = true;
     }

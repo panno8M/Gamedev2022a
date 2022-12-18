@@ -37,6 +37,7 @@ namespace Assembly.Components.StageGimmicks
           if (trigger.CompareTag(Tag.Kandelaar.GetName()))
           {
             powerProgress.SetAsIncrease();
+            trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = true;
           }
         }).AddTo(this);
       _safetyTrigger.OnExit
@@ -45,6 +46,7 @@ namespace Assembly.Components.StageGimmicks
           if (trigger.CompareTag(Tag.Kandelaar.GetName()))
           {
             powerProgress.SetAsDecrease();
+            trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = false;
           }
         }).AddTo(this);
 

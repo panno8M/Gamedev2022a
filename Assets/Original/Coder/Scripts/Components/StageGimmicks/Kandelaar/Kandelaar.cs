@@ -34,12 +34,14 @@ namespace Assembly.Components.StageGimmicks
           {
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
+            supply.enabled = false;
           });
       _holdable.OnRelease
           .Subscribe(_ =>
           {
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
+            supply.enabled = true;
             Observable.Timer(TimeSpan.FromMilliseconds(100))
               .Subscribe(_ =>
               {
