@@ -3,11 +3,10 @@ using UniRx;
 using UniRx.Triggers;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerBreath : ActorBehavior<PlayerAct>
   {
-    [SerializeField] PlayerFlameReceptor _flameReceptor;
     [SerializeField] ParticleSystem psFlameBreath;
 
     public EzLerp exhalingProgress = new EzLerp(3, EzLerp.Mode.Decrease);
@@ -20,63 +19,38 @@ namespace Assembly.Components.Actors
             if (exhalingProgress.isIncreasing)
             {
               psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
-              _flameReceptor.flameQuantity = 1 - exhalingProgress.UpdFactor();
+              _actor.flame.flameQuantity = 1 - exhalingProgress.UpdFactor();
               if (exhalingProgress.PeekFactor() == 1)
               {
                 exhalingProgress.SetAsDecrease();
               }
             }
-            else
-            {
-              if (exhalingProgress.PeekFactor() == 0)
-              {
-                RemoveOveruseLimitation();
-              }
-            }
           }).AddTo(this);
 
       exhalingProgress.OnModeChanged
+          .Where(mode => mode == EzLerp.Mode.Increase)
           .Subscribe(mode =>
           {
-            if (mode == EzLerp.Mode.Increase)
-            {
-              psFlameBreath.Play();
-              SetOveruseLimitation();
-            }
-            else
-            {
-              CooldownStart();
-            }
+            psFlameBreath.Play();
+          }).AddTo(this);
+      exhalingProgress.OnModeChanged
+          .Where(mode => mode == EzLerp.Mode.Decrease)
+          .Subscribe(mode =>
+          {
+            exhalingProgress.SetFactor0();
+            _actor.flame.flameQuantity = 0;
+            psFlameBreath.Stop();
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => _flameReceptor.flameQuantity != 0)
-          .Where(_ => !_actor.holder.hasItem)
+          .Where(_ => _actor.flame.flameQuantity != 0)
+          .Where(_ => !_actor.hand.holder.hasItem)
           .Subscribe(_ => exhalingProgress.SetAsIncrease())
           .AddTo(this);
 
-      _actor.holder.RequestHold
+      _actor.hand.holder.RequestHold
           .Subscribe(_ => exhalingProgress.SetAsDecrease())
           .AddTo(this);
-    }
-
-    void SetOveruseLimitation()
-    {
-      _actor.flapCtl.TightenLimit(0);
-      _actor.param.SetAsKnackered();
-    }
-
-    void RemoveOveruseLimitation()
-    {
-      _actor.flapCtl.ResetLimit();
-      _actor.param.SetAsNormal();
-    }
-
-
-    void CooldownStart()
-    {
-      _flameReceptor.flameQuantity = 0;
-      psFlameBreath.Stop();
     }
   }
 }

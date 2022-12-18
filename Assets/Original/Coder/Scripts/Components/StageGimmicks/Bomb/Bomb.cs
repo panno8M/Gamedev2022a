@@ -10,8 +10,6 @@ namespace Assembly.Components.StageGimmicks
 
   public class Bomb : DiBehavior, IPoolCollectable
   {
-    Vector3 _defaultPosition;
-
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] ParticleSystem _psExplosion;
     [SerializeField] DamagableComponent _damagable;
@@ -19,81 +17,95 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] float secExplosionDelay = 4;
 
     [SerializeField] SpriteRenderer _renderer;
+    [SerializeField] Collider _physicsCollider;
     [SerializeField] Collider _damagerCollider;
 
     public void Assemble()
     {
-      transform.position = _defaultPosition;
-      transform.rotation = Quaternion.identity;
-      _damagerCollider.enabled = false;
-      _damagable.enabled = true;
-      _renderer.enabled = true;
-      GetComponent<Collider>().enabled = true;
-      _holdable.enabled = true;
+      _psBurnUp.Stop();
+      SetHoldable(locked: false);
+      SetBurnUp(burning: false);
+      SetExplode(exploding: false);
+      OnHold(holding: false);
+    }
+    public void Disassemble()
+    {
+      ResetRigidbody();
       _damagable.Repair();
     }
-    public void Disassemble() {}
 
-    void Start()
+    protected override void Blueprint()
     {
-      _defaultPosition = transform.position;
-
-      _damagerCollider.enabled = false;
+      _physicsCollider = GetComponent<Collider>();
 
       _damagable.OnBroken
-          .Subscribe(_ =>
-          {
-            _holdable.enabled = false;
-          }).AddTo(this);
+        .Subscribe(_ => SetHoldable(locked: true))
+        .AddTo(this);
 
       _damagable.OnBroken
           .Delay(TimeSpan.FromSeconds(0.5))
-          .Subscribe(_ => _psBurnUp.Play())
+          .Subscribe(_ => SetBurnUp(burning: true))
           .AddTo(this);
 
       _damagable.OnBroken
           .Delay(TimeSpan.FromSeconds(secExplosionDelay))
           .Subscribe(_ =>
           {
-            Explode();
+            SetBurnUp(burning: false);
+            SetExplode(exploding: true);
             Observable.Timer(TimeSpan.FromSeconds(1))
-              .Subscribe(_ =>
-              {
-                BombPool.Instance.Despawn(this);
-                _psExplosion.Stop();
-              }).AddTo(this);
+              .Subscribe(_ => BombPool.Instance.Despawn(this)).AddTo(this);
           })
           .AddTo(this);
 
-      _holdable.OnHold
-          .Subscribe(_ =>
-          {
-            rigidbody.useGravity = false;
-            rigidbody.isKinematic = true;
-          });
-      _holdable.OnRelease
-          .Subscribe(_ =>
-          {
-            rigidbody.useGravity = true;
-            rigidbody.isKinematic = false;
-          });
+      _holdable.OnHold.Subscribe(_ => OnHold(holding: true));
+      _holdable.OnRelease.Subscribe(_ => OnHold(holding: false));
       _holdable.OnRelease
           .Delay(TimeSpan.FromMilliseconds(100))
-          .Subscribe(_ =>
-          {
-            rigidbody.velocity = Vector3.zero;
-            rigidbody.angularVelocity = Vector3.zero;
-          });
+          .Subscribe(_ => ResetRigidbody());
+    }
+    void ResetRigidbody()
+    {
+      rigidbody.velocity = Vector3.zero;
+      rigidbody.angularVelocity = Vector3.zero;
+
+    }
+    void OnHold(bool holding)
+    {
+      rigidbody.useGravity = !holding;
+      rigidbody.isKinematic = holding;
     }
 
-    void Explode()
+    void SetHoldable(bool locked)
     {
-      _damagable.enabled = false;
-      _renderer.enabled = false;
-      GetComponent<Collider>().enabled = false;
-      _damagerCollider.enabled = true;
-      _psExplosion.Play();
-      _psBurnUp.Stop();
+      _holdable.enabled = !locked;
+    }
+    void SetBurnUp(bool burning)
+    {
+      if (burning)
+      {
+        _psBurnUp.Play();
+      }
+      else
+      {
+        _psBurnUp.Stop();
+      }
+    }
+
+    void SetExplode(bool exploding)
+    {
+      _damagable.enabled = !exploding;
+      _renderer.enabled = !exploding;
+      _physicsCollider.enabled = !exploding;
+      _damagerCollider.enabled = exploding;
+      if (exploding)
+      {
+        _psExplosion.Play();
+      }
+      else
+      {
+        _psExplosion.Stop();
+      }
     }
   }
 }

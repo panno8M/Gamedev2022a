@@ -1,13 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 
 public class WaterBallPool : GameObjectPool<WaterBall>
 {
+  protected override void Blueprint()
+  {
+  }
+
   protected override WaterBall CreateInstance()
   {
-    return GameObject.Instantiate(prefab).GetComponent<WaterBall>();
+    return prefab.Instantiate<WaterBall>();
   }
   protected override void InfuseInfoOnSpawn(WaterBall newObj, ObjectCreateInfo info)
   {

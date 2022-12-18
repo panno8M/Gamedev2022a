@@ -3,7 +3,7 @@ using UniRx;
 using UniRx.Triggers;
 using Utilities;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerBreathOld: ActorBehavior<PlayerAct>
   {
@@ -48,12 +48,12 @@ namespace Assembly.Components.Actors
           }).AddTo(this);
 
       Global.Control.BreathPress
-          .Where(_ => !_actor.holder.hasItem)
+          .Where(_ => !_actor.hand.holder.hasItem)
           .Where(_ => exhalingProgress.isDecreasing)
           .Subscribe(_ => exhalingProgress.SetAsIncrease())
           .AddTo(this);
 
-      _actor.holder.RequestHold
+      _actor.hand.holder.RequestHold
           .Where(_ => Global.Control.BreathInput.Value)
           .AsUnitObservable()
           .Merge(Global.Control.BreathRelease)
@@ -65,14 +65,14 @@ namespace Assembly.Components.Actors
 
     void SetOveruseLimitation()
     {
-      _actor.flapCtl.TightenLimit(0);
-      _actor.param.SetAsKnackered();
+      _actor.wings.TightenLimit(0);
+      _actor.behavior.SetAsKnackered();
     }
 
     void RemoveOveruseLimitation()
     {
-      _actor.flapCtl.ResetLimit();
-      _actor.param.SetAsNormal();
+      _actor.wings.ResetLimit();
+      _actor.behavior.SetAsNormal();
     }
 
 

@@ -18,9 +18,9 @@ namespace Assembly.Components
     public IObservable<Holder> OnHold => _OnHold;
     public IObservable<Holder> OnRelease => _OnRelease;
 
-    void Awake()
+    void OnDisable()
     {
-      this.OnDisableAsObservable().Subscribe(_ => ReleaseMe());
+      ReleaseMe();
     }
 
     public bool HoldAccepted(Holder holder)

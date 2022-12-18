@@ -1,8 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerFlameReceptor : ActorBehavior<PlayerAct>
   {

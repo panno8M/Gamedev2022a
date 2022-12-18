@@ -1,38 +1,62 @@
 using System;
+using UnityEngine;
 using UniRx;
-using Assembly.GameSystem.ObjectPool;
+using Assembly.GameSystem.Damage;
+using Cysharp.Threading.Tasks;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.Actors.Player
 {
   public class PlayerLife : ActorBehavior<PlayerAct>
   {
+    [SerializeField] DamagableComponent _damagable;
+    public IDamagable damagable => _damagable;
+
+    Subject<Unit> _OnDead = new Subject<Unit>();
+    Subject<Unit> _OnRevived = new Subject<Unit>();
+
+    public IObservable<Unit> OnDead => _OnDead;
+    public IObservable<Unit> OnRevived => _OnRevived;
+
     protected override void OnAssemble()
     {
-      _actor.damagable.Repair();
+      damagable.Repair();
     }
 
     protected override void Blueprint()
     {
-      Global.Control.Respawn
-          .Where(_ => _actor.isControlAccepting)
-          .Subscribe(_ =>
-          {
-            _actor.damagable.Break();
-          }).AddTo(this);
+      _actor.ctl.Respawn
+        .Subscribe(_ =>
+        {
+          damagable.Break();
+        }).AddTo(this);
 
-      _actor.damagable.OnBroken
-          .Subscribe(_ =>
-          {
-            _actor.holder.Forget();
-            _actor.ControlMethod.Value = PlayerAct.ControlMethods.IgnoreAnyInput;
+      damagable.OnBroken
+          .Subscribe(_ => DieSequence().Forget());
 
-            Observable.Timer(TimeSpan.FromMilliseconds(1000))
-              .Subscribe(_ => Global.PlayerPool.Despawn())
-              .AddTo(this);
-            Observable.Timer(TimeSpan.FromMilliseconds(3000))
-              .Subscribe(_ => Global.PlayerPool.Spawn(ObjectCreateInfo.None))
-              .AddTo(this);
+      damagable.OnRepaired.Subscribe(_ =>
+          {
+            _OnRevived.OnNext(Unit.Default);
           }).AddTo(this);
+    }
+    async UniTask DieSequence()
+    {
+      _actor.ctl.enabled = false;
+      _actor.hand.holder.Forget();
+      _OnDead.OnNext(Unit.Default);
+
+      await UniTask.Delay(500);
+
+      UI.SimpleFader.Instance.progress.secDuration = 0.5f;
+      UI.SimpleFader.Instance.progress.SetAsIncrease();
+
+      await UniTask.Delay(500);
+
+      Global.PlayerPool.Despawn();
+
+      await UniTask.Delay(1000);
+
+      Global.PlayerPool.Spawn();
+      UI.SimpleFader.Instance.progress.SetAsDecrease();
     }
   }
 }

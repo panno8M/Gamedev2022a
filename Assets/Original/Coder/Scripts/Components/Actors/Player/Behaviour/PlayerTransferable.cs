@@ -4,7 +4,7 @@ using UniRx;
 using Cysharp.Threading.Tasks;
 using Assembly.Components.StageGimmicks;
 
-namespace Assembly.Components.Actors.player
+namespace Assembly.Components.Actors.Player
 {
   public sealed class PlayerTransferable : TransferableBase
   {
@@ -21,6 +21,11 @@ namespace Assembly.Components.Actors.player
 
     [SerializeField] int _secTransferDurationEnter = 250;
     [SerializeField] int _secTransferDurationExit = 250;
+
+    protected override void Blueprint()
+    {
+      throw new System.NotImplementedException();
+    }
 
     void Start()
     {

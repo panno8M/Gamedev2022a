@@ -13,6 +13,9 @@ namespace Assembly.Components.Actors
     bool _actable = true;
     Portal defaultPortal;
 
+    protected override void Blueprint()
+    {
+    }
 
     async UniTask Yield(CancellationToken token)
     {

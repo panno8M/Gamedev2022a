@@ -12,7 +12,7 @@ namespace Assembly.Components.UI
     void Reset()
     {
       if (!_text) { _text = GetComponent<TMP_Text>(); }
-      if (_damagable == null) { _damagable = Global.Player.damagable; }
+      if (_damagable == null) { _damagable = Global.Player.life.damagable; }
     }
     void Start()
     {

@@ -2,33 +2,46 @@ using System;
 using UniRx;
 using UnityEngine;
 using Assembly.GameSystem;
+using Assembly.GameSystem.Message;
 using Assembly.GameSystem.Damage;
-using Assembly.Components.Actors;
+using Cysharp.Threading.Tasks;
 
 namespace Assembly.Components.StageGimmicks
 {
   public class Kandelaar : DiBehavior
   {
+    Vector3 _defaultPosition;
+    [SerializeField] MessageDispatcher _OnRollback = new MessageDispatcher(MessageKind.Invoke);
     [SerializeField] Holdable _holdable;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
+    public KandelaarSupply supply;
 
-    [SerializeField] SafetyTrigger _supplyFieldTrigger;
-    PlayerFlameReceptor _playerFlameReceptor;
-
+    protected override void Blueprint()
+    {
+      throw new NotImplementedException();
+    }
     void Start()
     {
+      Prepare();
+      supply.Initialize();
+    }
+    void Prepare()
+    {
+      _defaultPosition = transform.position;
       _holdable.OnHold
           .Subscribe(_ =>
           {
             rigidbody.useGravity = false;
             rigidbody.isKinematic = true;
+            supply.enabled = false;
           });
       _holdable.OnRelease
           .Subscribe(_ =>
           {
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
+            supply.enabled = true;
             Observable.Timer(TimeSpan.FromMilliseconds(100))
               .Subscribe(_ =>
               {
@@ -37,25 +50,45 @@ namespace Assembly.Components.StageGimmicks
               });
           });
       _damagable.OnBroken
-        .Subscribe(_ =>
-        {
-          Debug.Log("Kandelaar Broken!");
-          _psSmoke.Play();
-          Observable.TimerFrame(1).Subscribe(_ => _psSmoke.Stop());
-        }).AddTo(this);
+        .Subscribe(_ => BreakSequence().Forget())
+        .AddTo(this);
+    }
+    async UniTask BreakSequence()
+    {
+      Debug.Log("Kandelaar Broken!");
+      _psSmoke.Play();
+      supply.enabled = false;
+      _holdable.enabled = false;
+      await UniTask.Delay(1000);
+      _psSmoke.Stop();
+      UI.SimpleFader.Instance.progress.secDuration = 1f;
+      UI.SimpleFader.Instance.progress.SetAsIncrease();
 
-      _supplyFieldTrigger.OnEnter
-        .Subscribe(trigger =>
-        {
-          if (!_playerFlameReceptor)
-          {
-            _playerFlameReceptor = trigger.GetComponent<PlayerFlameReceptor>();
-          }
-          if (_playerFlameReceptor)
-          {
-            _playerFlameReceptor.flameQuantity = 1;
-          }
-        });
+      await UniTask.Delay(1000);
+
+      await RollbackSequence();
+
+      await UniTask.Delay(1000);
+
+      UI.SimpleFader.Instance.progress.SetAsDecrease();
+      await UniTask.Delay(1000);
+
+      UI.SimpleFader.Instance.progress.secDuration = .3f;
+      UI.SimpleFader.Instance.progress.SetAsIncrease();
+      await UniTask.Delay(300);
+      UI.SimpleFader.Instance.progress.SetAsDecrease();
+      await UniTask.Delay(300);
+
+
+    }
+    UniTask RollbackSequence()
+    {
+      _damagable.Repair();
+      transform.position = _defaultPosition;
+      supply.enabled = true;
+      _holdable.enabled = true;
+      _OnRollback.Dispatch();
+      return UniTask.CompletedTask;
     }
   }
 }
