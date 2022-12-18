@@ -31,7 +31,6 @@ namespace Assembly.Components.Actors.Player
 
     protected override void OnAssemble()
     {
-      transform.position = Global.PlayerPool.activeSpawnPoint.position;
       ctl.enabled = true;
     }
 

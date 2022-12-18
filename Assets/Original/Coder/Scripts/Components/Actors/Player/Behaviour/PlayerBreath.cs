@@ -28,17 +28,18 @@ namespace Assembly.Components.Actors.Player
           }).AddTo(this);
 
       exhalingProgress.OnModeChanged
+          .Where(mode => mode == EzLerp.Mode.Increase)
           .Subscribe(mode =>
           {
-            if (mode == EzLerp.Mode.Increase)
-            {
-              psFlameBreath.Play();
-            }
-            else
-            {
-              _actor.flame.flameQuantity = 0;
-              psFlameBreath.Stop();
-            }
+            psFlameBreath.Play();
+          }).AddTo(this);
+      exhalingProgress.OnModeChanged
+          .Where(mode => mode == EzLerp.Mode.Decrease)
+          .Subscribe(mode =>
+          {
+            exhalingProgress.SetFactor0();
+            _actor.flame.flameQuantity = 0;
+            psFlameBreath.Stop();
           }).AddTo(this);
 
       Global.Control.BreathPress
