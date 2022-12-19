@@ -1,31 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
+using Assembly.GameSystem;
 using Utilities;
 
-public class AlarmMgr : MonoBehaviour
+public class AlarmMgr : UniqueBehaviour<AlarmMgr>
 {
-    public ReactiveProperty<bool> IsAlarm;
-    //public BoolReactiveProperty IsAlarm = new BoolReactiveProperty();
-    public ReactiveProperty<float> alarmRemainingTime;
-    public float alarmLength;
+  [SerializeField] EzLerp alarmProgress = new EzLerp(10);
+  [SerializeField] ReactiveProperty<bool> _IsOnAlert = new ReactiveProperty<bool>();
+  public IObservable<bool> IsOnAlert => _IsOnAlert;
+  public bool isOnAlert
+  {
+    get { return _IsOnAlert.Value; }
+    private set { _IsOnAlert.Value = value; }
+  }
+  public void AlarmStart()
+  {
+    alarmProgress.SetFactor1();
+  }
 
-    void Start(){
-        IsAlarm.Where(x => x==true).Subscribe(_ => AlarmStart());
-    }
+  void Start() { Initialize(); }
 
-    void AlarmStart(){
-        alarmRemainingTime.Value = alarmLength;
-        Debug.Log("ALARM!!!");
-    }
-
-    void FixedUpdate(){
-        if(alarmRemainingTime.Value > 0){
-            alarmRemainingTime.Value = alarmRemainingTime.Value - 1 * Time.deltaTime;
-        } else{
-            IsAlarm.Value = false;
-        }
-    }
-    
+  protected override void Blueprint()
+  {
+    this.FixedUpdateAsObservable()
+      .Subscribe(_ => isOnAlert = alarmProgress.UpdFactor() != 0);
+  }
 }

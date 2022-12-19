@@ -14,7 +14,7 @@ namespace Assembly.Components.StageGimmicks
     {
       damagable.OnBroken.Subscribe(_ =>
       {
-        (PlayerPool.Instance as PlayerPool).activeSpot = this;
+        Pool.Player.activeSpot = this;
       });
     }
     public Vector3 spawnPosition => transform.position;

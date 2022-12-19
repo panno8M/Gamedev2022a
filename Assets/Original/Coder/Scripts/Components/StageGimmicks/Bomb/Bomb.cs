@@ -54,7 +54,7 @@ namespace Assembly.Components.StageGimmicks
             SetBurnUp(burning: false);
             SetExplode(exploding: true);
             Observable.Timer(TimeSpan.FromSeconds(1))
-              .Subscribe(_ => BombPool.Instance.Despawn(this)).AddTo(this);
+              .Subscribe(_ => Pool.Bomb.Despawn(this)).AddTo(this);
           })
           .AddTo(this);
 

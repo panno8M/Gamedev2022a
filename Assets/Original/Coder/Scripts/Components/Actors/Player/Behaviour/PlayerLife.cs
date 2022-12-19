@@ -51,11 +51,11 @@ namespace Assembly.Components.Actors.Player
 
       await UniTask.Delay(500);
 
-      Global.PlayerPool.Despawn();
+      Pool.Player.Despawn();
 
       await UniTask.Delay(1000);
 
-      Global.PlayerPool.Spawn();
+      Pool.Player.Spawn();
       UI.SimpleFader.Instance.progress.SetAsDecrease();
     }
   }

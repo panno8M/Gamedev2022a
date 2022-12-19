@@ -1,13 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
+using UniRx.Triggers;
+using Assembly.Components.Effects;
+using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Utilities;
 
 namespace Assembly.Components.Actors
 {
-  public class WaterEmitterModule : ActorBehavior<HostileDrone>
+  public class WaterEmitterModule : DiBehavior
   {
+    [SerializeField] DroneAct _actor;
     [SerializeField] Transform emitterTransform;
     [SerializeField] float power;
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);
@@ -19,25 +22,24 @@ namespace Assembly.Components.Actors
       {
         userData = emitterTransform,
       };
+      _actor.OnPhaseEnter(DronePhase.Hostile)
+        .Subscribe(_ => enabled = true);
+      _actor.OnPhaseExit(DronePhase.Hostile)
+        .Subscribe(_ => enabled = false);
+
+      this.FixedUpdateAsObservable()
+        .Where(_ => _actor.target)
+        .Subscribe(_ => Launch());
     }
 
     public void Launch()
     {
       if (launchCoolDown.UpdFactor() == 0)
       {
-        WaterBall result = WaterBallPool.Instance.Spawn(_info);
+        WaterBall result = Pool.WaterBall.Spawn(_info);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
         launchCoolDown.SetFactor1();
       }
     }
-
-    void FixedUpdate()
-    {
-      if (_actor.aim.target)
-      {
-        Launch();
-      }
-    }
-
   }
 }

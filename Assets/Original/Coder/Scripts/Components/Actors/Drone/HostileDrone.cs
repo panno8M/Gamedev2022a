@@ -1,53 +1,35 @@
-using System;
 using UnityEngine;
-
 using UniRx;
-using Senses.Sight;
-using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.Actors
 {
 
   [RequireComponent(typeof(WaterEmitterModule))]
-  [RequireComponent(typeof(AimModule))]
-  [RequireComponent(typeof(PatrolWaypointModule))]
-  [RequireComponent(typeof(FollowObjectModule))]
-  [RequireComponent(typeof(LifeModule))]
-  public class HostileDrone : ActorCore<HostileDrone>
+  public class HostileDrone : DroneAct
   {
     public WaterEmitterModule emitter;
-    public AimModule aim;
-    public PatrolWaypointModule patrol;
-    public FollowObjectModule follow;
-    public LifeModule life;
 
-    public AiSight sight;
-    [SerializeField] float moveSpeed = 1f;
+    public Transform hoseTransform;
+    protected Quaternion defaultHoseRotation;
 
-    public Transform target;
 
-    protected override void Blueprint()
+    protected override void Prepare()
     {
-      emitter.Initialize();
-      aim.Initialize();
-      patrol.Initialize();
-      follow.Initialize();
-      life.Initialize();
+      base.Prepare();
 
-      sight.InSight
-          .Subscribe(visible =>
-          {
-            if (life.damagable.isBroken) { return; }
-            patrol.enabled = !visible;
-            follow.enabled = visible;
-            target = visible ? visible.center : null;
-            aim.Target(target);
-          }).AddTo(this);
+      defaultHoseRotation = hoseTransform.localRotation;
+      emitter.Initialize();
     }
 
-    public void Move(Vector3 UnnormalizedDirection)
+    protected override void OnLostTarget()
     {
-      transform.position += UnnormalizedDirection.normalized * moveSpeed * Time.deltaTime;
+      hoseTransform.localRotation = defaultHoseRotation;
+    }
+
+    protected override void WhileLockTarget()
+    {
+      hoseTransform.LookAt(target);
+      sightTransform.LookAt(target);
     }
   }
 }

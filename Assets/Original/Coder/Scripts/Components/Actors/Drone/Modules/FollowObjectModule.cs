@@ -1,52 +1,74 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
-  public class FollowObjectModule : ActorBehavior<HostileDrone>
+  public class FollowObjectModule : DiBehavior
   {
-    [SerializeField] PositionConstraints _constraints;
+    [SerializeField] DroneAct _actor;
+    [SerializeField] PositionConstraints _pcons;
+    [SerializeField] RotationConstraints _rcons;
 
     protected override void Blueprint()
     {
-      this.FixedUpdateAsObservable()
-      .Subscribe(_ =>
-      {
+      _actor.OnPhaseEnter(DronePhase.Hostile)
+        .Subscribe(_ => enabled = true);
+      _actor.OnPhaseExit(DronePhase.Hostile)
+        .Subscribe(_ => enabled = false);
 
-        if (!_actor.target) { return; }
-        var rot = Quaternion.LookRotation(_actor.target.position - transform.position);
-        transform.rotation = Quaternion.RotateTowards(
-          transform.rotation,
-          rot,
-          2f);
+      _actor.Target
+        .Where(_ => _actor.phase == DronePhase.Hostile)
+        .Where(target => !target)
+        .Subscribe(_ => _actor.phase = DronePhase.Patrol);
 
-        Vector3 dir;
-
-        float sqrDistance = (_actor.target.position - transform.position).sqrMagnitude;
-        if (sqrDistance < _constraints.sqrClosestDistance)
+      _actor.FixedUpdateAsObservable()
+        .Subscribe(_ =>
         {
-          dir = -transform.forward;
-        }
-        else if (_constraints.sqrFurthestDistance < sqrDistance)
-        {
-          dir = transform.forward;
-        }
-        else
-        {
-          dir = Vector3.zero;
-        }
 
-        if (!_constraints.HasEnoughHight(transform, out RaycastHit hit))
-        {
-          dir += Vector3.up;
-        }
+          if (!_actor.target) { return; }
+          var rot = Quaternion.LookRotation(_actor.target.position - transform.position);
+          var rotangles = rot.eulerAngles;
+          rot = Quaternion.Euler(
+            Mathf.Clamp((rotangles.x > 180f ? rotangles.x - 360f: rotangles.x), -_rcons.maximumHullTilt, _rcons.maximumHullTilt),
+            rotangles.y,
+            rotangles.z);
+          transform.rotation = Quaternion.RotateTowards(
+            transform.rotation,
+            rot,
+            2f);
 
-        _actor.Move(dir);
-      });
+          Vector3 dir;
+
+          float sqrDistance = (_actor.target.position - transform.position).sqrMagnitude;
+          if (sqrDistance < _pcons.sqrClosestDistance)
+          {
+            dir = -transform.forward.x_z();
+          }
+          else if (_pcons.sqrFurthestDistance < sqrDistance)
+          {
+            dir = transform.forward;
+          }
+          else
+          {
+            dir = Vector3.zero;
+          }
+
+          if (!_pcons.HasEnoughHight(transform, out RaycastHit hit))
+          {
+            dir += Vector3.up;
+          }
+
+          _actor.Move(dir);
+        });
+    }
+
+    [System.Serializable]
+    class RotationConstraints
+    {
+      public float maximumHullTilt = 30;
     }
 
     [System.Serializable]

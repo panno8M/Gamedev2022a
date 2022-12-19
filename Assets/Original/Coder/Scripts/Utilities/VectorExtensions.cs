@@ -31,6 +31,11 @@ namespace Utilities
       return new Vector3(0, v.y, 0);
     }
 
+    public static Vector3 xy_(this Vector3 v)
+    {
+      return new Vector3(v.x, v.y, 0);
+    }
+
     public static Vector3 x_z(this Vector3 v)
     {
       return new Vector3(v.x, 0, v.z);
