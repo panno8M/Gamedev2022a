@@ -3,14 +3,13 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
-using Senses.Sight;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.GameSystem.ObjectPool;
-using Utilities;
 
 namespace Assembly.Components.Actors
 {
+  [Flags]
   public enum DronePhase
   {
     Disactive,
@@ -22,6 +21,7 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(FollowObjectModule))]
   [RequireComponent(typeof(PatrolPathModule))]
   [RequireComponent(typeof(LaunchModule))]
+  [RequireComponent(typeof(AimModule))]
   public abstract class DroneAct : DiBehavior, IPoolCollectable
   {
 
@@ -34,19 +34,15 @@ namespace Assembly.Components.Actors
 
     DronePhase _previousPhase;
     Collider physicsCollider;
-    protected Quaternion defaultSightRotation;
 
     Subject<Unit> _OnAssemble = new Subject<Unit>();
     Subject<Unit> _OnDisassemble = new Subject<Unit>();
-    Subject<Unit>[] _OnPhaseEnter = new Subject<Unit>[Enum.GetNames(typeof(DronePhase)).Length];
-    Subject<Unit>[] _OnPhaseExit = new Subject<Unit>[Enum.GetNames(typeof(DronePhase)).Length];
 
     public LaunchModule launcher;
+    public AimModule aim;
     public FollowObjectModule follow;
     public PatrolPathModule patrol;
-    public AiSight sight;
     public DamagableComponent damagable;
-    public Transform sightTransform;
 
     public IObservable<Transform> Target => _Target;
     public IObservable<DronePhase> OnPhaseChanged => _phase;
@@ -70,14 +66,16 @@ namespace Assembly.Components.Actors
       {
         _previousPhase = _phase.Value;
         _phase.Value = value;
-        _OnPhaseExit[(int)previousPhase].OnNext(Unit.Default);
-        _OnPhaseEnter[(int)phase].OnNext(Unit.Default);
       }
     }
-    public IObservable<Unit> OnPhaseEnter(DronePhase phase)
-    { return _OnPhaseEnter[(int)phase]; }
-    public IObservable<Unit> OnPhaseExit(DronePhase phase)
-    { return _OnPhaseExit[(int)phase]; }
+    public IObservable<DronePhase> OnPhaseEnter(DronePhase phase)
+    {
+      return OnPhaseChanged.Where(x => phase.HasFlag(x));
+    }
+    public IObservable<DronePhase> OnPhaseExit(DronePhase phase)
+    {
+      return OnPhaseChanged.Where(x => phase.HasFlag(previousPhase));
+    }
 
     void Start() { Initialize(); }
     public void Assemble()
@@ -93,17 +91,11 @@ namespace Assembly.Components.Actors
 
     protected virtual void Prepare()
     {
-      for (int i = 0; i < _OnPhaseEnter.Length; i++)
-      {
-        _OnPhaseEnter[i] = new Subject<Unit>();
-        _OnPhaseExit[i] = new Subject<Unit>();
-      }
-
       physicsCollider = GetComponent<Collider>();
       follow.Initialize();
       patrol.Initialize();
       launcher.Initialize();
-      defaultSightRotation = sightTransform.localRotation;
+      aim.Initialize();
     }
     protected virtual void Subscribe()
     {
@@ -127,10 +119,6 @@ namespace Assembly.Components.Actors
           }
         }).AddTo(this);
 
-      sight.InSight
-        .Where(_ => phase != DronePhase.Disactive)
-        .Subscribe(visible => target = visible ? visible.center : null)
-        .AddTo(this);
 
       OnPhaseChanged
         .Subscribe(_ =>
@@ -144,21 +132,15 @@ namespace Assembly.Components.Actors
                 physicsCollider.enabled = false;
               }
               break;
-            case DronePhase.Dead:
-              sightTransform.gameObject.SetActive(false);
-              break;
             case DronePhase.Patrol:
             case DronePhase.Hostile:
               if (!physicsCollider.enabled)
               {
                 physicsCollider.enabled = true;
-                sightTransform.gameObject.SetActive(true);
               }
               break;
           }
         });
-
-      SwipeCamera().Forget();
     }
 
     protected sealed override void Blueprint()
@@ -191,38 +173,5 @@ namespace Assembly.Components.Actors
     }
     protected virtual void OnLostTarget() { }
     protected virtual void WhileLockTarget() { }
-
-    public float CamSwipeMin;
-    public float CamSwipeMax;
-    async UniTask SwipeCamera()
-    {
-      bool isMin = true;
-      while (true)
-      {
-        switch (phase)
-        {
-          case DronePhase.Patrol:
-            var deg = isMin ? CamSwipeMin : CamSwipeMax;
-            var target = Quaternion.AngleAxis(deg, transform.right) * transform.rotation;
-            var rot = Quaternion.RotateTowards(sightTransform.rotation, target, .1f);
-            sightTransform.rotation = rot;
-            if (rot == target) { isMin = !isMin; }
-            break;
-          case DronePhase.Hostile:
-            if (this.target)
-            {
-              sightTransform.LookAt(this.target);
-            }
-            break;
-        }
-
-        do
-        {
-          await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-        }
-        while (!this || !isActiveAndEnabled);
-      }
-    }
-
   }
 }

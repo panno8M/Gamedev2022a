@@ -19,9 +19,11 @@ namespace Assembly.Components.Actors
       hatch.CmdLaunch.Subscribe(_ => Launch().Forget());
 
       _actor.OnPhaseEnter(DronePhase.Standby)
-        .Subscribe(phase => enabled = true);
+        .Subscribe(phase => enabled = true)
+        .AddTo(this);
       _actor.OnPhaseExit(DronePhase.Standby)
-        .Subscribe(phase => enabled = false);
+        .Subscribe(phase => enabled = false)
+        .AddTo(this);
     }
 
     public override UniTask Collect()
@@ -35,13 +37,11 @@ namespace Assembly.Components.Actors
 
       _actor.transform.position = hatch.transform.position;
       _actor.phase = DronePhase.Standby;
-      _actor.gameObject.SetActive(false);
       return UniTask.CompletedTask;
     }
 
     public override async UniTask Launch()
     {
-      if (_actor.phase == DronePhase.Disactive) { _actor.Assemble(); }
       if (_actor.phase != DronePhase.Standby) { return; }
       while (hatch && transform.position != hatch.nextNode.transform.position)
       {

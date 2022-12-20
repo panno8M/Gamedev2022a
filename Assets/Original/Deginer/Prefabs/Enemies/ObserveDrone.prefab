@@ -554,6 +554,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4682344602442316360}
   - component: {fileID: 8086046639631021109}
+  - component: {fileID: 3083127586960048130}
   - component: {fileID: 4629212793357953519}
   - component: {fileID: 8086046639631021107}
   - component: {fileID: 9001981863741961213}
@@ -610,10 +611,24 @@ MonoBehaviour:
   psExplode: {fileID: 6146443668717030369}
   explDamager: {fileID: 8637316108765024848}
   launcher: {fileID: 4629212793357953519}
+  aim: {fileID: 3083127586960048130}
   follow: {fileID: 8647019607246088378}
   patrol: {fileID: 2144454998044867148}
-  sight: {fileID: 380470433067873133}
   damagable: {fileID: 3275330073327983121}
+--- !u!114 &3083127586960048130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4682344602442316363}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52fdf8254cb16a242b4cd237e6c6b003, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 8086046639631021109}
+  sight: {fileID: 380470433067873133}
   sightTransform: {fileID: 3046311783173419245}
   CamSwipeMin: 50
   CamSwipeMax: 10

@@ -15,9 +15,11 @@ namespace Assembly.Components.Actors
     protected override void Blueprint()
     {
       _actor.OnPhaseEnter(DronePhase.Hostile)
-        .Subscribe(_ => enabled = true);
+        .Subscribe(_ => enabled = true)
+        .AddTo(this);
       _actor.OnPhaseExit(DronePhase.Hostile)
-        .Subscribe(_ => enabled = false);
+        .Subscribe(_ => enabled = false)
+        .AddTo(this);
 
       _actor.Target
         .Where(_ => _actor.phase == DronePhase.Hostile)

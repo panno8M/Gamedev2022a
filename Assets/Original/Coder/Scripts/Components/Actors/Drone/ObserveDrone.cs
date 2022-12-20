@@ -6,24 +6,14 @@ namespace Assembly.Components.Actors
 
   public class ObserveDrone : DroneAct
   {
-    protected override void Prepare()
-    {
-      base.Prepare();
-      defaultSightRotation = sightTransform.localRotation;
-    }
     protected override void Subscribe()
     {
       base.Subscribe();
       OnPhaseEnter(DronePhase.Hostile)
-        .Subscribe(_ =>
-        {
-          AlarmMgr.Instance.ActivateAlarm();
-        });
+        .Where(_ => target)
+        .Subscribe(_ => AlarmMgr.Instance.ActivateAlarm()).AddTo(this);
       OnPhaseExit(DronePhase.Hostile)
-        .Subscribe(_ =>
-        {
-          AlarmMgr.Instance.DisarmAlarm();
-        });
+        .Subscribe(_ => AlarmMgr.Instance.DisarmAlarm()).AddTo(this);
     }
   }
 }

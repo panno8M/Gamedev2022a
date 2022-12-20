@@ -1,5 +1,4 @@
 using UnityEngine;
-using Cysharp.Threading.Tasks;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
@@ -11,6 +10,11 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] DroneAct _actor;
     public PathNode current;
+    PathNode next;
+
+    bool needsFace = true;
+    bool needsMove = true;
+
     PathNode Select(PathNode from)
     {
       return from.routes[0].dst;
@@ -20,54 +24,58 @@ namespace Assembly.Components.Actors
     {
 
       _actor.OnPhaseEnter(DronePhase.Patrol)
-        .Subscribe(_ =>
-        {
-          enabled = true;
-          Patrol().Forget();
-        });
+        .Subscribe(_ => enabled = true)
+        .AddTo(this);
       _actor.OnPhaseExit(DronePhase.Patrol)
-        .Subscribe(_ => enabled = false);
+        .Subscribe(_ => enabled = false)
+        .AddTo(this);
+
       _actor.Target
         .Where(_ => _actor.phase == DronePhase.Patrol)
         .Where(target => target)
         .Subscribe(_ => _actor.phase = DronePhase.Hostile);
+
+      this.FixedUpdateAsObservable()
+        .Where(_ => this && isActiveAndEnabled)
+        .Subscribe(_ => Patrol());
     }
-    async UniTask Patrol()
+    void Patrol()
     {
-      while (true)
+      if (!next) { next = Select(current); }
+      if (!next) { return; }
+
+      LookNext(2f);
+
+      if (!needsFace) { MoveNext(); }
+
+      if (!needsMove)
       {
-        if (!this || !isActiveAndEnabled) { return; }
-        await LookNext(2f);
-        await MoveNext();
         current = Select(current);
+        next = Select(current);
+        needsFace = true;
+        needsMove = true;
       }
     }
-    async UniTask MoveNext()
+    void MoveNext()
     {
-      PathNode next = Select(current);
-      while (next && (next.transform.position - transform.position).sqrMagnitude >= 0.01f)
-      {
-        if (!this || !isActiveAndEnabled) { return; }
-        _actor.Move(transform.forward);
-        await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
-      }
+      if (!needsMove) { return; }
+      if ((next.transform.position - transform.position).sqrMagnitude < 0.01f) { needsMove = false; }
+      _actor.Move(transform.forward);
     }
 
-    async UniTask LookNext(float delta)
+    void LookNext(float delta)
     {
-      while (true)
-      {
-        if (!this || !isActiveAndEnabled) { return; }
-        PathNode next = Select(current);
-        var target = Quaternion.LookRotation(next.transform.position - transform.position);
+      var target = Quaternion.LookRotation(next.transform.position - transform.position);
 
-        if (transform.rotation == target) { return; }
-        transform.rotation = Quaternion.RotateTowards(
-          transform.rotation,
-          target,
-          delta);
-        await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+      if (transform.rotation == target)
+      {
+        needsFace = false;
+        return;
       }
+      transform.rotation = Quaternion.RotateTowards(
+        transform.rotation,
+        target,
+        delta);
     }
   }
 }
