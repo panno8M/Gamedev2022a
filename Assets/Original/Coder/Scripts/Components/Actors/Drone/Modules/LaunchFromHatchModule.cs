@@ -14,7 +14,7 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
-      droneRenderer.OnBecameInvisibleAsObservable().Subscribe(_ => OnLeftCamera());
+      AlarmMgr.Instance.IsOnAlert.Where(x => !x).Subscribe(_ => Collect());
 
       hatch.CmdLaunch.Subscribe(_ => Launch().Forget());
 
@@ -22,11 +22,6 @@ namespace Assembly.Components.Actors
         .Subscribe(phase => enabled = true);
       _actor.OnPhaseExit(DronePhase.Standby)
         .Subscribe(phase => enabled = false);
-    }
-
-    void OnLeftCamera()
-    {
-      if (AlarmMgr.Instance && !AlarmMgr.Instance.isOnAlert) { Collect(); }
     }
 
     public override UniTask Collect()

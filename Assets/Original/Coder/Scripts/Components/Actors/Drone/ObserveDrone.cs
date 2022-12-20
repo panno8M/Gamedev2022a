@@ -17,11 +17,16 @@ namespace Assembly.Components.Actors
       OnPhaseEnter(DronePhase.Hostile)
         .Subscribe(_ =>
         {
-          AlarmMgr.Instance.AlarmStart();
+          AlarmMgr.Instance.ActivateAlarm();
+        });
+      OnPhaseExit(DronePhase.Hostile)
+        .Subscribe(_ =>
+        {
+          AlarmMgr.Instance.DisarmAlarm();
         });
     }
 
-    protected override void OnLostTarget() {}
+    protected override void OnLostTarget() { }
     protected override void WhileLockTarget()
     {
       sightTransform.LookAt(target);

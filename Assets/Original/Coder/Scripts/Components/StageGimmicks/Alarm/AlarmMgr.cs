@@ -15,9 +15,14 @@ public class AlarmMgr : UniqueBehaviour<AlarmMgr>
     get { return _IsOnAlert.Value; }
     private set { _IsOnAlert.Value = value; }
   }
-  public void AlarmStart()
+  public void ActivateAlarm()
   {
     alarmProgress.SetFactor1();
+    alarmProgress.SetAsIncrease();
+  }
+  public void DisarmAlarm()
+  {
+    alarmProgress.SetAsDecrease();
   }
 
   void Start() { Initialize(); }
