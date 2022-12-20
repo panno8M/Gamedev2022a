@@ -4,7 +4,7 @@ namespace Assembly.GameSystem
 {
   public abstract class DiBehavior : MonoBehaviour
   {
-    bool initialized;
+    public bool initialized { get; private set; }
     public void Initialize()
     {
       if (initialized) { return; }

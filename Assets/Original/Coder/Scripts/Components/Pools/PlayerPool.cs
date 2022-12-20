@@ -2,13 +2,13 @@ using System;
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem;
-using Utilities;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Message;
 
 using Assembly.Components.StageGimmicks;
+using Assembly.Components.Actors.Player;
 
-namespace Assembly.Components.Actors.Player
+namespace Assembly.Components.Pools
 {
   public class PlayerPool : GameObjectPool<PlayerAct>
   {

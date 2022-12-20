@@ -1,8 +1,9 @@
 using UnityEngine;
+using Assembly.Components.StageGimmicks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 
-namespace Assembly.Components.StageGimmicks
+namespace Assembly.Components.Pools
 {
   public class BombPool : GameObjectPool<Bomb>
   {
