@@ -9,11 +9,13 @@ namespace Assembly.Components.Actors
     protected override void Subscribe()
     {
       base.Subscribe();
-      OnPhaseEnter(DronePhase.Hostile)
-        .Where(_ => target)
-        .Subscribe(_ => AlarmMgr.Instance.ActivateAlarm()).AddTo(this);
-      OnPhaseExit(DronePhase.Hostile)
-        .Subscribe(_ => AlarmMgr.Instance.DisarmAlarm()).AddTo(this);
+      Target
+        .Where(_ => AlarmMgr.Instance)
+        .Subscribe(_ =>
+        {
+          if (target) AlarmMgr.Instance.ActivateAlarm();
+          else AlarmMgr.Instance.DisarmAlarm();
+        }).AddTo(this);
     }
   }
 }
