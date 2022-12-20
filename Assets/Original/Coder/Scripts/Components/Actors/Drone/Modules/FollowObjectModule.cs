@@ -24,11 +24,11 @@ namespace Assembly.Components.Actors
         .Where(target => !target)
         .Subscribe(_ => _actor.phase = DronePhase.Patrol);
 
-      _actor.FixedUpdateAsObservable()
+      this.FixedUpdateAsObservable()
+        .Where(_ => _actor.phase == DronePhase.Hostile)
+        .Where(_ => _actor.target)
         .Subscribe(_ =>
         {
-
-          if (!_actor.target) { return; }
           var rot = Quaternion.LookRotation(_actor.target.position - transform.position);
           var rotangles = rot.eulerAngles;
           rot = Quaternion.Euler(

@@ -18,7 +18,7 @@ namespace Assembly.Components.StageGimmicks
 
     [SerializeField] SpriteRenderer _renderer;
     [SerializeField] Collider _physicsCollider;
-    [SerializeField] Collider _damagerCollider;
+    [SerializeField] GameObject _damager;
 
     public void Assemble()
     {
@@ -97,7 +97,7 @@ namespace Assembly.Components.StageGimmicks
       _damagable.enabled = !exploding;
       _renderer.enabled = !exploding;
       _physicsCollider.enabled = !exploding;
-      _damagerCollider.enabled = exploding;
+      _damager.SetActive(exploding);
       if (exploding)
       {
         _psExplosion.Play();

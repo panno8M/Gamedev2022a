@@ -25,11 +25,5 @@ namespace Assembly.Components.Actors
           AlarmMgr.Instance.DisarmAlarm();
         });
     }
-
-    protected override void OnLostTarget() { }
-    protected override void WhileLockTarget()
-    {
-      sightTransform.LookAt(target);
-    }
   }
 }

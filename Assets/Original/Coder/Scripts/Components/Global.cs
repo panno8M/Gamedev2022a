@@ -16,6 +16,7 @@ namespace Assembly.Components
     public static PlayerPool Player => PlayerPool.Instance as PlayerPool;
     public static BombPool Bomb => BombPool.Instance as BombPool;
     public static WaterBallPool WaterBall => WaterBallPool.Instance as WaterBallPool;
+    public static HostileDronePool HostileDrone => HostileDronePool.Instance as HostileDronePool;
 
   }
 }

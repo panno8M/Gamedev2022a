@@ -26,7 +26,13 @@ namespace Assembly.Components.Actors
 
     public override UniTask Collect()
     {
-      if (_actor.phase == DronePhase.Dead) { return UniTask.CompletedTask; }
+      switch (_actor.phase)
+      {
+        case DronePhase.Disactive:
+        case DronePhase.Dead:
+          return UniTask.CompletedTask;
+      }
+
       _actor.transform.position = hatch.transform.position;
       _actor.phase = DronePhase.Standby;
       _actor.gameObject.SetActive(false);
@@ -35,7 +41,7 @@ namespace Assembly.Components.Actors
 
     public override async UniTask Launch()
     {
-      if (_actor.phase == DronePhase.Unready) { _actor.Assemble(); }
+      if (_actor.phase == DronePhase.Disactive) { _actor.Assemble(); }
       if (_actor.phase != DronePhase.Standby) { return; }
       while (hatch && transform.position != hatch.nextNode.transform.position)
       {

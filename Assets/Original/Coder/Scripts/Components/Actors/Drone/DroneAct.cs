@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Cysharp.Threading.Tasks;
 using Senses.Sight;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
@@ -12,7 +13,7 @@ namespace Assembly.Components.Actors
 {
   public enum DronePhase
   {
-    Unready,
+    Disactive,
     Standby,
     Patrol,
     Hostile,
@@ -28,6 +29,8 @@ namespace Assembly.Components.Actors
     [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
     [SerializeField] float moveSpeed = 1f;
     [SerializeField] ParticleSystem psBurnUp;
+    [SerializeField] ParticleSystem psExplode;
+    [SerializeField] GameObject explDamager;
 
     DronePhase _previousPhase;
     Collider physicsCollider;
@@ -79,13 +82,12 @@ namespace Assembly.Components.Actors
     void Start() { Initialize(); }
     public void Assemble()
     {
-      gameObject.SetActive(true);
       _OnAssemble.OnNext(Unit.Default);
       phase = DronePhase.Standby;
     }
     public void Disassemble()
     {
-      phase = DronePhase.Unready;
+      phase = DronePhase.Disactive;
       _OnDisassemble.OnNext(Unit.Default);
     }
 
@@ -111,12 +113,10 @@ namespace Assembly.Components.Actors
         .Subscribe(_ => Disassemble());
 
       damagable.TotalDamage
-          .Where(total => total == 1)
-            .Delay(TimeSpan.FromSeconds(0.5))
-            .Subscribe(_ =>
-            {
-              psBurnUp.Play();
-            }).AddTo(this);
+        .Where(total => total == 1)
+        .Delay(TimeSpan.FromSeconds(0.5))
+        .Subscribe(_ => OnDead()).AddTo(this);
+      damagable.OnBroken.Subscribe(_ => OnExplode().Forget()).AddTo(this);
 
       this.FixedUpdateAsObservable()
         .Subscribe(_ =>
@@ -128,29 +128,37 @@ namespace Assembly.Components.Actors
         }).AddTo(this);
 
       sight.InSight
-        .Where(_ => phase != DronePhase.Unready)
+        .Where(_ => phase != DronePhase.Disactive)
         .Subscribe(visible => target = visible ? visible.center : null)
         .AddTo(this);
-
-      damagable.OnBroken.Subscribe(_ => OnDead());
 
       OnPhaseChanged
         .Subscribe(_ =>
         {
           switch (phase)
           {
-            case DronePhase.Unready:
+            case DronePhase.Disactive:
             case DronePhase.Standby:
               if (physicsCollider.enabled)
+              {
                 physicsCollider.enabled = false;
+              }
+              break;
+            case DronePhase.Dead:
+              sightTransform.gameObject.SetActive(false);
               break;
             case DronePhase.Patrol:
             case DronePhase.Hostile:
               if (!physicsCollider.enabled)
+              {
                 physicsCollider.enabled = true;
+                sightTransform.gameObject.SetActive(true);
+              }
               break;
           }
         });
+
+      SwipeCamera().Forget();
     }
 
     protected sealed override void Blueprint()
@@ -170,10 +178,51 @@ namespace Assembly.Components.Actors
     {
       rigidbody.useGravity = true;
       rigidbody.isKinematic = false;
+      psBurnUp.Play();
       phase = DronePhase.Dead;
     }
-    protected abstract void OnLostTarget();
-    protected abstract void WhileLockTarget();
+    async UniTask OnExplode()
+    {
+      psExplode.Play();
+      explDamager.SetActive(true);
+      await UniTask.Delay(1000);
+      phase = DronePhase.Disactive;
+      gameObject.SetActive(false);
+    }
+    protected virtual void OnLostTarget() { }
+    protected virtual void WhileLockTarget() { }
+
+    public float CamSwipeMin;
+    public float CamSwipeMax;
+    async UniTask SwipeCamera()
+    {
+      bool isMin = true;
+      while (true)
+      {
+        switch (phase)
+        {
+          case DronePhase.Patrol:
+            var deg = isMin ? CamSwipeMin : CamSwipeMax;
+            var target = Quaternion.AngleAxis(deg, transform.right) * transform.rotation;
+            var rot = Quaternion.RotateTowards(sightTransform.rotation, target, .1f);
+            sightTransform.rotation = rot;
+            if (rot == target) { isMin = !isMin; }
+            break;
+          case DronePhase.Hostile:
+            if (this.target)
+            {
+              sightTransform.LookAt(this.target);
+            }
+            break;
+        }
+
+        do
+        {
+          await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+        }
+        while (!this || !isActiveAndEnabled);
+      }
+    }
 
   }
 }

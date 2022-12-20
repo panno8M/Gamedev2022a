@@ -29,7 +29,6 @@ namespace Assembly.Components.Actors
     protected override void WhileLockTarget()
     {
       hoseTransform.LookAt(target);
-      sightTransform.LookAt(target);
     }
   }
 }
