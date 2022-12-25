@@ -1,6 +1,5 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Assembly.Components.Effects;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
@@ -12,24 +11,37 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] DroneAct _actor;
     [SerializeField] Transform emitterTransform;
+    [SerializeField] Transform hoseRootTransform;
     [SerializeField] float power;
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);
     ObjectCreateInfo _info;
 
+    protected Quaternion defaultHoseRootRotation;
+
     protected override void Blueprint()
     {
+      defaultHoseRootRotation = hoseRootTransform.localRotation;
+
       _info = new ObjectCreateInfo
       {
         userData = emitterTransform,
       };
-      _actor.OnPhaseEnter(DronePhase.Hostile)
-        .Subscribe(_ => enabled = true);
-      _actor.OnPhaseExit(DronePhase.Hostile)
-        .Subscribe(_ => enabled = false);
+      _actor.ActivateSwitch(targets: this,
+        cond: DronePhase.Hostile);
 
-      this.FixedUpdateAsObservable()
-        .Where(_ => _actor.target)
-        .Subscribe(_ => Launch());
+      _actor.CameraUpdate(this)
+        .Where(_ => _actor.aim.target)
+        .Subscribe(_ =>
+        {
+          hoseRootTransform.LookAt(_actor.aim.target.center);
+          Launch();
+        });
+      _actor.aim.Target.Where(target => !target)
+        .Subscribe(_ =>
+        {
+          hoseRootTransform.localRotation = defaultHoseRootRotation;
+        });
+
     }
 
     public void Launch()

@@ -1,4 +1,3 @@
-using UnityEngine;
 using UniRx;
 
 namespace Assembly.Components.Actors
@@ -9,11 +8,11 @@ namespace Assembly.Components.Actors
     protected override void Subscribe()
     {
       base.Subscribe();
-      Target
+      aim.Target
         .Where(_ => AlarmMgr.Instance)
         .Subscribe(_ =>
         {
-          if (target) AlarmMgr.Instance.ActivateAlarm();
+          if (aim.target) AlarmMgr.Instance.ActivateAlarm();
           else AlarmMgr.Instance.DisarmAlarm();
         }).AddTo(this);
     }

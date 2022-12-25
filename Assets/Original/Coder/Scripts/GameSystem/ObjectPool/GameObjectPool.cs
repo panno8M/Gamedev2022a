@@ -8,7 +8,7 @@ namespace Assembly.GameSystem.ObjectPool
   public abstract class GameObjectPool<T> : UniqueBehaviour<GameObjectPool<T>>
     where T : DiBehavior, IPoolCollectable
   {
-    [SerializeField] protected GameObject prefab;
+    [SerializeField] protected T prefab;
 
     protected abstract T CreateInstance();
     protected virtual void OnBeforeSpawn(T instance) { }
@@ -28,6 +28,18 @@ namespace Assembly.GameSystem.ObjectPool
       return result;
     }
     public T Spawn() { return Spawn(ObjectCreateInfo.None); }
+    public T Spawn(ObjectCreateInfo info, TimeSpan timeToDespawn)
+    {
+      T result = Spawn(info);
+      Despawn(result, timeToDespawn);
+      return result;
+    }
+    public T Spawn(TimeSpan timeToDespawn)
+    {
+      T result = Spawn();
+      Despawn(result, timeToDespawn);
+      return result;
+    }
     public void Despawn(T obj)
     {
       if (obj && obj.isActiveAndEnabled)
@@ -36,6 +48,11 @@ namespace Assembly.GameSystem.ObjectPool
         pool.Return(obj);
       }
     }
+    public void Despawn(T obj, TimeSpan timeToDespawn)
+    {
+      Observable.Timer(timeToDespawn).Subscribe(_ => Despawn(obj)).AddTo(obj);
+    }
+
     public void Respawn(T obj, ObjectCreateInfo info, TimeSpan wait)
     {
       Despawn(obj);

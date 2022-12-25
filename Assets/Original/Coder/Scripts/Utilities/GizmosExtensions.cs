@@ -34,6 +34,38 @@ namespace Utilities
       Gizmos.DrawLine(arrow1, arrow2);
 
     }
+    private static int _circleVertexCount = 64;
+    public static void DrawWireCircle(Vector3 center, Quaternion rotation, float radius)
+    {
+      DrawWireRegularPolygon(_circleVertexCount, center, rotation, radius);
+    }
+
+    public static void DrawWireRegularPolygon(int vertexCount, Vector3 center, Quaternion rotation, float radius)
+    {
+      if (vertexCount < 3) { return; }
+
+      Vector3 previousPosition = Vector3.zero;
+
+      float step = 2f * Mathf.PI / vertexCount;
+      float offset = Mathf.PI * 0.5f + ((vertexCount % 2 == 0) ? step * 0.5f : 0f);
+
+      for (int i = 0; i <= vertexCount; i++)
+      {
+        float theta = step * i + offset;
+
+        float x = radius * Mathf.Cos(theta);
+        float y = radius * Mathf.Sin(theta);
+
+        Vector3 nextPosition = center + rotation * new Vector3(x, y, 0f);
+
+        if (i == 0)
+        { previousPosition = nextPosition; }
+        else
+        { Gizmos.DrawLine(previousPosition, nextPosition); }
+
+        previousPosition = nextPosition;
+      }
+    }
 #endif
   }
 }

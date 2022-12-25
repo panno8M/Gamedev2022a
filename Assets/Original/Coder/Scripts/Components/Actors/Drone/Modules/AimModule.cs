@@ -1,83 +1,125 @@
+using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
-using Cysharp.Threading.Tasks;
 using Senses.Sight;
 using Assembly.GameSystem;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
   public class AimModule : DiBehavior
   {
-    enum Mode { ToMin, ToMax, Reset }
+    [Serializable]
+    struct SwipeSettings
+    {
+      public enum Mode { ToA, ToB }
+      public Mode mode;
+      public float angleA;
+      public float angleB;
+      public float speedFactor;
+
+      public float angle => mode == Mode.ToA ? angleA : angleB;
+      public float speed => speedFactor * Time.deltaTime;
+      public Quaternion targetQuat(Transform standard) => Quaternion.AngleAxis(angle, standard.right) * standard.rotation;
+      public void Flip() => mode = mode == Mode.ToA ? Mode.ToB : Mode.ToA;
+
+      public void Process(Transform transform, Transform standard)
+      {
+        var target = targetQuat(standard);
+        if (transform.rotation == target) { Flip(); }
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, target, speed);
+      }
+    }
+    [Serializable]
+    struct FollowSettings
+    {
+      public float speedFactor;
+      public float speed => speedFactor * Time.deltaTime;
+      public void Process(Transform transform, Transform target)
+      {
+        Quaternion targetRot = Quaternion.LookRotation(target.position - transform.position);
+        if (targetRot == transform.rotation) { return; }
+        transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRot, speed);
+      }
+    }
+
     [SerializeField] DroneAct _actor;
     public AiSight sight;
-    public Transform sightTransform;
-    public float CamSwipeMin;
-    public float CamSwipeMax;
 
-    Quaternion defaultSightRotation;
-    Mode mode;
+    [SerializeField] ReactiveProperty<AiVisible> _Target = new ReactiveProperty<AiVisible>();
+    public EzLerp lostTarget = new EzLerp(1);
+    public AiVisible target => _Target.Value;
+    public IObservable<AiVisible> Target => _Target;
+
+    public Transform sightTransform;
+    [SerializeField]
+    SwipeSettings swipeSettings = new SwipeSettings
+    {
+      angleA = 10,
+      angleB = 50,
+      speedFactor = 10,
+    };
+    [SerializeField]
+    FollowSettings followSettings = new FollowSettings
+    {
+      speedFactor = 20,
+    };
 
     protected override void Blueprint()
     {
-      defaultSightRotation = sightTransform.localRotation;
-
-      sight.InSight
-        .Where(_ => _actor.phase != DronePhase.Disactive)
-        .Subscribe(visible => _actor.target = visible ? visible.center : null)
-        .AddTo(this);
-
-      _actor.OnPhaseEnter(DronePhase.Dead)
+      sight.InSight.Subscribe(target =>
+      {
+        if (target)
+        {
+          _Target.Value = target;
+          lostTarget.SetFactor1();
+          lostTarget.SetAsIncrease();
+        }
+        else
+        {
+          lostTarget.SetAsDecrease();
+        }
+      });
+      _actor.CameraUpdate(this)
         .Subscribe(_ =>
         {
-          sightTransform.gameObject.SetActive(false);
-        });
-      _actor.OnPhaseEnter(DronePhase.Patrol | DronePhase.Hostile)
-        .Subscribe(phase =>
-        {
-          switch (phase)
+          if (lostTarget.needsCalc)
           {
-            case DronePhase.Patrol:
-              mode = Mode.Reset;
-              break;
+            if (lostTarget.UpdFactor() == 0)
+            {
+              _Target.Value = null;
+            }
           }
-          sightTransform.gameObject.SetActive(true);
         });
-      this.FixedUpdateAsObservable()
-        .Where(x => this && isActiveAndEnabled)
+
+      _actor.ActivateSwitch(targets: this,
+        cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Standby);
+
+      this.OnEnableAsObservable().Subscribe(_ => Activate(true));
+      this.OnDisableAsObservable().Subscribe(_ => Activate(false));
+
+      _actor.CameraUpdate(this)
         .Subscribe(_ =>
-        {
-          switch (_actor.phase)
           {
-            case DronePhase.Patrol:
-              switch (mode)
-              {
-                case Mode.Reset:
-                  var rot = Quaternion.RotateTowards(sightTransform.localRotation, defaultSightRotation, 1f);
-                  sightTransform.localRotation = rot;
-                  if (rot == defaultSightRotation)
-                  { mode = Mode.ToMin; }
-                  break;
-                default:
-                  var deg = mode == Mode.ToMin ? CamSwipeMin : CamSwipeMax;
-                  var target = Quaternion.AngleAxis(deg, transform.right) * transform.rotation;
-                  var rot0 = Quaternion.RotateTowards(sightTransform.rotation, target, .1f);
-                  sightTransform.rotation = rot0;
-                  if (rot0 == target) { mode = mode == Mode.ToMin ? Mode.ToMax : Mode.ToMin; }
-                  break;
-              }
-              break;
-
-
-            case DronePhase.Hostile:
-              if (_actor.target)
-              {
-                sightTransform.LookAt(_actor.target);
-              }
-              break;
-          }
-        });
+            if (_actor.phase == DronePhase.Hostile && target)
+            {
+              followSettings.Process(
+                transform: sightTransform,
+                target: target.center);
+            }
+            if (_actor.phase == DronePhase.Patrol)
+            {
+              swipeSettings.Process(
+                transform: sightTransform,
+                standard: _actor.transform);
+            }
+          });
+    }
+    void Activate(bool b)
+    {
+      // sight.enabled = b;
+      sightTransform.gameObject.SetActive(b);
     }
   }
 }

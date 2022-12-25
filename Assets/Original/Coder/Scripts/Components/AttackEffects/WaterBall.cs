@@ -9,10 +9,7 @@ namespace Assembly.Components.Effects
 {
   public class WaterBall : DiBehavior, IPoolCollectable
   {
-    [SerializeField] ParticleSystem psImpactSplash;
-
-    [SerializeField] Collider _physicsCollider;
-    [SerializeField] Renderer _renderer;
+    ObjectCreateInfo _info = new ObjectCreateInfo { };
 
     protected override void Blueprint()
     {
@@ -23,26 +20,19 @@ namespace Assembly.Components.Effects
       });
     }
 
-    public void Assemble()
-    {
-      _physicsCollider.enabled = true;
-      _renderer.enabled = true;
-    }
+    public void Assemble() { }
     public void Disassemble()
     {
       rigidbody.velocity = Vector3.zero;
+      rigidbody.isKinematic = false;
     }
 
     void OnCollisionEnter(Collision other)
     {
-      psImpactSplash.Play();
-      _physicsCollider.enabled = false;
-      _renderer.enabled = false;
-      rigidbody.velocity = Vector3.zero;
-      Observable.Timer(TimeSpan.FromSeconds(3)).Subscribe(_ =>
-      {
-        Pool.WaterBall.Despawn(this);
-      }).AddTo(this);
+      _info.position = transform.position;
+      Pool.PsImpactSplash.Spawn(_info,
+        timeToDespawn: TimeSpan.FromSeconds(3f));
+      Pool.WaterBall.Despawn(this);
     }
   }
 }

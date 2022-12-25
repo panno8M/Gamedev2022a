@@ -1,19 +1,17 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Assembly.GameSystem;
 using Assembly.GameSystem.PathNetwork;
+using Utilities;
 
 namespace Assembly.Components.Actors
 {
   public class PatrolPathModule : DiBehavior
   {
     [SerializeField] DroneAct _actor;
-    public PathNode current;
-    PathNode next;
-
-    bool needsFace = true;
-    bool needsMove = true;
+    PathNode prev;
+    public PathNode next;
+    bool flagTurn;
 
     PathNode Select(PathNode from)
     {
@@ -22,60 +20,43 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
+      _actor.ActivateSwitch(targets: this,
+        cond: DronePhase.Patrol);
 
-      _actor.OnPhaseEnter(DronePhase.Patrol)
-        .Subscribe(_ => enabled = true)
-        .AddTo(this);
-      _actor.OnPhaseExit(DronePhase.Patrol)
-        .Subscribe(_ => enabled = false)
-        .AddTo(this);
-
-      _actor.Target
-        .Where(_ => _actor.phase == DronePhase.Patrol)
+      _actor.aim.Target
+        .Where(_ => isActiveAndEnabled)
         .Where(target => target)
-        .Subscribe(_ => _actor.phase = DronePhase.Hostile);
+        .Subscribe(_ => _actor.ShiftStandby());
 
-      this.FixedUpdateAsObservable()
-        .Where(_ => this && isActiveAndEnabled)
+      _actor.BehaviorUpdate(this)
+        .Where(_ => next)
         .Subscribe(_ => Patrol());
     }
     void Patrol()
     {
-      if (!next) { next = Select(current); }
-      if (!next) { return; }
+      if (_actor.LookTowards(next.transform) && flagTurn)
+      { flagTurn = false; }
 
-      LookNext(2f);
 
-      if (!needsFace) { MoveNext(); }
-
-      if (!needsMove)
+      if (!flagTurn)
       {
-        current = Select(current);
-        next = Select(current);
-        needsFace = true;
-        needsMove = true;
-      }
-    }
-    void MoveNext()
-    {
-      if (!needsMove) { return; }
-      if ((next.transform.position - transform.position).sqrMagnitude < 0.01f) { needsMove = false; }
-      _actor.Move(transform.forward);
-    }
+        float sqrDistance = _actor.sqrDistance(next.transform);
+        if (sqrDistance < 0.01f)
+        {
+          prev = next;
+          next = Select(prev);
+          flagTurn = true;
+        }
 
-    void LookNext(float delta)
-    {
-      var target = Quaternion.LookRotation(next.transform.position - transform.position);
-
-      if (transform.rotation == target)
-      {
-        needsFace = false;
-        return;
+        _actor.MoveSubjective(Vector3.forward);
+        if (transform.position.y != next.transform.position.y)
+        {
+          _actor.MoveObjective((next.transform.position.y - transform.position.y).AsUp());
+        }
       }
-      transform.rotation = Quaternion.RotateTowards(
-        transform.rotation,
-        target,
-        delta);
+      else
+      {rigidbody.velocity = Vector3.zero;}
+
     }
   }
 }

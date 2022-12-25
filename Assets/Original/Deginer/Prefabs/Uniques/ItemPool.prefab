@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3852363058420940265}
   - component: {fileID: 7381366844613435194}
   - component: {fileID: 23554660419876620}
+  - component: {fileID: 977406685932058208}
   m_Layer: 0
   m_Name: ItemPool
   m_TagString: Untagged
@@ -46,7 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf55662acb457854c88ea93846677281, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 7171335578761235701, guid: d1fb1d47056dcd84083c902081edeff5, type: 3}
+  prefab: {fileID: 7171335578761235705, guid: d1fb1d47056dcd84083c902081edeff5, type: 3}
 --- !u!114 &7381366844613435194
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -59,7 +60,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78104361f0af08b47bd3070ae5e44e2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 989460611246697144, guid: 0a1b6ee91ce29c84fad0ed6da5c9a77e, type: 3}
+  prefab: {fileID: 8764689740541255067, guid: 0a1b6ee91ce29c84fad0ed6da5c9a77e, type: 3}
 --- !u!114 &23554660419876620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -72,4 +73,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c5deff9a4734ad49ac537a35377d675, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1210545985916033633, guid: e0eb512d7ebcdf84fa30f68ed01cd06b, type: 3}
+  prefab: {fileID: 1210545985916033635, guid: e0eb512d7ebcdf84fa30f68ed01cd06b, type: 3}
+--- !u!114 &977406685932058208
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3852363058420940266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4ddc2efc282ce0d4eb0dfb56607d5603, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefab: {fileID: 1026889659281742017, guid: 5fc9da0017d7c074196539501ed64ec3, type: 3}

@@ -10,20 +10,24 @@ namespace Assembly.Components.Actors
     [SerializeField] PathNode baseNode;
     protected override void Blueprint()
     {
-      _actor.OnPhaseEnter(DronePhase.Standby)
-        .Subscribe(phase =>
-        {
-          _actor.patrol.current = baseNode;
-          _actor.phase = DronePhase.Patrol;
-        });
+      base.Blueprint();
+      Launch();
     }
     public override UniTask Collect()
     {
-      throw new System.NotImplementedException();
+      if (_actor.phaseSilence) { return UniTask.CompletedTask; }
+      _actor.transform.position = base.transform.position;
+      _actor.rigidbody.velocity = Vector3.zero;
+      _actor.patrol.next = null;
+      _actor.ShiftDisactive();
+      return UniTask.CompletedTask;
     }
     public override UniTask Launch()
     {
-      throw new System.NotImplementedException();
+      if (!_actor.phaseDisactive) { return UniTask.CompletedTask; }
+      _actor.patrol.next = baseNode.routes[0].dst;
+      _actor.ShiftStandby();
+      return UniTask.CompletedTask;
     }
   }
 }

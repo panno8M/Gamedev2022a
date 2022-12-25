@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.Components.Actors;
 
@@ -13,11 +14,10 @@ namespace Assembly.Components.Pools
     }
     protected override HostileDrone CreateInstance()
     {
-      throw new System.NotImplementedException();
+      return prefab.Instantiate<HostileDrone>();
     }
     protected override void InfuseInfoOnSpawn(HostileDrone newObj, ObjectCreateInfo info)
     {
-      throw new System.NotImplementedException();
     }
   }
 }

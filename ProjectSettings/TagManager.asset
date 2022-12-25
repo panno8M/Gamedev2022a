@@ -29,7 +29,7 @@ TagManager:
   - Senses/Damager
   - Physics/Player
   - Ctlvol/ForDynamic
-  - 
+  - Senses/AiSight
   - 
   - 
   - 

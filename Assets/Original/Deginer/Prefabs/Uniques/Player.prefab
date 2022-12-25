@@ -11,12 +11,13 @@ GameObject:
   - component: {fileID: 85444139}
   - component: {fileID: 85444141}
   - component: {fileID: 85444140}
+  - component: {fileID: 3309648386066652752}
   m_Layer: 9
   m_Name: AiVisible
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &85444139
 Transform:
@@ -56,12 +57,25 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 85444138}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.72
   m_Height: 3.12
   m_Direction: 1
   m_Center: {x: 0, y: 2.015624, z: 0}
+--- !u!114 &3309648386066652752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 85444138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1 &293357031
 GameObject:
   m_ObjectHideFlags: 0
@@ -77,7 +91,7 @@ GameObject:
   m_TagString: Ctlvol/Camera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &293357032
 Transform:
@@ -92,7 +106,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 847327826}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &293357033
 SphereCollider:
@@ -124,7 +138,7 @@ GameObject:
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &819544958
 Transform:
@@ -139,7 +153,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 847327826}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &819544961
 SphereCollider:
@@ -195,7 +209,7 @@ GameObject:
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &847327826
 Transform:
@@ -211,12 +225,10 @@ Transform:
   m_Children:
   - {fileID: 2142224223}
   - {fileID: 85444139}
-  - {fileID: 1991763559}
   - {fileID: 819544958}
   - {fileID: 293357032}
-  - {fileID: 4553798392424367422}
   m_Father: {fileID: 8353330523506930297}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1991763558
 GameObject:
@@ -242,13 +254,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1991763558}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.53, y: 2.1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0.1325, y: 0.525, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5944828297999102118}
-  m_Father: {fileID: 847327826}
-  m_RootOrder: 2
+  m_Father: {fileID: 8353330523506930297}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2142224222
 GameObject:
@@ -267,7 +279,7 @@ GameObject:
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 2147483647
   m_IsActive: 1
 --- !u!4 &2142224223
 Transform:
@@ -363,12 +375,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5128063384439505513}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.6, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.65, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 847327826}
-  m_RootOrder: 5
+  m_Father: {fileID: 8353330523506930297}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!198 &6077958407147686160
 ParticleSystem:
@@ -5430,6 +5442,8 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7900621019548899594}
+  - {fileID: 1991763559}
+  - {fileID: 4553798392424367422}
   - {fileID: 847327826}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -5669,6 +5683,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: psFlameBreath
+      objectReference: {fileID: 0}
+    - target: {fileID: 5944828299234186825, guid: f071352f26a707646b4580729edb01e5,
+        type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5944828299234186836, guid: f071352f26a707646b4580729edb01e5,
         type: 3}

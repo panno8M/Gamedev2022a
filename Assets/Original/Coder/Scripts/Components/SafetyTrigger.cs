@@ -12,9 +12,11 @@ public class SafetyTrigger : MonoBehaviour
   public List<SafetyTrigger> triggers = new List<SafetyTrigger>();
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
+  Subject<SafetyTrigger> _OnStay = new Subject<SafetyTrigger>();
   Subject<SafetyTrigger> _OnExit = new Subject<SafetyTrigger>();
 
   public IObservable<SafetyTrigger> OnEnter => _OnEnter;
+  public IObservable<SafetyTrigger> OnStay => _OnStay;
   public IObservable<SafetyTrigger> OnExit => _OnExit;
 
   List<SafetyTrigger> exitNotifyQueue = new List<SafetyTrigger>();
@@ -78,9 +80,12 @@ public class SafetyTrigger : MonoBehaviour
     }
 
     Observable.EveryFixedUpdate()
+        .Where(_ => isActiveAndEnabled)
         .Subscribe(_ =>
         {
           NoticeEnter();
+          for (int i = 0; i < triggers.Count; i++)
+          { _OnStay.OnNext(triggers[i]); }
           NoticeExit();
         }).AddTo(this);
   }

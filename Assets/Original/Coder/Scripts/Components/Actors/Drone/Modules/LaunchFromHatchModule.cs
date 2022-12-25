@@ -1,8 +1,6 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
-using Utilities;
 
 namespace Assembly.Components.Actors
 {
@@ -14,42 +12,35 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
+      base.Blueprint();
+
       AlarmMgr.Instance.IsOnAlert.Where(x => !x).Subscribe(_ => Collect());
 
       hatch.CmdLaunch.Subscribe(_ => Launch().Forget());
-
-      _actor.OnPhaseEnter(DronePhase.Standby)
-        .Subscribe(phase => enabled = true)
-        .AddTo(this);
-      _actor.OnPhaseExit(DronePhase.Standby)
-        .Subscribe(phase => enabled = false)
-        .AddTo(this);
     }
 
     public override UniTask Collect()
     {
-      switch (_actor.phase)
-      {
-        case DronePhase.Disactive:
-        case DronePhase.Dead:
-          return UniTask.CompletedTask;
-      }
-
+      if (_actor.phaseSilence) { return UniTask.CompletedTask; }
       _actor.transform.position = hatch.transform.position;
-      _actor.phase = DronePhase.Standby;
+      _actor.rigidbody.velocity = Vector3.zero;
+      _actor.patrol.next = null;
+      _actor.ShiftDisactive();
       return UniTask.CompletedTask;
     }
 
     public override async UniTask Launch()
     {
-      if (_actor.phase != DronePhase.Standby) { return; }
+      if (!_actor.phaseDisactive) { return; }
+      _actor.ShiftLaunch();
+
       while (hatch && transform.position != hatch.nextNode.transform.position)
       {
         _actor.transform.position = Vector3.MoveTowards(transform.position, hatch.nextNode.transform.position, launchSpeed * Time.deltaTime);
         await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
       }
-      _actor.patrol.current = hatch.nextNode;
-      _actor.phase = DronePhase.Patrol;
+      _actor.patrol.next = hatch.nextNode.routes[0].dst;
+      _actor.ShiftStandby();
     }
   }
 }

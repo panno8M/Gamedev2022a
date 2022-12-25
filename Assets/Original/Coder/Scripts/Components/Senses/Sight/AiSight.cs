@@ -1,91 +1,102 @@
 using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
+using Utilities;
 
 namespace Senses.Sight
 {
+  [RequireComponent(typeof(SphereCollider))]
+  [RequireComponent(typeof(SafetyTrigger))]
   public class AiSight : MonoBehaviour
   {
-    public float eyesight = 20;
-    public float secSightCooldown = .1f;
-    public float secToNotice = 1f;
-
-    public Layer layerTarget = Layer.AiVisible;
+    public float sightAngle = 30;
     public Layer layerObstacle = Layer.Stage;
-    public Layers lsEyeRay => new Layers(layerTarget, layerObstacle);
-    public List<Tag> tags = new List<Tag>();
 
-    ReactiveProperty<AiVisible> _InTheUnconscious = new ReactiveProperty<AiVisible>();
-    ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
+    [SerializeField] ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
 
-    public AiVisible inTheUnconscious => _InTheUnconscious.Value;
-    public AiVisible inSight => _InSight.Value;
+    SafetyTrigger trigger;
+
+    public AiVisible inSight
+    {
+      get { return _InSight.Value; }
+      private set { _InSight.Value = value; }
+    }
+
     public IObservable<AiVisible> InSight => _InSight;
-
-    float secElapsedViewing;
 
     void Start()
     {
-      this.FixedUpdateAsObservable()
-          .ThrottleFirst(TimeSpan.FromSeconds(secSightCooldown))
-          .Subscribe(_ => LookFor());
+      trigger = GetComponent<SafetyTrigger>();
+
+      this.OnEnableAsObservable()
+        .Subscribe(_ =>
+        {
+          trigger.enabled = true;
+        });
+      this.OnDisableAsObservable()
+        .Subscribe(_ =>
+        {
+          trigger.enabled = false;
+          inSight = null;
+        });
+
+      trigger.OnStay
+        .Where(_ => inSight)
+        .Subscribe(_ =>
+        {
+          bool hitObstacle = HaveObstaclesInBetween(inSight.center);
+          if (hitObstacle || !IsInAngle(inSight.center, sightAngle))
+          { LostInSight(); }
+        });
+
+      trigger.OnStay
+        .Where(_ => !inSight)
+        .Subscribe(target =>
+        {
+          AiVisible visible = target.GetComponent<AiVisible>();
+          if (!IsInAngle(visible.center, sightAngle)) { return; }
+
+          bool hitObstacle = HaveObstaclesInBetween(visible.center);
+
+          Debug.DrawLine(
+            transform.position,
+            visible.center.position,
+            (hitObstacle ? Color.gray : Color.red), 1);
+
+          if (!hitObstacle) { FoundOut(visible); }
+        });
+      trigger.OnExit
+        .Where(_ => inSight)
+        .Where(target => target.GetComponent<AiVisible>() == inSight)
+        .Subscribe(_ => LostInSight());
     }
 
-    bool Find(RaycastHit hit)
+    bool HaveObstaclesInBetween(Transform target)
     {
-      return hit.collider &&
-          (hit.collider.gameObject.layer == (int)layerTarget) &&
-          tags.Contains(hit.collider.gameObject.tag);
+      return Physics.Linecast(transform.position, target.position, new Layers(layerObstacle));
     }
-    void LookFor()
+    void FoundOut(AiVisible visible)
     {
-      var ray = new Ray(transform.position, transform.forward);
-      RaycastHit hit;
-      bool hitAny = Physics.Raycast(ray, out hit, eyesight, lsEyeRay);
+      inSight = visible;
+      inSight.Find();
+    }
+    void LostInSight()
+    {
+      inSight.Find(false);
+      inSight = null;
+    }
 
-      AiVisible previousSeen = inTheUnconscious;
-
-      _InTheUnconscious.Value = (hitAny && Find(hit))
-        ? hit.collider.GetComponent<AiVisible>()
-        : null;
-
-      if (inTheUnconscious && previousSeen == inTheUnconscious)
-      {
-        secElapsedViewing += secSightCooldown;
-        if (secElapsedViewing > secToNotice)
-        {
-          _InSight.Value = inTheUnconscious;
-          inSight.Find();
-        }
-      }
-      else
-      {
-        if (inSight)
-        {
-          inSight.Find(false);
-          _InSight.Value = null;
-        }
-        secElapsedViewing = 0;
-      }
-
-
-      Debug.DrawLine(
-        ray.origin,
-        (hitAny ? hit.point : ray.origin + ray.direction * eyesight),
-        (inSight ? Color.red :
-         inTheUnconscious ? Color.blue :
-         Color.gray),
-        secSightCooldown);
-
-
+    bool IsInAngle(Transform target, float angle)
+    {
+      return (Vector3.Angle(transform.forward, target.position - transform.position) < angle);
     }
 
     void OnDrawGizmos()
     {
       Gizmos.DrawRay(transform.position, transform.forward);
+      GizmosEx.DrawWireCircle(transform.position + transform.forward, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad));
     }
   }
 }

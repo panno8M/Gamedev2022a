@@ -12,6 +12,12 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] protected DroneAct _actor;
 
+    protected override void Blueprint()
+    {
+      _actor.ActivateSwitch(targets: this,
+        cond: DronePhase.Launch | DronePhase.Disactive);
+    }
+
     public abstract UniTask Launch();
     public abstract UniTask Collect();
   }

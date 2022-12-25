@@ -159,8 +159,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   param:
-    stamina: 2
-    secCoolDownToNextDamage: 2
+    stamina: 1
+    secCoolDownToNextDamage: 0
     allowDamageSource: 5
     damageDisabled: 0
   inspector:
@@ -602,14 +602,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fec872fcf31ac344bd640b8b26679ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _Target:
-    value: {fileID: 0}
   _phase:
     value: 0
-  moveSpeed: 1
+  _gravity: -3
   psBurnUp: {fileID: 4640317560797117958}
   psExplode: {fileID: 6146443668717030369}
   explDamager: {fileID: 8637316108765024848}
+  positionConstraints:
+    closestDistance: 3
+    furthestDistance: 4
+    relativeHeightFromGround: 1
+    speedFactor: 1
+  rotationConstraints:
+    maximumHullTilt: 30
+    speedFactor: 50
   launcher: {fileID: 4629212793357953519}
   aim: {fileID: 3083127586960048130}
   follow: {fileID: 8647019607246088378}
@@ -629,9 +635,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actor: {fileID: 8086046639631021109}
   sight: {fileID: 380470433067873133}
+  _Target:
+    value: {fileID: 0}
+  lostTarget:
+    _factor: 0
+    useCurve: 0
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    secDuration: 1
+    _mode:
+      value: -1
   sightTransform: {fileID: 3046311783173419245}
-  CamSwipeMin: 50
-  CamSwipeMax: 10
+  swipeSettings:
+    mode: 0
+    angleA: 10
+    angleB: 50
+    speedFactor: 10
+  followSettings:
+    speedFactor: 30
 --- !u!114 &4629212793357953519
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,11 +720,11 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4682344602442316363}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 1000
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -716,12 +741,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 8086046639631021109}
-  _pcons:
-    closestDistance: 3
-    furthestDistance: 4
-    relativeHeightFromGround: 1
-  _rcons:
-    maximumHullTilt: 30
 --- !u!114 &2144454998044867148
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -735,7 +754,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 8086046639631021109}
-  current: {fileID: 0}
+  next: {fileID: 0}
 --- !u!1 &5199080110163453966
 GameObject:
   m_ObjectHideFlags: 0
@@ -1027,8 +1046,10 @@ GameObject:
   m_Component:
   - component: {fileID: 495669939318957988}
   - component: {fileID: 380470433067873133}
-  m_Layer: 0
-  m_Name: GameObject
+  - component: {fileID: 2392761135679778437}
+  - component: {fileID: 4964035379130095719}
+  m_Layer: 19
+  m_Name: Sight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1061,12 +1082,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcc630fd1339aa49a27ee042b28e546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  eyesight: 20
-  secSightCooldown: 0.1
-  secToNotice: 0.1
-  layerTarget: 9
+  sightAngle: 18.46
   layerObstacle: 6
-  tags: 01000000
+  _InSight:
+    value: {fileID: 0}
+--- !u!135 &2392761135679778437
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6541430772093747012}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 5
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4964035379130095719
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6541430772093747012}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1 &6588817983426805733
 GameObject:
   m_ObjectHideFlags: 0
