@@ -5657,7 +5657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
   _holder: {fileID: 819544959}
-  _interacter: {fileID: 290132958}
+  _interactor: {fileID: 290132958}
 --- !u!114 &1168846669
 MonoBehaviour:
   m_ObjectHideFlags: 0
