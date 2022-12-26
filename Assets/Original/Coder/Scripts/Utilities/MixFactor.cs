@@ -64,6 +64,15 @@ namespace Utilities
       return from + (to * PeekFactor());
     }
 
+    public Quaternion UpdMix(Quaternion from, Quaternion to)
+    {
+      return Quaternion.Slerp(from, to, UpdFactor());
+    }
+    public Quaternion Mix(Quaternion from, Quaternion to)
+    {
+      return Quaternion.Slerp(from, to, PeekFactor());
+    }
+
     public Vector3 UpdAddX(Vector3 from, float to)
     {
       return new Vector3(from.x + (to * UpdFactor()), from.y, from.z);

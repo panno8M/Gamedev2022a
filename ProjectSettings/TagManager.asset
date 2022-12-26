@@ -22,7 +22,7 @@ TagManager:
   - Senses/AiVisible
   - Senses/Damagable
   - ScreenToStageConverter
-  - Senses/DamagableFromPlayer
+  - Senses/PlayerDamagable
   - Senses/Interactable
   - Senses/Interactor
   - Physics/Item

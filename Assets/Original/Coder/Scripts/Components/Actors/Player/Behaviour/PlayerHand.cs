@@ -7,6 +7,8 @@ namespace Assembly.Components.Actors.Player
   {
     [SerializeField] Holder _holder;
     public Holder holder => _holder;
+    [SerializeField] Interactor _interacter;
+    public Interactor interacter => _interacter;
     protected override void Blueprint()
     {
       _actor.ctl.Interact
@@ -14,8 +16,8 @@ namespace Assembly.Components.Actors.Player
         {
           if (_holder.hasItem)
           { _holder.ReleaseForce(); }
-          else
-          { _holder.AttemptToHold(); }
+          else if (!_holder.AttemptToHold())
+          { _interacter.Interact(); }
         }).AddTo(this);
 
       _holder.HoldingItem
