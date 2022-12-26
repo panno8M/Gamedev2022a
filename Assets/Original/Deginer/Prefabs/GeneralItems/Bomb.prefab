@@ -193,7 +193,7 @@ GameObject:
   - component: {fileID: 7171335579413191720}
   - component: {fileID: 739709127349373722}
   - component: {fileID: 7171335579413191722}
-  m_Layer: 12
+  m_Layer: 10
   m_Name: Damagable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -274,7 +274,7 @@ GameObject:
   - component: {fileID: 2142224226}
   - component: {fileID: 2142224225}
   - component: {fileID: 2142224224}
-  m_Layer: 10
+  m_Layer: 12
   m_Name: Damagable
   m_TagString: Player
   m_Icon: {fileID: 0}

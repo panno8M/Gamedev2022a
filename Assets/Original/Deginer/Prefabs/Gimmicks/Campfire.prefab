@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4971769602581933736}
   - component: {fileID: 8594037217743074302}
   - component: {fileID: 3801520939959651109}
-  m_Layer: 12
+  m_Layer: 10
   m_Name: Damagable
   m_TagString: Untagged
   m_Icon: {fileID: 0}

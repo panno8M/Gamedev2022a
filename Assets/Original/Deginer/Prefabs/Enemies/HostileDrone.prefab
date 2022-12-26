@@ -995,7 +995,7 @@ GameObject:
   - component: {fileID: 8330688539192757002}
   - component: {fileID: 3739879790729299886}
   - component: {fileID: 9026324072695872059}
-  m_Layer: 12
+  m_Layer: 10
   m_Name: Damagable
   m_TagString: Untagged
   m_Icon: {fileID: 0}
