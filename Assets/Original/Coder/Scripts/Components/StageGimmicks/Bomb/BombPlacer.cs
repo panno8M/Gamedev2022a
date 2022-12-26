@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Message;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -21,7 +22,7 @@ namespace Assembly.Components.StageGimmicks
         {
           userData = transform.GetChild(i)
         });
-        instances.Add(Pool.Bomb.Spawn(infos[i]));
+        instances.Add(Pool.bomb.Spawn(infos[i]));
       }
     }
     public void ReceiveMessage(MessageUnit message)
@@ -31,7 +32,7 @@ namespace Assembly.Components.StageGimmicks
         case MessageKind.Invoke:
           for (int i = 0; i < instances.Count; i++)
           {
-            Pool.Bomb.Respawn(instances[i], infos[i]);
+            Pool.bomb.Respawn(instances[i], infos[i]);
           }
           break;
 

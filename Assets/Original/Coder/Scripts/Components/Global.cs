@@ -7,18 +7,7 @@ namespace Assembly.Components
   public static class Global
   {
     public static InputControl Control => InputControl.Instance;
-    public static PlayerAct Player => Pool.Player.player;
+    public static PlayerAct Player => Pool.player.player;
     public static Camctl Cameraman => Camctl.Instance;
-  }
-
-  public static class Pool
-  {
-    public static PlayerPool Player => PlayerPool.Instance as PlayerPool;
-    public static BombPool Bomb => BombPool.Instance as BombPool;
-    public static WaterBallPool WaterBall => WaterBallPool.Instance as WaterBallPool;
-    public static HostileDronePool HostileDrone => HostileDronePool.Instance as HostileDronePool;
-
-    public static ImpactSplashPool PsImpactSplash => ImpactSplashPool.Instance as ImpactSplashPool;
-
   }
 }

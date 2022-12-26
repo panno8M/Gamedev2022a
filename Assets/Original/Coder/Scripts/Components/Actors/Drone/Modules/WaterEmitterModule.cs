@@ -1,8 +1,9 @@
 using UnityEngine;
 using UniRx;
-using Assembly.Components.Effects;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.Components.Effects;
+using Assembly.Components.Pools;
 using Utilities;
 
 namespace Assembly.Components.Actors
@@ -48,7 +49,7 @@ namespace Assembly.Components.Actors
     {
       if (launchCoolDown.UpdFactor() == 0)
       {
-        WaterBall result = Pool.WaterBall.Spawn(_info);
+        WaterBall result = Pool.waterBall.Spawn(_info);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
         launchCoolDown.SetFactor1();
       }

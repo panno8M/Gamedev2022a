@@ -2,6 +2,7 @@ using UnityEngine;
 using Cinemachine;
 using UniRx;
 using Assembly.GameSystem;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components
 {
@@ -15,7 +16,7 @@ namespace Assembly.Components
 
     void Awake()
     {
-      Pool.Player?.OnSpawn
+      Pool.player?.OnSpawn
           .Subscribe(player =>
           {
             cmDefault.m_Follow = player.transform;

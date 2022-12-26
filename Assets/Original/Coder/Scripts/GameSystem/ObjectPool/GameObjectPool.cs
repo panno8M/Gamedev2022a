@@ -5,7 +5,7 @@ using UniRx.Triggers;
 
 namespace Assembly.GameSystem.ObjectPool
 {
-  public abstract class GameObjectPool<T> : UniqueBehaviour<GameObjectPool<T>>
+  public abstract class GameObjectPool<T> : DiBehavior
     where T : DiBehavior, IPoolCollectable
   {
     [SerializeField] protected T prefab;

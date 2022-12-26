@@ -4,6 +4,7 @@ using UniRx;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -11,21 +12,17 @@ namespace Assembly.Components.StageGimmicks
   public class Bomb : DiBehavior, IPoolCollectable
   {
     [SerializeField] ParticleSystem _psBurnUp;
-    [SerializeField] ParticleSystem _psExplosion;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Holdable _holdable;
     [SerializeField] float secExplosionDelay = 4;
 
-    [SerializeField] SpriteRenderer _renderer;
-    [SerializeField] Collider _physicsCollider;
-    [SerializeField] GameObject _damager;
+    ObjectCreateInfo _info = new ObjectCreateInfo { };
 
     public void Assemble()
     {
       _psBurnUp.Stop();
       SetHoldable(locked: false);
       SetBurnUp(burning: false);
-      SetExplode(exploding: false);
       OnHold(holding: false);
     }
     public void Disassemble()
@@ -36,8 +33,6 @@ namespace Assembly.Components.StageGimmicks
 
     protected override void Blueprint()
     {
-      _physicsCollider = GetComponent<Collider>();
-
       _damagable.OnBroken
         .Subscribe(_ => SetHoldable(locked: true))
         .AddTo(this);
@@ -52,9 +47,9 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ =>
           {
             SetBurnUp(burning: false);
-            SetExplode(exploding: true);
-            Observable.Timer(TimeSpan.FromSeconds(1))
-              .Subscribe(_ => Pool.Bomb.Despawn(this)).AddTo(this);
+            _info.position = transform.position;
+            Pool.psExplosion.Spawn(_info, TimeSpan.FromSeconds(1));
+            Pool.bomb.Despawn(this);
           })
           .AddTo(this);
 
@@ -83,29 +78,9 @@ namespace Assembly.Components.StageGimmicks
     void SetBurnUp(bool burning)
     {
       if (burning)
-      {
-        _psBurnUp.Play();
-      }
+      { _psBurnUp.Play(); }
       else
-      {
-        _psBurnUp.Stop();
-      }
-    }
-
-    void SetExplode(bool exploding)
-    {
-      _damagable.enabled = !exploding;
-      _renderer.enabled = !exploding;
-      _physicsCollider.enabled = !exploding;
-      _damager.SetActive(exploding);
-      if (exploding)
-      {
-        _psExplosion.Play();
-      }
-      else
-      {
-        _psExplosion.Stop();
-      }
+      { _psBurnUp.Stop(); }
     }
   }
 }

@@ -2633,7 +2633,7 @@ PrefabInstance:
     - target: {fileID: 3852363058420940266, guid: c29cdb2da2f8e424d9d3cbc4a860c06d,
         type: 3}
       propertyPath: m_Name
-      value: ItemPool
+      value: ObjectPool
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c29cdb2da2f8e424d9d3cbc4a860c06d, type: 3}

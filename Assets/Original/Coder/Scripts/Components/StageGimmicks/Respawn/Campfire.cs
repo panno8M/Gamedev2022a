@@ -1,7 +1,7 @@
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.Damage;
-using Assembly.Components.Actors.Player;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -14,7 +14,7 @@ namespace Assembly.Components.StageGimmicks
     {
       damagable.OnBroken.Subscribe(_ =>
       {
-        Pool.Player.activeSpot = this;
+        Pool.player.activeSpot = this;
       });
     }
     public Vector3 spawnPosition => transform.position;

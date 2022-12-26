@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
 using UniRx;
-using Assembly.GameSystem.Damage;
 using Cysharp.Threading.Tasks;
+using Assembly.GameSystem.Damage;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors.Player
 {
@@ -51,11 +52,11 @@ namespace Assembly.Components.Actors.Player
 
       await UniTask.Delay(500);
 
-      Pool.Player.Despawn();
+      Pool.player.Despawn();
 
       await UniTask.Delay(1000);
 
-      Pool.Player.Spawn();
+      Pool.player.Spawn();
       UI.SimpleFader.Instance.progress.SetAsDecrease();
     }
   }

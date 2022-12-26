@@ -4,6 +4,7 @@ using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.Effects
 {
@@ -30,9 +31,9 @@ namespace Assembly.Components.Effects
     void OnCollisionEnter(Collision other)
     {
       _info.position = transform.position;
-      Pool.PsImpactSplash.Spawn(_info,
+      Pool.psImpactSplash.Spawn(_info,
         timeToDespawn: TimeSpan.FromSeconds(3f));
-      Pool.WaterBall.Despawn(this);
+      Pool.waterBall.Despawn(this);
     }
   }
 }

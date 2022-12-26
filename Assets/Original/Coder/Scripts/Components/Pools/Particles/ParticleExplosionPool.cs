@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using UnityEngine;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 
 namespace Assembly.Components.Pools
 {
-  public class ImpactSplashPool : GameObjectPool<PoolManagedParticle>
+  public class ParticleExplosionPool : GameObjectPool<PoolManagedParticle>
   {
     protected override void Blueprint()
     {
