@@ -30,18 +30,17 @@ namespace Assembly.Components.Actors
     Subject<Unit> _CameraUpdate = new Subject<Unit>();
 
     DronePhase _previousPhase;
-    Collider physicsCollider;
 
     Vector3 subjectiveMoveDelta;
     Vector3 objectiveMoveDelta;
     bool subjectiveMoveDeltaChanged;
     bool objectiveMoveDeltaChanged;
 
+    ObjectCreateInfo _info = new ObjectCreateInfo { };
+
     [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
     [SerializeField] float _gravity = -3f;
     [SerializeField] ParticleSystem psBurnUp;
-    [SerializeField] ParticleSystem psExplode;
-    [SerializeField] GameObject explDamager;
 
     [SerializeField]
     public DronePositionConstraints positionConstraints = new DronePositionConstraints
@@ -150,16 +149,6 @@ namespace Assembly.Components.Actors
             { targets[i].enabled = b; }
         });
     }
-    public void ActivateSwitch(DronePhase cond, params Collider[] targets)
-    {
-      OnPhaseChanged
-        .Subscribe(newPhase =>
-        {
-          bool b = (newPhase & cond) != 0;
-          for (int i = 0; i < targets.Length; i++)
-          { targets[i].enabled = b; }
-        });
-    }
 
     void Start() { Initialize(); }
     public void Assemble()
@@ -172,7 +161,6 @@ namespace Assembly.Components.Actors
 
     protected virtual void Prepare()
     {
-      physicsCollider = GetComponent<Collider>();
       follow.Initialize();
       patrol.Initialize();
       launcher.Initialize();
@@ -203,9 +191,6 @@ namespace Assembly.Components.Actors
           else if (patrol.next)
           { ShiftPatrol(); }
         });
-
-      ActivateSwitch(targets: physicsCollider,
-        cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Standby);
     }
 
     protected sealed override void Blueprint()
@@ -239,10 +224,10 @@ namespace Assembly.Components.Actors
     {
       psBurnUp.Play();
       phase = DronePhase.Dead;
-      await UniTask.Delay(1000);
-      psExplode.Play();
-      explDamager.SetActive(true);
-      await UniTask.Delay(1000);
+      await UniTask.Delay(1500);
+      _info.position = transform.position;
+      Pools.Pool.psExplosion.Spawn(_info,
+        timeToDespawn: TimeSpan.FromSeconds(3));
       ShiftDisactive();
       gameObject.SetActive(false);
     }
