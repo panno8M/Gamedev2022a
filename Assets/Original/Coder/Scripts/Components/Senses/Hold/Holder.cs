@@ -8,7 +8,7 @@ namespace Assembly.Components
   [RequireComponent(typeof(SafetyTrigger))]
   public class Holder : MonoBehaviour
   {
-    [SerializeField] SafetyTrigger _safetyTrigger;
+    SafetyTrigger _safetyTrigger;
     [SerializeField] List<Holdable> _accessibles = new List<Holdable>();
 
     Subject<Holdable> _RequestHold = new Subject<Holdable>();
@@ -34,11 +34,13 @@ namespace Assembly.Components
 
       void AddToAccessibles(SafetyTrigger trigger)
       {
-        _accessibles.Add(trigger.GetComponent<Holdable>());
+        Holdable holdable = trigger.GetComponent<Holdable>();
+        if (holdable) { _accessibles.Add(holdable); }
       }
       void RemoveFromAccessibles(SafetyTrigger trigger)
       {
-        _accessibles.Remove(trigger.GetComponent<Holdable>());
+        Holdable holdable = trigger.GetComponent<Holdable>();
+        if (holdable) { _accessibles.Remove(holdable); }
       }
     }
     public void Forget()
@@ -82,10 +84,10 @@ namespace Assembly.Components
       ReleaseForce();
     }
 
-    public void AttemptToHold()
+    public bool AttemptToHold()
     {
-      if (_accessibles.Count == 0) { return; }
-      if (_accessibles.Count == 1) { Hold(_accessibles[0]); return; }
+      if (_accessibles.Count == 0) { return false; }
+      if (_accessibles.Count == 1) { Hold(_accessibles[0]); return true; }
       float closestDistance = Mathf.Infinity;
       int closestIndex = 2;
       for (int i = 1; i != _accessibles.Count; i++)
@@ -98,6 +100,7 @@ namespace Assembly.Components
         }
       }
       Hold(_accessibles[closestIndex]);
+      return true;
     }
   }
 

@@ -1,7 +1,7 @@
-namespace Assembly.Components.StageGimmicks
+namespace Assembly.Components
 {
   public interface IInteractable
   {
-    public void OnInteract();
+    void OnInteract();
   }
 }

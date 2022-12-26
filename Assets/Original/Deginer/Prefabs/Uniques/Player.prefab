@@ -132,8 +132,8 @@ GameObject:
   - component: {fileID: 819544958}
   - component: {fileID: 819544961}
   - component: {fileID: 819544959}
-  - component: {fileID: 5294640173728383470}
   - component: {fileID: 290132958}
+  - component: {fileID: 5294640173728383470}
   m_Layer: 14
   m_Name: Tactile
   m_TagString: Player
@@ -181,21 +181,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 571b2995c5ea1434d83f20991e71ba9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _safetyTrigger: {fileID: 0}
   _accessibles: []
---- !u!114 &5294640173728383470
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 819544957}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  triggers: []
 --- !u!114 &290132958
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +195,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   safetyTrigger: {fileID: 5294640173728383470}
+--- !u!114 &5294640173728383470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 819544957}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1 &847327825
 GameObject:
   m_ObjectHideFlags: 0
@@ -5658,6 +5657,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
   _holder: {fileID: 819544959}
+  _interactor: {fileID: 290132958}
 --- !u!114 &1168846669
 MonoBehaviour:
   m_ObjectHideFlags: 0

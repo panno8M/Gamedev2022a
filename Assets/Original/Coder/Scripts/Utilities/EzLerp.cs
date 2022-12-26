@@ -28,6 +28,7 @@ namespace Utilities
     float _curvedAplha;
     bool _needsCalc = true;
     public bool needsCalc => _needsCalc;
+    public bool NeedsCalc<T>(T t) => _needsCalc;
 
     public float alpha => useCurve ? _curvedAplha : _factor;
     public override float UpdFactor()

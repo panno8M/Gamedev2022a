@@ -1,24 +1,19 @@
-using System.Collections;
-using System;
 using UnityEngine;
-using UniRx;
-using UniRx.Triggers;
 
-namespace Assembly.Components.StageGimmicks{
+namespace Assembly.Components
+{
+  public class Interactable : MonoBehaviour
+  {
+    IInteractable[] interactables;
 
-    public class Interactable : MonoBehaviour
+    void Start()
+    { interactables = GetComponents<IInteractable>(); }
+
+    public void Attempt()
     {
-        public SafetyTrigger safetyTrigger;
-        Subject<Interactable> _OnInteractRecieve = new Subject<Interactable>();
-        IObservable<Interactable> OnInteractRecieve => _OnInteractRecieve;
-        public Interactable a;
-
-        void Start()
-        {
-            safetyTrigger = GetComponent<SafetyTrigger>();
-        }
-
-
+      for (int i = 0; i < interactables.Length; i++)
+      { interactables[i].OnInteract(); }
     }
+  }
 }
 
