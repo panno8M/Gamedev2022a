@@ -15,10 +15,12 @@ namespace Assembly.GameSystem.ObjectPool
     protected virtual void OnBeforeDespawn(T instance) { }
 
     Subject<T> _OnSpawn = new Subject<T>();
-    public IObservable<T> OnSpawn => _OnSpawn;
+    public IObservable<T> OnSpawn() => _OnSpawn;
+    public IObservable<T> OnSpawn(T obj) => _OnSpawn.Where(x => x == obj);
 
     Subject<T> _OnDespawn = new Subject<T>();
-    public IObservable<T> OnDespawn => _OnDespawn;
+    public IObservable<T> OnDespawn() => _OnDespawn;
+    public IObservable<T> OnDespawn(T obj) => _OnDespawn.Where(x => x == obj);
 
     public T Spawn(ObjectCreateInfo info)
     {
@@ -56,7 +58,7 @@ namespace Assembly.GameSystem.ObjectPool
     public void Respawn(T obj, ObjectCreateInfo info, TimeSpan wait)
     {
       Despawn(obj);
-      Observable.Timer(wait).Subscribe(_ => Spawn(info));
+      Observable.Timer(wait).Subscribe(_ => Spawn(info)).AddTo(obj);
     }
     public void Respawn(T obj, ObjectCreateInfo info)
     {

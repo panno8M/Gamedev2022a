@@ -17,10 +17,9 @@ namespace Assembly.Components.Pools
     }
     protected override void InfuseInfoOnSpawn(WaterBall newObj, ObjectCreateInfo info)
     {
-      Transform t = info.userData as Transform;
-      if (!t) { return; }
-      newObj.transform.position = t.position;
-      newObj.transform.rotation = t.rotation;
+      if (!info.offset) { return; }
+      newObj.transform.position = info.offset.position;
+      newObj.transform.rotation = info.offset.rotation;
     }
   }
 }

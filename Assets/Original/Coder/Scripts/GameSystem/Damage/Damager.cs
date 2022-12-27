@@ -26,7 +26,6 @@ namespace Assembly.GameSystem.Damage
           .ThrottleFirst(TimeSpan.FromSeconds(.2f))
           .Subscribe(other =>
           {
-            Debug.Log(other.name);
             int num = ps.GetCollisionEvents(other, ev);
             if (num != 0)
             {

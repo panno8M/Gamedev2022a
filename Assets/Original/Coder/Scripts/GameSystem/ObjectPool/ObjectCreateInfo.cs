@@ -9,6 +9,8 @@ namespace Assembly.GameSystem.ObjectPool
 
     public Vector3 position;
     public Quaternion rotation = Quaternion.identity;
+    public Transform parent;
+    public Transform offset;
     public object userData;
   }
 }

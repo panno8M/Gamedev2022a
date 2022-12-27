@@ -73,7 +73,11 @@ namespace Assembly.Components
       if (!holdingItem) { return; }
       if (!holdingItem.ReleaseAccepted(this)) { return; }
 
-      holdingItem.rb.transform.SetParent(_previousParentOfHoldingItem);
+      if (_previousParentOfHoldingItem)
+      {
+        holdingItem.rb.transform.SetParent(_previousParentOfHoldingItem);
+      }
+      else { holdingItem.rb.transform.parent = null; }
 
       _RequestRelease.OnNext(holdingItem);
       _HoldingItem.Value = null;
