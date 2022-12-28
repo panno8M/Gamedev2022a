@@ -97,6 +97,7 @@ namespace Senses.Sight
     {
       Gizmos.DrawRay(transform.position, transform.forward);
       GizmosEx.DrawWireCircle(transform.position + transform.forward, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad));
+      GizmosEx.DrawWireCircle(transform.position + transform.forward / 2, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad) / 2);
     }
   }
 }
