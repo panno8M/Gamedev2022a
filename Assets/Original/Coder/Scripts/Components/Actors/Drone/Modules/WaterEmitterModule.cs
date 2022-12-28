@@ -25,7 +25,7 @@ namespace Assembly.Components.Actors
 
       _info = new ObjectCreateInfo
       {
-        userData = emitterTransform,
+        offset = emitterTransform,
       };
       _actor.ActivateSwitch(targets: this,
         cond: DronePhase.Hostile);

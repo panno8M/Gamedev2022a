@@ -16,7 +16,7 @@ namespace Assembly.Components
 
     void Awake()
     {
-      Pool.player?.OnSpawn
+      Pool.player?.OnSpawn()
           .Subscribe(player =>
           {
             cmDefault.m_Follow = player.transform;

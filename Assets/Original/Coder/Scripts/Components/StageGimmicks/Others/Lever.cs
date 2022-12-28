@@ -46,5 +46,10 @@ namespace Assembly.Components.StageGimmicks
     {
       ToggleLever();
     }
+
+    void OnDrawGizmos()
+    {
+      _OnSwitch.DrawArrow(transform);
+    }
   }
 }

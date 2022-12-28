@@ -13,14 +13,16 @@ namespace Assembly.Components.Pools
     }
     protected override void InfuseInfoOnSpawn(Bomb newObj, ObjectCreateInfo info)
     {
-      Transform t = info.userData as Transform;
-      if (newObj.transform.parent != t)
+      if (info.offset != null)
       {
-        newObj.transform.SetParent(t);
+        newObj.transform.SetParent(info.parent, false);
+        newObj.transform.position = info.offset.position;
+        newObj.transform.rotation = info.offset.rotation;
       }
-      newObj.transform.localPosition = Vector3.zero;
-      newObj.transform.localRotation = Quaternion.identity;
-      newObj.transform.localScale = Vector3.one;
+      else
+      {
+        newObj.transform.SetParent(info.parent, true);
+      }
     }
     protected override void Blueprint()
     {

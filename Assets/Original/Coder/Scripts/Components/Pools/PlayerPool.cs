@@ -65,7 +65,7 @@ namespace Assembly.Components.Pools
     protected override void Blueprint()
     {
       Spawn();
-      OnSpawn.Subscribe(_ => _OnRespawn.Dispatch());
+      OnSpawn().Subscribe(_ => _OnRespawn.Dispatch());
     }
 
     void OnDrawGizmos()
