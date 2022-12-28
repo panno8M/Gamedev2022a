@@ -66,6 +66,8 @@ namespace Assembly.Components.Actors
       speedFactor = 20,
     };
 
+    void Start(){}
+
     protected override void Blueprint()
     {
       sight.InSight.Subscribe(target =>
@@ -96,9 +98,6 @@ namespace Assembly.Components.Actors
       _actor.ActivateSwitch(targets: this,
         cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Standby);
 
-      this.OnEnableAsObservable().Subscribe(_ => Activate(true));
-      this.OnDisableAsObservable().Subscribe(_ => Activate(false));
-
       _actor.CameraUpdate(this)
         .Subscribe(_ =>
           {
@@ -116,6 +115,8 @@ namespace Assembly.Components.Actors
             }
           });
     }
+    void OnEnable() => Activate(true);
+    void OnDisable() => Activate(false);
     void Activate(bool b)
     {
       // sight.enabled = b;

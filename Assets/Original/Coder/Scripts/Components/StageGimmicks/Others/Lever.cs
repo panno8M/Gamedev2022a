@@ -34,7 +34,7 @@ namespace Assembly.Components.StageGimmicks
       OnLeverSwitch.Subscribe(leverProgress.SetAsIncrease);
 
       this.FixedUpdateAsObservable()
-        .Where(leverProgress.NeedsCalc)
+        .Where(leverProgress.isNeedsCalc)
         .Subscribe(_ =>
         {
           _leverRoot.localRotation = leverProgress.UpdMix(_leverRotateFrom, _leverRotateTo);

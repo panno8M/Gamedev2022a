@@ -13,6 +13,9 @@ namespace Utilities
     public virtual void SetFactor0() { _factor = 0; }
     public virtual void SetFactor1() { _factor = 1; }
 
+    public bool isFactor0 => PeekFactor() == 0;
+    public bool isFactor1 => PeekFactor() == 1;
+
     public float UpdMix(float from, float to)
     {
       return Mathf.Lerp(from, to, UpdFactor());

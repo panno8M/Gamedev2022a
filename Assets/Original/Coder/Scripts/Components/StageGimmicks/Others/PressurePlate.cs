@@ -1,5 +1,6 @@
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
 using Utilities;
 using Assembly.GameSystem.Message;
@@ -35,6 +36,8 @@ namespace Assembly.Components.StageGimmicks
       _OnPress.message.intensity = animateProgress;
 
       AnimatePress().Forget();
+      // this.FixedUpdateAsObservable()
+      //   .Subscribe(_ => CalcFrame());
 
       SafetyTrigger.OnEnter
         .Subscribe(trigger =>
@@ -51,22 +54,26 @@ namespace Assembly.Components.StageGimmicks
         }).AddTo(this);
     }
 
+    void CalcFrame()
+    {
+      animateProgress.mode = (EzLerp.Mode)targetMode;
+      if (animateProgress.needsCalc)
+      {
+        _OnPress.Dispatch();
+
+        _plateObject.transform.localPosition = animateProgress.UpdAdd(_positionDefault, _positionDelta);
+        if (_plateMaterial)
+        {
+          _plateMaterial.color = animateProgress.UpdMix(_relaxColor, _pressColor);
+        }
+      }
+
+    }
     async UniTask AnimatePress()
     {
       while (Application.isPlaying)
       {
-        animateProgress.mode = (EzLerp.Mode)targetMode;
-        if (animateProgress.needsCalc)
-        {
-          _OnPress.Dispatch();
-
-          _plateObject.transform.localPosition = animateProgress.UpdAdd(_positionDefault, _positionDelta);
-          if (_plateMaterial)
-          {
-            _plateMaterial.color = animateProgress.UpdMix(_relaxColor, _pressColor);
-          }
-        }
-
+        CalcFrame();
         await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
       }
       _plateObject.transform.localPosition = _positionDefault;

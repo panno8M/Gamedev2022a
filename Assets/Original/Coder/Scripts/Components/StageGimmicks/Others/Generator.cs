@@ -32,31 +32,26 @@ namespace Assembly.Components.StageGimmicks
       _OnPutKandelaar.message.intensity = powerProgress;
 
       _safetyTrigger.OnEnter
+        .Where(trigger => trigger.CompareTag(Tag.Kandelaar.GetName()))
         .Subscribe(trigger =>
         {
-          if (trigger.CompareTag(Tag.Kandelaar.GetName()))
-          {
-            powerProgress.SetAsIncrease();
-            trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = true;
-          }
+          powerProgress.SetAsIncrease();
+          trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = true;
         }).AddTo(this);
       _safetyTrigger.OnExit
+        .Where(trigger => trigger.CompareTag(Tag.Kandelaar.GetName()))
         .Subscribe(trigger =>
         {
-          if (trigger.CompareTag(Tag.Kandelaar.GetName()))
-          {
-            powerProgress.SetAsDecrease();
-            trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = false;
-          }
+          powerProgress.SetAsDecrease();
+          trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = false;
         }).AddTo(this);
 
       this.FixedUpdateAsObservable()
+          .Where(powerProgress.isNeedsCalc)
           .Subscribe(_ =>
           {
-            if (powerProgress.needsCalc)
-            {
-              _OnPutKandelaar.Dispatch();
-            }
+            powerProgress.UpdFactor();
+            _OnPutKandelaar.Dispatch();
           });
     }
 

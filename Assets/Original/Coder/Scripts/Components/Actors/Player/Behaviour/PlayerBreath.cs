@@ -45,11 +45,11 @@ namespace Assembly.Components.Actors.Player
       Global.Control.BreathPress
           .Where(_ => _actor.flame.flameQuantity != 0)
           .Where(_ => !_actor.hand.holder.hasItem)
-          .Subscribe(_ => exhalingProgress.SetAsIncrease())
+          .Subscribe(exhalingProgress.SetAsIncrease)
           .AddTo(this);
 
       _actor.hand.holder.RequestHold
-          .Subscribe(_ => exhalingProgress.SetAsDecrease())
+          .Subscribe(exhalingProgress.SetAsDecrease)
           .AddTo(this);
     }
   }
