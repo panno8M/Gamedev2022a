@@ -11,7 +11,7 @@ public class SecurityCamera : MonoBehaviour
 
     void Start(){
         safetyTrigger = aiSight.gameObject.GetComponent<SafetyTrigger>();
-        aiSight.InSight.Subscribe(x => OnAlarm(x));
+        aiSight.InSight.Subscribe(x => OnAlarm(x)).AddTo(this);
     }
 
     void OnAlarm(AiVisible target){
