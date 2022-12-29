@@ -9,21 +9,23 @@ namespace Assembly.Components.StageGimmicks
 {
   public class BombPlacer : MonoBehaviour, IMessageListener
   {
-    ObjectCreateInfo[] infos;
+    BombPool.CreateInfo[] _bombCIs;
     [SerializeField] Bomb[] instances;
     void Start()
     {
-      infos = new ObjectCreateInfo[transform.childCount];
+      _bombCIs = new BombPool.CreateInfo[transform.childCount];
       instances = new Bomb[transform.childCount];
 
       for (int i = 0; i < transform.childCount; i++)
       {
 
-        infos[i] = new ObjectCreateInfo
+        _bombCIs[i] = new BombPool.CreateInfo
         {
-          offset = transform.GetChild(i)
+          spawnSpace = eopSpawnSpace.Global,
+          referenceUsage = eopReferenceUsage.Global,
+          reference = transform.GetChild(i),
         };
-        instances[i] = Pool.bomb.Spawn(infos[i]);
+        instances[i] = Pool.bomb.Spawn(_bombCIs[i]);
       }
     }
     public void ReceiveMessage(MessageUnit message)
@@ -33,7 +35,7 @@ namespace Assembly.Components.StageGimmicks
         case MessageKind.Invoke:
           for (int i = 0; i < instances.Length; i++)
           {
-            Pool.bomb.Respawn(instances[i], infos[i], TimeSpan.FromSeconds(1));
+            Pool.bomb.Respawn(instances[i], _bombCIs[i], TimeSpan.FromSeconds(1));
           }
           break;
 

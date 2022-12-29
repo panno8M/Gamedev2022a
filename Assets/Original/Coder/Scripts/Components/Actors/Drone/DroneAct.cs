@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors
 {
@@ -36,7 +37,11 @@ namespace Assembly.Components.Actors
     bool subjectiveMoveDeltaChanged;
     bool objectiveMoveDeltaChanged;
 
-    ObjectCreateInfo _info = new ObjectCreateInfo { };
+    ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
+    {
+      spawnSpace = eopSpawnSpace.Global,
+      referenceUsage = eopReferenceUsage.Global,
+    };
 
     [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
     [SerializeField] float _gravity = -3f;
@@ -161,6 +166,8 @@ namespace Assembly.Components.Actors
 
     protected virtual void Prepare()
     {
+      _psExplCI.reference = transform;
+
       follow.Initialize();
       patrol.Initialize();
       launcher.Initialize();
@@ -225,8 +232,7 @@ namespace Assembly.Components.Actors
       psBurnUp.Play();
       phase = DronePhase.Dead;
       await UniTask.Delay(1500);
-      _info.position = transform.position;
-      Pools.Pool.psExplosion.Spawn(_info,
+      Pools.Pool.psExplosion.Spawn(_psExplCI,
         timeToDespawn: TimeSpan.FromSeconds(3));
       ShiftDisactive();
       gameObject.SetActive(false);

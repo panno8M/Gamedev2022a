@@ -16,7 +16,11 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] Holdable _holdable;
     [SerializeField] float secExplosionDelay = 4;
 
-    ObjectCreateInfo _info = new ObjectCreateInfo { };
+    ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
+    {
+      spawnSpace = eopSpawnSpace.Global,
+      referenceUsage = eopReferenceUsage.Global,
+    };
 
     public void Assemble()
     {
@@ -33,6 +37,7 @@ namespace Assembly.Components.StageGimmicks
 
     protected override void Blueprint()
     {
+      _psExplCI.reference = transform;
       _damagable.OnBroken
         .Subscribe(_ => SetHoldable(locked: true))
         .AddTo(this);
@@ -47,8 +52,7 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ =>
           {
             SetBurnUp(burning: false);
-            _info.position = transform.position;
-            Pool.psExplosion.Spawn(_info, TimeSpan.FromSeconds(1));
+            Pool.psExplosion.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
             Pool.bomb.Despawn(this);
           })
           .AddTo(this);

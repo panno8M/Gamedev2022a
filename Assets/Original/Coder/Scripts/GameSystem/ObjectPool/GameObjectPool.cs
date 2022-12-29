@@ -22,23 +22,16 @@ namespace Assembly.GameSystem.ObjectPool
     public IObservable<T> OnDespawn() => _OnDespawn;
     public IObservable<T> OnDespawn(T obj) => _OnDespawn.Where(x => x == obj);
 
-    public T Spawn(ObjectCreateInfo info)
+    public T Spawn(ObjectCreateInfo<T> info)
     {
       var result = pool.Rent();
-      InfuseInfoOnSpawn(result, info);
-      if (result) _OnSpawn.OnNext(result);
+      info.Infuse(result);
+      _OnSpawn.OnNext(result);
       return result;
     }
-    public T Spawn() { return Spawn(ObjectCreateInfo.None); }
-    public T Spawn(ObjectCreateInfo info, TimeSpan timeToDespawn)
+    public T Spawn(ObjectCreateInfo<T> info, TimeSpan timeToDespawn)
     {
       T result = Spawn(info);
-      Despawn(result, timeToDespawn);
-      return result;
-    }
-    public T Spawn(TimeSpan timeToDespawn)
-    {
-      T result = Spawn();
       Despawn(result, timeToDespawn);
       return result;
     }
@@ -55,20 +48,16 @@ namespace Assembly.GameSystem.ObjectPool
       Observable.Timer(timeToDespawn).Subscribe(_ => Despawn(obj)).AddTo(obj);
     }
 
-    public void Respawn(T obj, ObjectCreateInfo info, TimeSpan wait)
+    public void Respawn(T obj, ObjectCreateInfo<T> info, TimeSpan wait)
     {
       Despawn(obj);
       Observable.Timer(wait).Subscribe(_ => Spawn(info)).AddTo(obj);
     }
-    public void Respawn(T obj, ObjectCreateInfo info)
+    public void Respawn(T obj, ObjectCreateInfo<T> info)
     {
       Despawn(obj);
       Spawn(info);
     }
-    public void Respawn(T obj) { Despawn(obj); Spawn(); }
-
-    protected abstract void InfuseInfoOnSpawn(T newObj, ObjectCreateInfo info);
-
     InternalPool _pool;
     InternalPool pool => _pool ?? (_pool = new InternalPool(this));
     protected void Start()

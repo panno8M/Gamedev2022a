@@ -10,10 +10,15 @@ namespace Assembly.Components.Effects
 {
   public class WaterBall : DiBehavior, IPoolCollectable
   {
-    ObjectCreateInfo _info = new ObjectCreateInfo { };
+    ParticlePool.CreateInfo _psSplashCI = new ParticlePool.CreateInfo
+    {
+      spawnSpace = eopSpawnSpace.Global,
+      referenceUsage = eopReferenceUsage.Global,
+    };
 
     protected override void Blueprint()
     {
+      _psSplashCI.reference = transform;
       this.FixedUpdateAsObservable()
       .Subscribe(_ =>
       {
@@ -30,8 +35,7 @@ namespace Assembly.Components.Effects
 
     void OnCollisionEnter(Collision other)
     {
-      _info.position = transform.position;
-      Pool.psImpactSplash.Spawn(_info,
+      Pool.psImpactSplash.Spawn(_psSplashCI,
         timeToDespawn: TimeSpan.FromSeconds(3f));
       Pool.waterBall.Despawn(this);
     }

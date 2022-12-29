@@ -16,8 +16,5 @@ namespace Assembly.Components.Pools
     {
       return prefab.Instantiate<HostileDrone>();
     }
-    protected override void InfuseInfoOnSpawn(HostileDrone newObj, ObjectCreateInfo info)
-    {
-    }
   }
 }

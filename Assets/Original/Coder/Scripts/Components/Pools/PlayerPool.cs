@@ -12,6 +12,13 @@ namespace Assembly.Components.Pools
 {
   public class PlayerPool : GameObjectPool<PlayerAct>
   {
+    public class CreateInfo : ObjectCreateInfo<PlayerAct> { }
+
+    CreateInfo playerCI = new CreateInfo
+    {
+      spawnSpace = eopSpawnSpace.Global,
+    };
+
     PlayerAct _player;
     public PlayerAct player => _player ?? Spawn();
     [SerializeField] MessageDispatcher _OnRespawn = new MessageDispatcher(MessageKind.Invoke);
@@ -55,11 +62,11 @@ namespace Assembly.Components.Pools
 
       return _player;
     }
-    protected override void InfuseInfoOnSpawn(PlayerAct newObj, ObjectCreateInfo info)
+    public PlayerAct Spawn()
     {
-      newObj.transform.position = activeSpot.spawnPosition;
+      playerCI.position = activeSpot.spawnPosition;
+      return Spawn(playerCI);
     }
-
     public void Despawn() { Despawn(_player); }
 
     protected override void Blueprint()
