@@ -9,6 +9,8 @@ namespace Utilities
     [SerializeField][Range(0f, 1f)] protected float _factor;
     public virtual float UpdFactor() { return _factor; }
     public virtual float PeekFactor() { return _factor; }
+    public float UpdFactor<T>(T t) => UpdFactor();
+    public float PeekFactor<T>(T t) => PeekFactor();
     public virtual void SetFactor(float value) { _factor = Mathf.Clamp01(value); }
     public virtual void SetFactor0() { _factor = 0; }
     public virtual void SetFactor1() { _factor = 1; }

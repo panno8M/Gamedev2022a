@@ -48,8 +48,12 @@ namespace Assembly.Components.Actors
     public AiSight sight;
 
     [SerializeField] ReactiveProperty<AiVisible> _Target = new ReactiveProperty<AiVisible>();
-    public EzLerp lostTarget = new EzLerp(1);
-    public AiVisible target => _Target.Value;
+    public EzLerp targettingProgress = new EzLerp(1);
+    public AiVisible target
+    {
+      get { return _Target.Value; }
+      private set { _Target.Value = value; }
+    }
     public IObservable<AiVisible> Target => _Target;
 
     public Transform sightTransform;
@@ -66,33 +70,20 @@ namespace Assembly.Components.Actors
       speedFactor = 20,
     };
 
-    void Start(){}
+    void Start() { }
 
     protected override void Blueprint()
     {
-      sight.InSight.Subscribe(target =>
-      {
-        if (target)
-        {
-          _Target.Value = target;
-          lostTarget.SetFactor1();
-          lostTarget.SetAsIncrease();
-        }
-        else
-        {
-          lostTarget.SetAsDecrease();
-        }
-      });
+      sight.InSight
+        .Select(target => target != null)
+        .Subscribe(targettingProgress.SetAsIncrease);
       _actor.CameraUpdate(this)
-        .Subscribe(_ =>
+        .Where(targettingProgress.isNeedsCalc)
+        .Select(targettingProgress.UpdFactor)
+        .Subscribe(fac =>
         {
-          if (lostTarget.needsCalc)
-          {
-            if (lostTarget.UpdFactor() == 0)
-            {
-              _Target.Value = null;
-            }
-          }
+          if (fac == 1) { target = sight.inSight; }
+          if (fac == 0) { target = null; }
         });
 
       _actor.ActivateSwitch(targets: this,
