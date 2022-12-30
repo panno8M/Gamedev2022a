@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1aec7652d7d8304d848d12d978b637f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mode: 0
+  mode: 1
   ignorePower: 0
   _power: 0
   _positionDelta: {x: 0, y: 2, z: 0}

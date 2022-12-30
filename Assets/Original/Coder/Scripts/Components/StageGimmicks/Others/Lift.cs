@@ -26,7 +26,6 @@ namespace Assembly.Components.StageGimmicks
     Material _plateMaterial;
     Color _relaxColor;
 
-    new Transform transform => _plateObject.transform;
     float power => ignorePower ? 1 : _power;
     void Start()
     {
