@@ -20,6 +20,7 @@ namespace Assembly.Components.Actors
     Launch = 1 << 2,
     Patrol = 1 << 3,
     Hostile = 1 << 4,
+    Attention = 1 << 5,
   }
   [RequireComponent(typeof(FollowObjectModule))]
   [RequireComponent(typeof(PatrolPathModule))]
@@ -53,7 +54,8 @@ namespace Assembly.Components.Actors
       closestDistance = 3,
       furthestDistance = 4,
       relativeHeightFromGround = 1,
-      speedFactor = 1,
+      speedNormal = 1,
+      speedStop = 0,
     };
     [SerializeField]
     public DroneRotationConstraints rotationConstraints = new DroneRotationConstraints
@@ -91,6 +93,8 @@ namespace Assembly.Components.Actors
     public void ShiftLaunch() { phase = DronePhase.Launch; }
     public void ShiftPatrol() { phase = DronePhase.Patrol; }
     public void ShiftHostile() { phase = DronePhase.Hostile; }
+    public void ShiftAttention() { phase = DronePhase.Attention; }
+
 
     public bool phaseDisactive => phase == DronePhase.Disactive;
     /// <summary>
@@ -192,11 +196,22 @@ namespace Assembly.Components.Actors
         .Where(_ => phase == DronePhase.Dead)
         .Subscribe(_ => AddGravity());
 
+      BehaviorUpdate(this)
+        .Where(_ => phase == DronePhase.Attention)
+        .Subscribe(_ =>
+        {
+          MoveObjective(Vector3.zero);
+          if (aim.target || !aim.sight.inSight)
+          { ShiftStandby(); }
+        });
+
       OnPhaseEnter(DronePhase.Standby)
         .Subscribe(_ =>
         {
           if (aim.target)
           { ShiftHostile(); }
+          else if (aim.sight.inSight)
+          { ShiftAttention(); }
           else if (patrol.next)
           { ShiftPatrol(); }
         });
@@ -256,11 +271,12 @@ namespace Assembly.Components.Actors
 
     public float relativeHeightFromGround;
 
-    public float speedFactor;
+    public float speedNormal;
+    public float speedStop;
 
     public float sqrClosestDistance => closestDistance * closestDistance;
     public float sqrFurthestDistance => furthestDistance * furthestDistance;
-    public float speed => speedFactor;
+    public float speed => speedNormal;
 
     public bool HasEnoughHight(Transform transform, out RaycastHit hit)
     {

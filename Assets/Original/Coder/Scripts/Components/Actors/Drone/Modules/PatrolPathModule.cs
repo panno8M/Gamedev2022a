@@ -23,7 +23,7 @@ namespace Assembly.Components.Actors
       _actor.ActivateSwitch(targets: this,
         cond: DronePhase.Patrol);
 
-      _actor.aim.Target
+      _actor.aim.sight.InSight
         .Where(_ => isActiveAndEnabled)
         .Where(target => target)
         .Subscribe(_ => _actor.ShiftStandby());

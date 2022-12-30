@@ -69,8 +69,6 @@ namespace Assembly.Components.Actors
       speedFactor = 20,
     };
 
-    void Start() { }
-
     protected override void Blueprint()
     {
       sight.InSight
@@ -100,7 +98,7 @@ namespace Assembly.Components.Actors
         });
 
       _actor.ActivateSwitch(targets: this,
-        cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Standby);
+        cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Attention | DronePhase.Standby);
 
       _actor.CameraUpdate(this)
         .Subscribe(_ =>
@@ -110,6 +108,13 @@ namespace Assembly.Components.Actors
               followSettings.Process(
                 transform: sightTransform,
                 target: target.center);
+            }
+            if (_actor.phase == DronePhase.Attention && sight.inSight)
+            {
+              followSettings.Process(
+                transform: sightTransform,
+                target: sight.inSight.center);
+
             }
             if (_actor.phase == DronePhase.Patrol)
             {
