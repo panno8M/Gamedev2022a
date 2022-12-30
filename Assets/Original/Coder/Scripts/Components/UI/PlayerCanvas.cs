@@ -42,8 +42,8 @@ namespace Assembly.Components.UI
         .Select(_ => Global.Control.HorizontalMoveInput.Value)
         .Subscribe(hmi =>
         {
-          easeR.SetAsIncrease(hmi == 1);
-          easeL.SetAsIncrease(hmi == -1);
+          easeR.SetMode(increase: hmi == 1);
+          easeL.SetMode(increase: hmi == -1);
 
           if (!player.gameObject.activeSelf) { return; }
 

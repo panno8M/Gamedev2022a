@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Senses.Sight;
 using Assembly.GameSystem;
 using Utilities;
@@ -75,15 +74,29 @@ namespace Assembly.Components.Actors
     protected override void Blueprint()
     {
       sight.InSight
-        .Select(target => target != null)
-        .Subscribe(targettingProgress.SetAsIncrease);
+        .Subscribe(nextTarget =>
+        {
+          targettingProgress.SetMode(increase: nextTarget);
+          if (nextTarget && !target)
+          {
+            _actor.reaction.Question();
+          }
+        });
       _actor.CameraUpdate(this)
         .Where(targettingProgress.isNeedsCalc)
         .Select(targettingProgress.UpdFactor)
         .Subscribe(fac =>
         {
-          if (fac == 1) { target = sight.inSight; }
-          if (fac == 0) { target = null; }
+          if (fac == 1 && !target)
+          {
+            target = sight.inSight;
+            _actor.reaction.Exclamation();
+          }
+          if (fac == 0 && target)
+          {
+            target = null;
+            _actor.reaction.GuruGuru();
+          }
         });
 
       _actor.ActivateSwitch(targets: this,

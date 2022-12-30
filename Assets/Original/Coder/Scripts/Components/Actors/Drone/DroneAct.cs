@@ -66,6 +66,7 @@ namespace Assembly.Components.Actors
     public AimModule aim;
     public FollowObjectModule follow;
     public PatrolPathModule patrol;
+    public ReactionModule reaction;
     public DamagableComponent damagable;
 
     public IObservable<DronePhase> OnPhaseChanged => _phase;
@@ -170,6 +171,7 @@ namespace Assembly.Components.Actors
 
       follow.Initialize();
       patrol.Initialize();
+      reaction.Initialize();
       launcher.Initialize();
       aim.Initialize();
     }

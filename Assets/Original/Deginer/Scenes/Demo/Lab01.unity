@@ -168,7 +168,7 @@ PrefabInstance:
     - target: {fileID: 4402238460517421524, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 4402238460517421524, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
@@ -223,7 +223,7 @@ PrefabInstance:
     - target: {fileID: 6065348773119128609, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8889518633315064098, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
@@ -1238,6 +1238,23 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3083127586960048130, guid: 02af7c8c169e8314eb91760f31013a59,
+        type: 3}
+      propertyPath: canvas
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3083127586960048130, guid: 02af7c8c169e8314eb91760f31013a59,
+        type: 3}
+      propertyPath: uiQuestion
+      value: 
+      objectReference: {fileID: 8226723117614178010, guid: 799cedd845ac5ef45bb0ecddb83609d5,
+        type: 3}
+    - target: {fileID: 3083127586960048130, guid: 02af7c8c169e8314eb91760f31013a59,
+        type: 3}
+      propertyPath: uiExclamation
+      value: 
+      objectReference: {fileID: 8226723117614178010, guid: 8f91e473c7573564ba36c11639585f59,
+        type: 3}
     - target: {fileID: 4629212793357953519, guid: 02af7c8c169e8314eb91760f31013a59,
         type: 3}
       propertyPath: baseNode

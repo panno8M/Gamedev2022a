@@ -26,7 +26,7 @@ public class AlarmLight : MonoBehaviour
 
     AlarmMgr.Instance.IsOnAlert.Subscribe(b =>
     {
-      transProgress.SetAsIncrease(alarm = b);
+      transProgress.SetMode(increase: alarm = b);
       if (alarm) { transProgress.SetFactor1(); }
     });
   }

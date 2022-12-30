@@ -31,7 +31,7 @@ namespace Assembly.Components.StageGimmicks
     {
       interactable = GetComponent<Interactable>();
       _OnSwitch.message.intensity = leverProgress;
-      OnLeverSwitch.Subscribe(leverProgress.SetAsIncrease);
+      OnLeverSwitch.Subscribe(leverProgress.SetMode);
 
       this.FixedUpdateAsObservable()
         .Where(leverProgress.isNeedsCalc)

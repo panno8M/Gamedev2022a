@@ -103,9 +103,9 @@ namespace Utilities
 
     public float elapsedSeconds => alpha * secDuration;
 
-    public void SetAsIncrease(bool b)
+    public void SetMode(bool increase)
     {
-      mode = b ? Mode.Increase : Mode.Decrease;
+      mode = increase ? Mode.Increase : Mode.Decrease;
     }
     public void SetAsIncrease() { mode = Mode.Increase; }
     public void SetAsDecrease() { mode = Mode.Decrease; }
