@@ -602,18 +602,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fec872fcf31ac344bd640b8b26679ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  psExplosionPool: {fileID: 0}
   _phase:
     value: 0
   _gravity: -3
   psBurnUp: {fileID: 4640317560797117958}
-  positionConstraints:
-    closestDistance: 3
-    furthestDistance: 4
-    relativeHeightFromGround: 1
-    speedNormal: 1
-  rotationConstraints:
-    maximumHullTilt: 30
-    speedFactor: 50
+  param: {fileID: 11400000, guid: 371a8af886cd1584c90ecba7d9163109, type: 2}
   launcher: {fileID: 4629212793357953519}
   aim: {fileID: 3083127586960048130}
   follow: {fileID: 8647019607246088378}

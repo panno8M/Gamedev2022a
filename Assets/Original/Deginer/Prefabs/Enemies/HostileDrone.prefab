@@ -222,16 +222,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _phase:
     value: 0
-  _gravity: -3
   psBurnUp: {fileID: 1176009663848111660}
-  positionConstraints:
-    closestDistance: 3
-    furthestDistance: 4
-    relativeHeightFromGround: 1
-    speedNormal: 1
-  rotationConstraints:
-    maximumHullTilt: 30
-    speedFactor: 50
+  param: {fileID: 11400000, guid: ade9deabc9df18247b1040ceaa53f330, type: 2}
   launcher: {fileID: 4220097943033955267}
   aim: {fileID: 8918805207021964606}
   follow: {fileID: 9119622892683133504}
@@ -430,7 +422,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   baseNode: {fileID: 0}
-  _actor: {fileID: 0}
+  _actor: {fileID: 1210545985916033635}
   launchOnAssemble: 0
 --- !u!1 &1210545986345958735
 GameObject:

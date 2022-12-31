@@ -7,6 +7,7 @@ using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.Components.Pools;
+using Assembly.Params;
 
 namespace Assembly.Components.Actors
 {
@@ -28,7 +29,7 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(AimModule))]
   public abstract class DroneAct : DiBehavior, IPoolCollectable
   {
-    public ParticleExplosionPool psExplosionPool;
+    public ParticleExplosionPool psExplosionPool { get; private set; }
     [Zenject.Inject]
     public virtual void DepsInject(ParticleExplosionPool psExplosionPool)
     {
@@ -57,22 +58,9 @@ namespace Assembly.Components.Actors
     };
 
     [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
-    [SerializeField] float _gravity = -3f;
     [SerializeField] ParticleSystem psBurnUp;
 
-    public DronePositionConstraints positionConstraints = new DronePositionConstraints
-    {
-      closestDistance = 3,
-      furthestDistance = 4,
-      relativeHeightFromGround = 1,
-      speedNormal = 1,
-    };
-    public DroneRotationConstraints rotationConstraints = new DroneRotationConstraints
-    {
-      maximumHullTilt = 30,
-      speedFactor = 50,
-    };
-
+    public DroneParam param;
     public LaunchModule launcher;
     public AimModule aim;
     public FollowObjectModule follow;
@@ -132,7 +120,7 @@ namespace Assembly.Components.Actors
 
       var angles = rotation.eulerAngles;
       rotation = Quaternion.Euler(
-        Mathf.Clamp((angles.x > 180f ? angles.x - 360f : angles.x), -rotationConstraints.maximumHullTilt, rotationConstraints.maximumHullTilt),
+        param.constraints.ClampAngle(angles.x),
         angles.y,
         angles.z);
 
@@ -146,7 +134,7 @@ namespace Assembly.Components.Actors
     }
     public bool LookTowards(Transform target)
     {
-      return LookTowards(target, rotationConstraints.speed);
+      return LookTowards(target, param.settings.rotateSpeed);
     }
 
     public IObservable<DronePhase> OnPhaseEnter(DronePhase phase)
@@ -205,7 +193,7 @@ namespace Assembly.Components.Actors
 
       BehaviorUpdate(this)
         .Where(_ => phase == DronePhase.Dead)
-        .Subscribe(_ => AddGravity());
+        .Subscribe(_ => rigidbody.AddForce(param.settings.gravity, ForceMode.Acceleration));
 
       BehaviorUpdate(this)
         .Where(_ => phase == DronePhase.Attention)
@@ -238,21 +226,16 @@ namespace Assembly.Components.Actors
     void ApplySubjectiveMove()
     {
       if (!subjectiveMoveDeltaChanged) { return; }
-      rigidbody.AddForce(transform.rotation * subjectiveMoveDelta * positionConstraints.speed - rigidbody.velocity, ForceMode.Acceleration);
+      rigidbody.AddForce(transform.rotation * subjectiveMoveDelta * param.settings.moveSpeed - rigidbody.velocity, ForceMode.Acceleration);
       subjectiveMoveDelta = Vector3.zero;
       subjectiveMoveDeltaChanged = false;
     }
     void ApplyObjectiveMove()
     {
       if (!objectiveMoveDeltaChanged) { return; }
-      rigidbody.AddForce(objectiveMoveDelta * positionConstraints.speed - rigidbody.velocity, ForceMode.Acceleration);
+      rigidbody.AddForce(objectiveMoveDelta * param.settings.moveSpeed - rigidbody.velocity, ForceMode.Acceleration);
       objectiveMoveDelta = Vector3.zero;
       objectiveMoveDeltaChanged = false;
-    }
-
-    void AddGravity()
-    {
-      rigidbody.AddForce(new Vector3(0, _gravity, 0), ForceMode.Acceleration);
     }
 
     async UniTask OnDead()
@@ -266,38 +249,5 @@ namespace Assembly.Components.Actors
       gameObject.SetActive(false);
     }
     public abstract void Despawn();
-
-  }
-  [System.Serializable]
-  public struct DroneRotationConstraints
-  {
-    public float maximumHullTilt;
-    public float speedFactor;
-    public float speed => speedFactor * Time.deltaTime;
-  }
-
-  [System.Serializable]
-  public struct DronePositionConstraints
-  {
-    public float closestDistance;
-    public float furthestDistance;
-
-    public float relativeHeightFromGround;
-
-    public float speedNormal;
-
-    public float sqrClosestDistance => closestDistance * closestDistance;
-    public float sqrFurthestDistance => furthestDistance * furthestDistance;
-    public float speed => speedNormal;
-
-    public bool HasEnoughHight(Transform transform, out RaycastHit hit)
-    {
-      return !Physics.Raycast(
-        transform.position,
-        Vector3.down,
-        out hit,
-        relativeHeightFromGround,
-        new Layers(Layer.Stage));
-    }
   }
 }

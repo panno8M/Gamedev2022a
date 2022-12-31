@@ -25,16 +25,16 @@ namespace Assembly.Components.Actors
           _actor.LookTowards(_actor.aim.target.center);
 
           float sqrDistance = _actor.sqrDistance(_actor.aim.target.center);
-          if (sqrDistance < _actor.positionConstraints.sqrClosestDistance)
+          if (sqrDistance < _actor.param.constraints.sqrClosestDistance)
           {
             _actor.MoveObjective(Vector3.back);
           }
-          else if (_actor.positionConstraints.sqrFurthestDistance < sqrDistance)
+          else if (_actor.param.constraints.sqrFurthestDistance < sqrDistance)
           {
             _actor.MoveSubjective(Vector3.forward);
           }
 
-          if (!_actor.positionConstraints.HasEnoughHight(transform, out RaycastHit hit))
+          if (!_actor.param.constraints.HasEnoughHight(transform, out RaycastHit hit))
           {
             _actor.MoveObjective(Vector3.up);
           }
