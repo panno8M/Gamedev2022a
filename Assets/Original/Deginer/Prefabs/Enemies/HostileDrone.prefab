@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 1210545985916033634}
   - component: {fileID: 1210545985916033635}
   - component: {fileID: 8918805207021964606}
-  - component: {fileID: 7449205639051925083}
+  - component: {fileID: 4220097943033955267}
   - component: {fileID: 5798258383893932439}
   - component: {fileID: 6005332447257279349}
   - component: {fileID: 9119622892683133504}
@@ -181,6 +181,7 @@ GameObject:
   - component: {fileID: 3232116125892301783}
   - component: {fileID: 1210545985916033644}
   - component: {fileID: 1210545985916033645}
+  - component: {fileID: 1506019995565370137}
   m_Layer: 3
   m_Name: HostileDrone
   m_TagString: Untagged
@@ -227,11 +228,11 @@ MonoBehaviour:
     closestDistance: 3
     furthestDistance: 4
     relativeHeightFromGround: 1
-    speedFactor: 3
+    speedNormal: 1
   rotationConstraints:
     maximumHullTilt: 30
     speedFactor: 50
-  launcher: {fileID: 7449205639051925083}
+  launcher: {fileID: 4220097943033955267}
   aim: {fileID: 8918805207021964606}
   follow: {fileID: 9119622892683133504}
   patrol: {fileID: 6005332447257279349}
@@ -275,7 +276,7 @@ MonoBehaviour:
     speedFactor: 10
   followSettings:
     speedFactor: 30
---- !u!114 &7449205639051925083
+--- !u!114 &4220097943033955267
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -284,13 +285,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1210545985916033633}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4903a549a81255a4b9a8487f8d68a634, type: 3}
+  m_Script: {fileID: 11500000, guid: e0c009f204e0fb74e89013e0b5b41f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  baseNode: {fileID: 0}
   _actor: {fileID: 1210545985916033635}
-  droneRenderer: {fileID: 1210545987367667307}
-  launchSpeed: 3
-  hatch: {fileID: 0}
+  launchOnAssemble: 0
 --- !u!114 &5798258383893932439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -417,6 +417,21 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1506019995565370137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1210545985916033633}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e0c009f204e0fb74e89013e0b5b41f14, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  baseNode: {fileID: 0}
+  _actor: {fileID: 0}
+  launchOnAssemble: 0
 --- !u!1 &1210545986345958735
 GameObject:
   m_ObjectHideFlags: 0

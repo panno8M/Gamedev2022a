@@ -52,11 +52,11 @@ namespace Assembly.Components.Actors.Player
 
       await UniTask.Delay(500);
 
-      Pool.player.Despawn();
+      PlayerAct.pool.Despawn();
 
       await UniTask.Delay(1000);
 
-      Pool.player.Spawn();
+      PlayerAct.pool.Spawn();
       UI.SimpleFader.Instance.progress.SetAsDecrease();
     }
   }

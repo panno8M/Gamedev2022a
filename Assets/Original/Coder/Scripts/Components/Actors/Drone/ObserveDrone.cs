@@ -16,5 +16,10 @@ namespace Assembly.Components.Actors
           else AlarmMgr.Instance.DisarmAlarm();
         }).AddTo(this);
     }
+
+    public override void Despawn()
+    {
+      throw new System.NotImplementedException();
+    }
   }
 }

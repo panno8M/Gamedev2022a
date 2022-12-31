@@ -1,11 +1,11 @@
-using System;
 using UnityEngine;
-using Utilities;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors.Player
 {
   public class PlayerAct : ActorCore<PlayerAct>
   {
+    public static PlayerPool pool => PoolCore.Instance.player;
 
     #region modules
     [SerializeField] PlayerController _ctl;

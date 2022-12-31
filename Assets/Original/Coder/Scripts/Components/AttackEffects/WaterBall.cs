@@ -10,6 +10,7 @@ namespace Assembly.Components.Effects
 {
   public class WaterBall : DiBehavior, IPoolCollectable
   {
+    public static WaterBallPool pool => PoolCore.Instance.waterBall;
     ParticlePool.CreateInfo _psSplashCI = new ParticlePool.CreateInfo
     {
       spawnSpace = eopSpawnSpace.Global,
@@ -37,7 +38,7 @@ namespace Assembly.Components.Effects
     {
       Pool.psImpactSplash.Spawn(_psSplashCI,
         timeToDespawn: TimeSpan.FromSeconds(3f));
-      Pool.waterBall.Despawn(this);
+      pool.Despawn(this);
     }
   }
 }

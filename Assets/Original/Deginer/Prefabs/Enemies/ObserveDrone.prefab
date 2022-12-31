@@ -610,7 +610,7 @@ MonoBehaviour:
     closestDistance: 3
     furthestDistance: 4
     relativeHeightFromGround: 1
-    speedFactor: 1
+    speedNormal: 1
   rotationConstraints:
     maximumHullTilt: 30
     speedFactor: 50
@@ -666,11 +666,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 4682344602442316363}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c38c3ea9c245bc7478b8a10014bc025d, type: 3}
+  m_Script: {fileID: 11500000, guid: e0c009f204e0fb74e89013e0b5b41f14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actor: {fileID: 8086046639631021109}
   baseNode: {fileID: 0}
+  _actor: {fileID: 8086046639631021109}
+  launchOnAssemble: 1
 --- !u!114 &8086046639631021107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +768,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 324c43a8794531a4cbe8a9d3b4774f84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _actor: {fileID: 8086046639631021109}
   reactionSet: {fileID: 8663779495464086892}
 --- !u!1 &5199080110163453966
 GameObject:

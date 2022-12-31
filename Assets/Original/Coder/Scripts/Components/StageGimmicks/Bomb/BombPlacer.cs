@@ -25,7 +25,7 @@ namespace Assembly.Components.StageGimmicks
           referenceUsage = eopReferenceUsage.Global,
           reference = transform.GetChild(i),
         };
-        instances[i] = Pool.bomb.Spawn(_bombCIs[i]);
+        instances[i] = Bomb.pool.Spawn(_bombCIs[i]);
       }
     }
     public void ReceiveMessage(MessageUnit message)
@@ -35,7 +35,7 @@ namespace Assembly.Components.StageGimmicks
         case MessageKind.Invoke:
           for (int i = 0; i < instances.Length; i++)
           {
-            Pool.bomb.Respawn(instances[i], _bombCIs[i], TimeSpan.FromSeconds(1));
+            Bomb.pool.Respawn(instances[i], _bombCIs[i], TimeSpan.FromSeconds(1));
           }
           break;
 

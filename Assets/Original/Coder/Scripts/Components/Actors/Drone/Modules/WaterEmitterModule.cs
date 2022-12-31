@@ -51,7 +51,7 @@ namespace Assembly.Components.Actors
     {
       if (launchCoolDown.UpdFactor() == 0)
       {
-        WaterBall result = Pool.waterBall.Spawn(_waterBallCI);
+        WaterBall result = WaterBall.pool.Spawn(_waterBallCI);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
         launchCoolDown.SetFactor1();
       }

@@ -3,20 +3,37 @@ using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using Assembly.GameSystem.PathNetwork;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors
 {
   public class DroneHatch : PathNode
   {
-    Subject<Unit> _CmdLaunch = new Subject<Unit>();
-    public IObservable<Unit> CmdLaunch => _CmdLaunch;
-    public PathNode nextNode => routes[0].dst;
+    HostileDronePool.CreateInfo _droneCI = new HostileDronePool.CreateInfo { };
+
+    public HostileDrone drone;
 
     void Start()
     {
+      _droneCI.hatch = this;
       AlarmMgr.Instance.IsOnAlert
-        .Where(x => x)
-        .Subscribe(_ => _CmdLaunch.OnNext(Unit.Default));
+        .Subscribe(b =>
+        {
+          if (b)
+          {
+            if (drone) { return; }
+            _droneCI.position = transform.position;
+            drone = HostileDrone.pool.Spawn(_droneCI);
+            drone.launcher.Launch();
+          }
+          else
+          {
+            if (!drone) { return; }
+            drone.launcher.Collect();
+            drone.Despawn();
+            drone = null;
+          }
+        });
     }
   }
 }

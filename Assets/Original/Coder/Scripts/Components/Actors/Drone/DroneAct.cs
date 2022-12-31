@@ -30,6 +30,7 @@ namespace Assembly.Components.Actors
   {
     Subject<Unit> _BehaviorUpdate = new Subject<Unit>();
     Subject<Unit> _CameraUpdate = new Subject<Unit>();
+    Subject<Unit> _OnAssemble = new Subject<Unit>();
 
     DronePhase _previousPhase;
 
@@ -48,16 +49,13 @@ namespace Assembly.Components.Actors
     [SerializeField] float _gravity = -3f;
     [SerializeField] ParticleSystem psBurnUp;
 
-    [SerializeField]
     public DronePositionConstraints positionConstraints = new DronePositionConstraints
     {
       closestDistance = 3,
       furthestDistance = 4,
       relativeHeightFromGround = 1,
       speedNormal = 1,
-      speedStop = 0,
     };
-    [SerializeField]
     public DroneRotationConstraints rotationConstraints = new DroneRotationConstraints
     {
       maximumHullTilt = 30,
@@ -76,6 +74,7 @@ namespace Assembly.Components.Actors
 
     public IObservable<Unit> BehaviorUpdate(Behaviour x) => _BehaviorUpdate.Where(_ => x.enabled);
     public IObservable<Unit> CameraUpdate(Behaviour x) => _CameraUpdate.Where(_ => x.enabled);
+    public IObservable<Unit> OnAssemble => _OnAssemble;
 
     public float sqrDistance(Transform target) => (target.position - transform.position).sqrMagnitude;
 
@@ -163,6 +162,7 @@ namespace Assembly.Components.Actors
     void Start() { Initialize(); }
     public void Assemble()
     {
+      _OnAssemble.OnNext(Unit.Default);
     }
     public void Disassemble()
     {
@@ -254,6 +254,8 @@ namespace Assembly.Components.Actors
       ShiftDisactive();
       gameObject.SetActive(false);
     }
+    public abstract void Despawn();
+
   }
   [System.Serializable]
   public struct DroneRotationConstraints
@@ -272,7 +274,6 @@ namespace Assembly.Components.Actors
     public float relativeHeightFromGround;
 
     public float speedNormal;
-    public float speedStop;
 
     public float sqrClosestDistance => closestDistance * closestDistance;
     public float sqrFurthestDistance => furthestDistance * furthestDistance;

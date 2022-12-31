@@ -30,6 +30,11 @@ public class AlarmMgr : UniqueBehaviour<AlarmMgr>
   protected override void Blueprint()
   {
     this.FixedUpdateAsObservable()
-      .Subscribe(_ => isOnAlert = alarmProgress.UpdFactor() != 0);
+      .Where(alarmProgress.isNeedsCalc)
+      .Select(alarmProgress.UpdFactor)
+      .Subscribe(fac =>
+      {
+        isOnAlert = fac != 0;
+      });
   }
 }

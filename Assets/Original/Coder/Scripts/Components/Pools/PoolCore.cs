@@ -28,11 +28,6 @@ namespace Assembly.Components.Pools
   }
   public static class Pool
   {
-    public static PlayerPool player => PoolCore.Instance.player;
-    public static BombPool bomb => PoolCore.Instance.bomb;
-    public static WaterBallPool waterBall => PoolCore.Instance.waterBall;
-    public static HostileDronePool hostileDrone => PoolCore.Instance.hostileDrone;
-
     public static ParticleImpactSplashPool psImpactSplash => PoolCore.Instance.psImpactSplash;
     public static ParticleExplosionPool psExplosion => PoolCore.Instance.psExplosion;
 

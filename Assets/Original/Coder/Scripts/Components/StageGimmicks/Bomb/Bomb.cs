@@ -11,6 +11,8 @@ namespace Assembly.Components.StageGimmicks
 
   public class Bomb : DiBehavior, IPoolCollectable
   {
+    public static BombPool pool => PoolCore.Instance.bomb;
+
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Holdable _holdable;
@@ -53,7 +55,7 @@ namespace Assembly.Components.StageGimmicks
           {
             SetBurnUp(burning: false);
             Pool.psExplosion.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
-            Pool.bomb.Despawn(this);
+            pool.Despawn(this);
           })
           .AddTo(this);
 
