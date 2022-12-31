@@ -28,6 +28,13 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(AimModule))]
   public abstract class DroneAct : DiBehavior, IPoolCollectable
   {
+    public ParticleExplosionPool psExplosionPool;
+    [Zenject.Inject]
+    public virtual void DepsInject(ParticleExplosionPool psExplosionPool)
+    {
+      this.psExplosionPool = psExplosionPool;
+    }
+
     Subject<Unit> _BehaviorUpdate = new Subject<Unit>();
     Subject<Unit> _CameraUpdate = new Subject<Unit>();
     Subject<Unit> _OnAssemble = new Subject<Unit>();
@@ -41,8 +48,12 @@ namespace Assembly.Components.Actors
 
     ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
     {
-      spawnSpace = eopSpawnSpace.Global,
-      referenceUsage = eopReferenceUsage.Global,
+      transformUsageInfo = new TransformUsageInfo
+      {
+        spawnSpace = eopSpawnSpace.Global,
+        referenceUsage = eopReferenceUsage.Global,
+      },
+      transformInfo = new TransformInfo { },
     };
 
     [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
@@ -171,7 +182,7 @@ namespace Assembly.Components.Actors
 
     protected virtual void Prepare()
     {
-      _psExplCI.reference = transform;
+      _psExplCI.transformInfo.reference = transform;
 
       follow.Initialize();
       patrol.Initialize();
@@ -249,7 +260,7 @@ namespace Assembly.Components.Actors
       psBurnUp.Play();
       phase = DronePhase.Dead;
       await UniTask.Delay(1500);
-      Pools.Pool.psExplosion.Spawn(_psExplCI,
+      psExplosionPool.Spawn(_psExplCI,
         timeToDespawn: TimeSpan.FromSeconds(3));
       ShiftDisactive();
       gameObject.SetActive(false);

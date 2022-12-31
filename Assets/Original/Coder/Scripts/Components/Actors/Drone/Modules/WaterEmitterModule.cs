@@ -10,6 +10,13 @@ namespace Assembly.Components.Actors
 {
   public class WaterEmitterModule : DiBehavior
   {
+    [Zenject.Inject]
+    public void DepsInject(WaterBallPool pool, ParticleImpactSplashPool psImpactSplashPool)
+    {
+      _waterBallCI.pool = pool;
+      _waterBallCI.psImpactSplashPool = psImpactSplashPool;
+    }
+
     [SerializeField] DroneAct _actor;
     [SerializeField] Transform emitterTransform;
     [SerializeField] Transform hoseRootTransform;
@@ -17,8 +24,12 @@ namespace Assembly.Components.Actors
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);
     WaterBallPool.CreateInfo _waterBallCI = new WaterBallPool.CreateInfo
     {
-      spawnSpace = eopSpawnSpace.Global,
-      referenceUsage = eopReferenceUsage.Global,
+      transformUsageInfo = new TransformUsageInfo
+      {
+        spawnSpace = eopSpawnSpace.Global,
+        referenceUsage = eopReferenceUsage.Global,
+      },
+      transformInfo = new TransformInfo { },
     };
 
     protected Quaternion defaultHoseRootRotation;
@@ -27,7 +38,7 @@ namespace Assembly.Components.Actors
     {
       defaultHoseRootRotation = hoseRootTransform.localRotation;
 
-      _waterBallCI.reference = emitterTransform;
+      _waterBallCI.transformInfo.reference = emitterTransform;
 
       _actor.ActivateSwitch(targets: this,
         cond: DronePhase.Hostile);
@@ -51,7 +62,7 @@ namespace Assembly.Components.Actors
     {
       if (launchCoolDown.UpdFactor() == 0)
       {
-        WaterBall result = WaterBall.pool.Spawn(_waterBallCI);
+        WaterBall result = _waterBallCI.pool.Spawn(_waterBallCI);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
         launchCoolDown.SetFactor1();
       }

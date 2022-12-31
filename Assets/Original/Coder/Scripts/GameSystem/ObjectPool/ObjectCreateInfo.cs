@@ -4,11 +4,15 @@ namespace Assembly.GameSystem.ObjectPool
 {
   public enum eopSpawnSpace { Parent, Global }
   public enum eopReferenceUsage { Discard, Local, Global }
-  public abstract class ObjectCreateInfo<T>
-    where T : DiBehavior, IPoolCollectable
+
+  public class TransformUsageInfo
   {
     public eopSpawnSpace spawnSpace = eopSpawnSpace.Parent;
     public eopReferenceUsage referenceUsage = eopReferenceUsage.Discard;
+  }
+
+  public class TransformInfo
+  {
     public Transform reference;
     public Vector3 position;
     public Quaternion rotation = Quaternion.identity;
@@ -19,15 +23,15 @@ namespace Assembly.GameSystem.ObjectPool
       get => _parent;
       set => _parent = value;
     }
-    public virtual void Infuse(T instance)
+    public virtual void Infuse(Transform instance, TransformUsageInfo usage)
     {
       Transform parent = this.parent;
-      if (instance.transform.parent != parent)
-      { instance.transform.SetParent(parent, false); }
+      if (instance.parent != parent)
+      { instance.SetParent(parent, false); }
 
       Vector3 position;
       Quaternion rotation;
-      switch (referenceUsage)
+      switch (usage.referenceUsage)
       {
         case eopReferenceUsage.Local:
           position = reference?.localPosition ?? this.position;
@@ -44,25 +48,37 @@ namespace Assembly.GameSystem.ObjectPool
           break;
       }
 
-      switch (spawnSpace)
+      switch (usage.spawnSpace)
       {
         case eopSpawnSpace.Parent:
-          instance.transform.localRotation = rotation;
-          instance.transform.localPosition = position;
+          instance.localRotation = rotation;
+          instance.localPosition = position;
           break;
         case eopSpawnSpace.Global:
-          if (instance.transform.parent == null)
+          if (instance.parent == null)
           {
-            instance.transform.localRotation = rotation;
-            instance.transform.localPosition = position;
+            instance.localRotation = rotation;
+            instance.localPosition = position;
           }
           else
           {
-            instance.transform.rotation = rotation;
-            instance.transform.position = position;
+            instance.rotation = rotation;
+            instance.position = position;
           }
           break;
       }
+    }
+
+  }
+
+  public abstract class ObjectCreateInfo<T>
+    where T : DiBehavior, IPoolCollectable
+  {
+    public TransformUsageInfo transformUsageInfo;
+    public TransformInfo transformInfo;
+    public virtual void Infuse(T instance)
+    {
+      transformInfo.Infuse(instance.transform, transformUsageInfo);
     }
   }
 }

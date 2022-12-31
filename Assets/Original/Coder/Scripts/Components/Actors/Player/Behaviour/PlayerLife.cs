@@ -3,12 +3,17 @@ using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
 using Assembly.GameSystem.Damage;
-using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors.Player
 {
   public class PlayerLife : ActorBehavior<PlayerAct>
   {
+    UI.SimpleFader fader;
+    [Zenject.Inject]
+    public void DepsInject(UI.SimpleFader fader)
+    {
+      this.fader = fader;
+    }
     [SerializeField] DamagableComponent _damagable;
     public IDamagable damagable => _damagable;
 
@@ -47,17 +52,15 @@ namespace Assembly.Components.Actors.Player
 
       await UniTask.Delay(500);
 
-      UI.SimpleFader.Instance.progress.secDuration = 0.5f;
-      UI.SimpleFader.Instance.progress.SetAsIncrease();
+      fader.Fade().Forget();
 
       await UniTask.Delay(500);
 
-      PlayerAct.pool.Despawn();
+      _actor.pool.Despawn();
 
       await UniTask.Delay(1000);
 
-      PlayerAct.pool.Spawn();
-      UI.SimpleFader.Instance.progress.SetAsDecrease();
+      _actor.pool.Spawn();
     }
   }
 }

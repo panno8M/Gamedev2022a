@@ -10,6 +10,12 @@ namespace Assembly.Components.StageGimmicks
 {
   public class Kandelaar : DiBehavior
   {
+    UI.SimpleFader fader;
+    [Zenject.Inject]
+    public void DepsInject(UI.SimpleFader fader)
+    {
+      this.fader = fader;
+    }
     Vector3 _defaultPosition;
     [SerializeField] MessageDispatcher _OnRollback = new MessageDispatcher(MessageKind.Invoke);
     [SerializeField] Holdable _holdable;
@@ -61,25 +67,11 @@ namespace Assembly.Components.StageGimmicks
       _holdable.enabled = false;
       await UniTask.Delay(1000);
       _psSmoke.Stop();
-      UI.SimpleFader.Instance.progress.secDuration = 1f;
-      UI.SimpleFader.Instance.progress.SetAsIncrease();
+
+      fader.Rollback().Forget();
 
       await UniTask.Delay(1000);
-
       await RollbackSequence();
-
-      await UniTask.Delay(1000);
-
-      UI.SimpleFader.Instance.progress.SetAsDecrease();
-      await UniTask.Delay(1000);
-
-      UI.SimpleFader.Instance.progress.secDuration = .3f;
-      UI.SimpleFader.Instance.progress.SetAsIncrease();
-      await UniTask.Delay(300);
-      UI.SimpleFader.Instance.progress.SetAsDecrease();
-      await UniTask.Delay(300);
-
-
     }
     UniTask RollbackSequence()
     {

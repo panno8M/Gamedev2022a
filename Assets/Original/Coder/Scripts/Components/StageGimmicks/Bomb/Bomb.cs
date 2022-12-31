@@ -11,7 +11,15 @@ namespace Assembly.Components.StageGimmicks
 
   public class Bomb : DiBehavior, IPoolCollectable
   {
-    public static BombPool pool => PoolCore.Instance.bomb;
+    BombPool pool;
+    ParticleExplosionPool psExplosionPool;
+
+    [Zenject.Inject]
+    public void DepsInject(BombPool pool, ParticleExplosionPool psExplosionPool)
+    {
+      this.pool = pool;
+      this.psExplosionPool = psExplosionPool;
+    }
 
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] DamagableComponent _damagable;
@@ -20,8 +28,12 @@ namespace Assembly.Components.StageGimmicks
 
     ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
     {
-      spawnSpace = eopSpawnSpace.Global,
-      referenceUsage = eopReferenceUsage.Global,
+      transformUsageInfo = new TransformUsageInfo
+      {
+        spawnSpace = eopSpawnSpace.Global,
+        referenceUsage = eopReferenceUsage.Global,
+      },
+      transformInfo = new TransformInfo { },
     };
 
     public void Assemble()
@@ -39,7 +51,7 @@ namespace Assembly.Components.StageGimmicks
 
     protected override void Blueprint()
     {
-      _psExplCI.reference = transform;
+      _psExplCI.transformInfo.reference = transform;
       _damagable.OnBroken
         .Subscribe(_ => SetHoldable(locked: true))
         .AddTo(this);
@@ -54,7 +66,7 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ =>
           {
             SetBurnUp(burning: false);
-            Pool.psExplosion.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
+            psExplosionPool.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
             pool.Despawn(this);
           })
           .AddTo(this);

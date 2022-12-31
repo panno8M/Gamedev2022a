@@ -2,12 +2,18 @@ using UnityEngine;
 using Cinemachine;
 using UniRx;
 using Assembly.GameSystem;
-using Assembly.Components.Actors.Player;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components
 {
-  public class Camctl : UniqueBehaviour<Camctl>
+  public class Camctl : DiBehavior
   {
+    PlayerPool playerPool;
+    [Zenject.Inject]
+    public void DepsInject(PlayerPool playerPool)
+    {
+      this.playerPool = playerPool;
+    }
     [SerializeField] CinemachineVirtualCamera cmDefault;
     protected override void Blueprint()
     {
@@ -16,7 +22,7 @@ namespace Assembly.Components
 
     void Awake()
     {
-      PlayerAct.pool?.OnSpawn()
+      playerPool.OnSpawn()
           .Subscribe(player =>
           {
             cmDefault.m_Follow = player.transform;

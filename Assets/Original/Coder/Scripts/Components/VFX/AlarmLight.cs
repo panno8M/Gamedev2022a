@@ -1,9 +1,16 @@
 using UnityEngine;
 using Utilities;
 using UniRx;
+using Assembly.GameSystem;
 
-public class AlarmLight : MonoBehaviour
+public class AlarmLight : DiBehavior
 {
+  AlarmMgr alarmMgr;
+  [Zenject.Inject]
+  public void DepsInject(AlarmMgr alarmMgr)
+  {
+    this.alarmMgr = alarmMgr;
+  }
   [SerializeField] bool alarm;
   [SerializeField] new Light light;
 
@@ -19,12 +26,14 @@ public class AlarmLight : MonoBehaviour
 
   [SerializeField] EzLerp transProgress;
   [SerializeField][Range(0, 1)] float alarmGradProgress;
-  void Start()
+
+  void Start() { Initialize(); }
+  protected override void Blueprint()
   {
     if (!light) light = GetComponent<Light>();
     light.useColorTemperature = true;
 
-    AlarmMgr.Instance.IsOnAlert.Subscribe(b =>
+    alarmMgr.IsOnAlert.Subscribe(b =>
     {
       transProgress.SetMode(increase: alarm = b);
       if (alarm) { transProgress.SetFactor1(); }

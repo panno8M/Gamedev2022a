@@ -12,11 +12,24 @@ namespace Assembly.Components.Pools
 {
   public class PlayerPool : GameObjectPool<PlayerAct>
   {
-    public class CreateInfo : ObjectCreateInfo<PlayerAct> { }
+    public class CreateInfo : ObjectCreateInfo<PlayerAct>
+    {
+      public PlayerPool pool;
+
+      public override void Infuse(PlayerAct instance)
+      {
+        base.Infuse(instance);
+        instance.DepsInject(pool);
+      }
+    }
 
     CreateInfo playerCI = new CreateInfo
     {
-      spawnSpace = eopSpawnSpace.Global,
+      transformUsageInfo = new TransformUsageInfo
+      {
+        spawnSpace = eopSpawnSpace.Global,
+      },
+      transformInfo = new TransformInfo { },
     };
 
     PlayerAct _player;
@@ -24,12 +37,11 @@ namespace Assembly.Components.Pools
     [SerializeField] MessageDispatcher _OnRespawn = new MessageDispatcher(MessageKind.Invoke);
 
 
-    [SerializeField] CheckPoint defaultSpot;
     ReactiveProperty<ISpawnSpot> ActiveSpot = new ReactiveProperty<ISpawnSpot>();
     public IObservable<ISpawnSpot> OnActiveSpotChanged => ActiveSpot;
     public ISpawnSpot activeSpot
     {
-      get { return ActiveSpot.Value ?? defaultSpot; }
+      get => ActiveSpot.Value;
       set
       {
         if (activeSpot == value) { return; }
@@ -64,7 +76,8 @@ namespace Assembly.Components.Pools
     }
     public PlayerAct Spawn()
     {
-      playerCI.position = activeSpot.spawnPosition;
+      playerCI.pool = this;
+      playerCI.transformInfo.position = activeSpot.spawnPosition;
       return Spawn(playerCI);
     }
     public void Despawn() { Despawn(_player); }

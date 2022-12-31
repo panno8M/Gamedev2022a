@@ -5,7 +5,7 @@ using Assembly.GameSystem.Internal;
 
 namespace Assembly.GameSystem.Input
 {
-  public class InputControl : UniqueBehaviour<InputControl>
+  public class InputControl : DiBehavior
   {
     InputControlProvider _provider;
     InputControlProvider provider => _provider ?? (_provider = new InputControlProvider());

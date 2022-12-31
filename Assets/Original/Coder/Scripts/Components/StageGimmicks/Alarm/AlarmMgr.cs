@@ -5,7 +5,7 @@ using UniRx.Triggers;
 using Assembly.GameSystem;
 using Utilities;
 
-public class AlarmMgr : UniqueBehaviour<AlarmMgr>
+public class AlarmMgr : DiBehavior
 {
   [SerializeField] EzLerp alarmProgress = new EzLerp(10);
   [SerializeField] ReactiveProperty<bool> _IsOnAlert = new ReactiveProperty<bool>();
@@ -15,14 +15,12 @@ public class AlarmMgr : UniqueBehaviour<AlarmMgr>
     get { return _IsOnAlert.Value; }
     private set { _IsOnAlert.Value = value; }
   }
-  public void ActivateAlarm()
+  public void ActivateAlarm() => SwitchAlarm(true);
+  public void DisarmAlarm() => SwitchAlarm(false);
+  public void SwitchAlarm(bool b)
   {
-    alarmProgress.SetFactor1();
-    alarmProgress.SetAsIncrease();
-  }
-  public void DisarmAlarm()
-  {
-    alarmProgress.SetAsDecrease();
+    if (b) alarmProgress.SetFactor1();
+    alarmProgress.SetMode(b);
   }
 
   void Start() { Initialize(); }

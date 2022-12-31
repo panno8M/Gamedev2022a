@@ -5,16 +5,20 @@ namespace Assembly.Components.Actors
 
   public class ObserveDrone : DroneAct
   {
+    AlarmMgr alarmMgr;
+    [Zenject.Inject]
+    public void DepsInject(AlarmMgr alarmMgr)
+    {
+      this.alarmMgr = alarmMgr;
+    }
     protected override void Subscribe()
     {
       base.Subscribe();
       aim.Target
-        .Where(_ => AlarmMgr.Instance)
-        .Subscribe(_ =>
-        {
-          if (aim.target) AlarmMgr.Instance.ActivateAlarm();
-          else AlarmMgr.Instance.DisarmAlarm();
-        }).AddTo(this);
+        .Where(_ => alarmMgr)
+        .Select(target => target != null)
+        .Subscribe(alarmMgr.SwitchAlarm)
+        .AddTo(this);
     }
 
     public override void Despawn()

@@ -1,4 +1,3 @@
-using UnityEngine;
 using Assembly.Components.StageGimmicks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
@@ -7,7 +6,16 @@ namespace Assembly.Components.Pools
 {
   public class BombPool : GameObjectPool<Bomb>
   {
-    public class CreateInfo : ObjectCreateInfo<Bomb> { }
+    public class CreateInfo : ObjectCreateInfo<Bomb>
+    {
+      public BombPool pool;
+      public ParticleExplosionPool psExplosionPool;
+      public override void Infuse(Bomb instance)
+      {
+        base.Infuse(instance);
+        instance.DepsInject(pool, psExplosionPool);
+      }
+    }
 
     protected override Bomb CreateInstance()
     {

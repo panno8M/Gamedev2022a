@@ -1,7 +1,6 @@
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem;
-using Utilities;
 
 namespace Assembly.Components.Actors
 {

@@ -5633,6 +5633,7 @@ MonoBehaviour:
   psFlameBreath: {fileID: 5944828297956823533}
   exhalingProgress:
     _factor: 0
+    localTimeScale: 1
     useCurve: 0
     curve:
       serializedVersion: 2
@@ -5671,6 +5672,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mumbling: 0
+  _actor: {fileID: 1855202803}
   _secTransferDurationEnter: 250
   _secTransferDurationExit: 250
 --- !u!114 &15780796179480652
