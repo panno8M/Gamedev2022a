@@ -1,6 +1,5 @@
 using UnityEngine;
 using Cinemachine;
-using UniRx;
 using Assembly.GameSystem;
 using Assembly.Components.Actors.Player;
 
@@ -8,6 +7,8 @@ namespace Assembly.Components
 {
   public class Camctl : DiBehavior
   {
+    void Start() => InitializeAfter(player);
+
     PlayerAct player;
     [Zenject.Inject]
     public void DepsInject(PlayerAct player)
@@ -17,18 +18,7 @@ namespace Assembly.Components
     [SerializeField] CinemachineVirtualCamera cmDefault;
     protected override void Blueprint()
     {
-      throw new System.NotImplementedException();
+      cmDefault.m_Follow = player.transform;
     }
-
-    void Awake()
-    {
-      player.OnAssembleObservable
-          .Subscribe(_ =>
-          {
-            cmDefault.m_Follow = player.transform;
-          }).AddTo(this);
-
-    }
-
   }
 }
