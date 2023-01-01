@@ -10,10 +10,11 @@ namespace Assembly.Components.Actors
 {
   public class WaterEmitterModule : DiBehavior
   {
+    WaterBallPool waterBallPool;
     [Zenject.Inject]
-    public void DepsInject(WaterBallPool pool, ParticleImpactSplashPool psImpactSplashPool)
+    public void DepsInject(WaterBallPool waterBallPool, ParticleImpactSplashPool psImpactSplashPool)
     {
-      _waterBallCI.pool = pool;
+      this.waterBallPool = waterBallPool;
       _waterBallCI.psImpactSplashPool = psImpactSplashPool;
     }
 
@@ -24,7 +25,7 @@ namespace Assembly.Components.Actors
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);
     WaterBallPool.CreateInfo _waterBallCI = new WaterBallPool.CreateInfo
     {
-      transformUsageInfo = new TransformUsageInfo
+      transformUsage = new TransformUsage
       {
         spawnSpace = eopSpawnSpace.Global,
         referenceUsage = eopReferenceUsage.Global,
@@ -62,7 +63,7 @@ namespace Assembly.Components.Actors
     {
       if (launchCoolDown.UpdFactor() == 0)
       {
-        WaterBall result = _waterBallCI.pool.Spawn(_waterBallCI);
+        WaterBall result = waterBallPool.Spawn(_waterBallCI);
         result.rigidbody?.AddForce(emitterTransform.forward * power, ForceMode.Acceleration);
         launchCoolDown.SetFactor1();
       }

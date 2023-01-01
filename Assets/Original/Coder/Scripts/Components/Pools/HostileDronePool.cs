@@ -10,14 +10,13 @@ namespace Assembly.Components.Pools
     public class CreateInfo : ObjectCreateInfo<HostileDrone>
     {
       public DroneHatch hatch;
-      public HostileDronePool pool;
       public WaterBallPool waterBallPool;
       public ParticleExplosionPool psExplosionPool;
       public ParticleImpactSplashPool psImpactSplashPool;
       public override void Infuse(HostileDrone instance)
       {
         base.Infuse(instance);
-        instance.DepsInject(pool, waterBallPool, psExplosionPool, psImpactSplashPool);
+        instance.DepsInject(waterBallPool, psExplosionPool, psImpactSplashPool);
         instance.launcher.baseNode = hatch;
       }
     }

@@ -11,13 +11,12 @@ namespace Assembly.Components.StageGimmicks
 
   public class Bomb : DiBehavior, IPoolCollectable
   {
-    BombPool pool;
+    public IDespawnable despawnable { get; set; }
     ParticleExplosionPool psExplosionPool;
 
     [Zenject.Inject]
-    public void DepsInject(BombPool pool, ParticleExplosionPool psExplosionPool)
+    public void DepsInject(ParticleExplosionPool psExplosionPool)
     {
-      this.pool = pool;
       this.psExplosionPool = psExplosionPool;
     }
 
@@ -28,7 +27,7 @@ namespace Assembly.Components.StageGimmicks
 
     ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
     {
-      transformUsageInfo = new TransformUsageInfo
+      transformUsage = new TransformUsage
       {
         spawnSpace = eopSpawnSpace.Global,
         referenceUsage = eopReferenceUsage.Global,
@@ -67,7 +66,7 @@ namespace Assembly.Components.StageGimmicks
           {
             SetBurnUp(burning: false);
             psExplosionPool.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
-            pool.Despawn(this);
+            despawnable.Despawn();
           })
           .AddTo(this);
 

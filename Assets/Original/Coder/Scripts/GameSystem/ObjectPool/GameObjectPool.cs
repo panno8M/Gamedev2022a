@@ -1,11 +1,10 @@
-using System;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 
 namespace Assembly.GameSystem.ObjectPool
 {
-  public abstract class GameObjectPool<T> : DiBehavior
+  public abstract class GameObjectPool<T> : DiBehavior, IObjectPool<T>
     where T : DiBehavior, IPoolCollectable
   {
     [SerializeField] protected T prefab;
@@ -14,50 +13,21 @@ namespace Assembly.GameSystem.ObjectPool
     protected virtual void OnBeforeSpawn(T instance) { }
     protected virtual void OnBeforeDespawn(T instance) { }
 
-    Subject<T> _OnSpawn = new Subject<T>();
-    public IObservable<T> OnSpawn() => _OnSpawn;
-    public IObservable<T> OnSpawn(T obj) => _OnSpawn.Where(x => x == obj);
-
-    Subject<T> _OnDespawn = new Subject<T>();
-    public IObservable<T> OnDespawn() => _OnDespawn;
-    public IObservable<T> OnDespawn(T obj) => _OnDespawn.Where(x => x == obj);
-
-    public T Spawn(ObjectCreateInfo<T> info)
+    public T Spawn(IInfuser<T> info)
     {
-      var result = pool.Rent();
+      T result = pool.Rent();
       info.Infuse(result);
-      _OnSpawn.OnNext(result);
+      result.despawnable = new Despawnable(() => this.Despawn(result));
       return result;
     }
-    public T Spawn(ObjectCreateInfo<T> info, TimeSpan timeToDespawn)
+    public void Despawn(T instance)
     {
-      T result = Spawn(info);
-      Despawn(result, timeToDespawn);
-      return result;
-    }
-    public void Despawn(T obj)
-    {
-      if (obj && obj.isActiveAndEnabled)
+      if (instance && instance.isActiveAndEnabled)
       {
-        _OnDespawn.OnNext(obj);
-        pool.Return(obj);
+        pool.Return(instance);
       }
     }
-    public void Despawn(T obj, TimeSpan timeToDespawn)
-    {
-      Observable.Timer(timeToDespawn).Subscribe(_ => Despawn(obj)).AddTo(obj);
-    }
 
-    public void Respawn(T obj, ObjectCreateInfo<T> info, TimeSpan wait)
-    {
-      Despawn(obj);
-      Observable.Timer(wait).Subscribe(_ => Spawn(info)).AddTo(obj);
-    }
-    public void Respawn(T obj, ObjectCreateInfo<T> info)
-    {
-      Despawn(obj);
-      Spawn(info);
-    }
     InternalPool _pool;
     InternalPool pool => _pool ?? (_pool = new InternalPool(this));
     protected void Start()

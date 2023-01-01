@@ -20,10 +20,5 @@ namespace Assembly.Components.Actors
         .Subscribe(alarmMgr.SwitchAlarm)
         .AddTo(this);
     }
-
-    public override void Despawn()
-    {
-      throw new System.NotImplementedException();
-    }
   }
 }

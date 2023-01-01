@@ -8,12 +8,11 @@ namespace Assembly.Components.Pools
   {
     public class CreateInfo : ObjectCreateInfo<Bomb>
     {
-      public BombPool pool;
       public ParticleExplosionPool psExplosionPool;
       public override void Infuse(Bomb instance)
       {
         base.Infuse(instance);
-        instance.DepsInject(pool, psExplosionPool);
+        instance.DepsInject(psExplosionPool);
       }
     }
 

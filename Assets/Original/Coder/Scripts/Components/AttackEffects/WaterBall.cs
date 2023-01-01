@@ -10,21 +10,19 @@ namespace Assembly.Components.Effects
 {
   public class WaterBall : DiBehavior, IPoolCollectable
   {
-    WaterBallPool pool;
+    public IDespawnable despawnable { get; set; }
     ParticleImpactSplashPool psImpactSplashPool;
 
     [Zenject.Inject]
     public void DepsInject(
-      WaterBallPool pool,
       ParticleImpactSplashPool psImpactSplashPool)
     {
-      this.pool = pool;
       this.psImpactSplashPool = psImpactSplashPool;
     }
 
     ParticlePool.CreateInfo _psSplashCI = new ParticlePool.CreateInfo
     {
-      transformUsageInfo = new TransformUsageInfo
+      transformUsage = new TransformUsage
       {
         spawnSpace = eopSpawnSpace.Global,
         referenceUsage = eopReferenceUsage.Global,
@@ -53,7 +51,7 @@ namespace Assembly.Components.Effects
     {
       psImpactSplashPool.Spawn(_psSplashCI,
         timeToDespawn: TimeSpan.FromSeconds(3f));
-      pool.Despawn(this);
+      despawnable.Despawn();
     }
   }
 }

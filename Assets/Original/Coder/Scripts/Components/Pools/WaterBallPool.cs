@@ -8,13 +8,12 @@ namespace Assembly.Components.Pools
   {
     public class CreateInfo : ObjectCreateInfo<WaterBall>
     {
-      public WaterBallPool pool;
       public ParticleImpactSplashPool psImpactSplashPool;
 
       public override void Infuse(WaterBall instance)
       {
         base.Infuse(instance);
-        instance.DepsInject(pool, psImpactSplashPool);
+        instance.DepsInject(psImpactSplashPool);
       }
     }
 

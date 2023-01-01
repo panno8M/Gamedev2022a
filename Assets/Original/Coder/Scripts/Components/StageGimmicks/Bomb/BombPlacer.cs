@@ -16,16 +16,14 @@ namespace Assembly.Components.StageGimmicks
     public void DepsInject(BombPool pool, ParticleExplosionPool psExplosionPool, Rollback rollback)
     {
       this.pool = pool;
-      _bombCI.pool = pool;
       _bombCI.psExplosionPool = psExplosionPool;
       if (!this.rollback) { this.rollback = rollback; }
-
     }
 
     TransformInfo[] _bombTransformInfos;
     BombPool.CreateInfo _bombCI = new BombPool.CreateInfo
     {
-      transformUsageInfo = new TransformUsageInfo
+      transformUsage = new TransformUsage
       {
         spawnSpace = eopSpawnSpace.Global,
         referenceUsage = eopReferenceUsage.Global,

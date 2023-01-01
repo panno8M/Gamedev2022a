@@ -29,6 +29,7 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(AimModule))]
   public abstract class DroneAct : DiBehavior, IPoolCollectable
   {
+    public IDespawnable despawnable { get; set; }
     public ParticleExplosionPool psExplosionPool { get; private set; }
     [Zenject.Inject]
     public virtual void DepsInject(ParticleExplosionPool psExplosionPool)
@@ -49,7 +50,7 @@ namespace Assembly.Components.Actors
 
     ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
     {
-      transformUsageInfo = new TransformUsageInfo
+      transformUsage = new TransformUsage
       {
         spawnSpace = eopSpawnSpace.Global,
         referenceUsage = eopReferenceUsage.Global,
@@ -246,8 +247,7 @@ namespace Assembly.Components.Actors
       psExplosionPool.Spawn(_psExplCI,
         timeToDespawn: TimeSpan.FromSeconds(3));
       ShiftDisactive();
-      gameObject.SetActive(false);
+      despawnable.Despawn();
     }
-    public abstract void Despawn();
   }
 }

@@ -7,16 +7,12 @@ namespace Assembly.Components.Actors
   [RequireComponent(typeof(WaterEmitterModule))]
   public class HostileDrone : DroneAct
   {
-    HostileDronePool pool;
-
     [Zenject.Inject]
     public void DepsInject(
-      HostileDronePool pool,
       WaterBallPool waterBallPool,
       ParticleExplosionPool psExplosionPool,
       ParticleImpactSplashPool psImpactSplashPool)
     {
-      this.pool = pool;
       base.DepsInject(psExplosionPool);
       emitter.DepsInject(waterBallPool, psImpactSplashPool);
     }
@@ -27,10 +23,6 @@ namespace Assembly.Components.Actors
     {
       base.Prepare();
       emitter.Initialize();
-    }
-    public override void Despawn()
-    {
-      pool.Despawn(this);
     }
   }
 }
