@@ -6,7 +6,6 @@ namespace Assembly.Components.Installers
 {
   public class PoolInstaller : MonoInstaller
   {
-    [SerializeField] PlayerPool playerPool;
     [SerializeField] WaterBallPool waterBallPool;
     [SerializeField] BombPool bombPool;
     [SerializeField] HostileDronePool hostileDronePool;
@@ -14,10 +13,6 @@ namespace Assembly.Components.Installers
     [SerializeField] ParticleImpactSplashPool particleImpactSplashPool;
     public override void InstallBindings()
     {
-      Container.Bind<PlayerPool>()
-        .FromComponentInNewPrefab(playerPool)
-        .AsSingle();
-
       Container.Bind<WaterBallPool>()
         .FromComponentInNewPrefab(waterBallPool)
         .AsSingle();

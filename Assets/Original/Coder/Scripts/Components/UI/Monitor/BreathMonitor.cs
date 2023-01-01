@@ -1,15 +1,14 @@
 using UnityEngine;
 using TMPro;
 using Assembly.Components.Actors.Player;
-using Assembly.Components.Pools;
 
 public class BreathMonitor : MonoBehaviour
 {
-  PlayerPool playerPool;
+  PlayerAct player;
   [Zenject.Inject]
-  public void DepsInject(PlayerPool playerPool)
+  public void DepsInject(PlayerAct player)
   {
-    this.playerPool = playerPool;
+    this.player = player;
   }
   TMP_Text _text;
   void Start()
@@ -19,7 +18,7 @@ public class BreathMonitor : MonoBehaviour
 
   void Update()
   {
-    PlayerBreath mouse = playerPool.player.mouse;
+    PlayerBreath mouse = player.mouse;
     string timeString = "[" + ((int)(mouse.exhalingProgress.elapsedSeconds * 1000)).ToString().PadLeft(4, '0') + " ms]";
     if (mouse.exhalingProgress.isIncreasing)
     {

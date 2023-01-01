@@ -56,11 +56,11 @@ namespace Assembly.Components.Actors.Player
 
       await UniTask.Delay(500);
 
-      _actor.pool.Despawn();
+      _actor.rebirth.Despawn();
 
       await UniTask.Delay(1000);
 
-      _actor.pool.Spawn();
+      _actor.rebirth.Spawn();
     }
   }
 }

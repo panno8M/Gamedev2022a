@@ -1,17 +1,18 @@
 using UnityEngine;
 using UniRx;
-using Assembly.GameSystem.Damage;
-using Assembly.Components.Pools;
+using Assembly.Components.Actors.Player;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class CheckPoint : MonoBehaviour, ISpawnSpot
+  public class CheckPoint : MonoBehaviour, ISpawnSpot, ITransactionDispatcher
   {
-    PlayerPool pool;
+    PlayerAct player;
+    Rollback rollback;
     [Zenject.Inject]
-    public void DepsInject(PlayerPool pool)
+    public void DepsInject(PlayerAct player, Rollback rollback)
     {
-      this.pool = pool;
+      this.player = player;
+      this.rollback = rollback;
     }
 
     [SerializeField] bool activateOnAwake;
@@ -21,7 +22,8 @@ namespace Assembly.Components.StageGimmicks
     {
       if (activateOnAwake)
       {
-        pool.activeSpot = this;
+        player.rebirth.activeSpot = this;
+        rollback.UpdateTransaction(this);
       }
     }
 

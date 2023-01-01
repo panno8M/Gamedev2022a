@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   settings:
     rotateSpeedFactor: 50
-    moveSpeedFactor: 1
+    moveSpeedFactor: 3
+    gravityScale: -3
   constraints:
     closestDistance: 3
     furthestDistance: 4

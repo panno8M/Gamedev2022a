@@ -2,22 +2,23 @@ using System;
 using UniRx;
 using UnityEngine;
 using Assembly.GameSystem;
-using Assembly.GameSystem.Message;
 using Assembly.GameSystem.Damage;
 using Cysharp.Threading.Tasks;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class Kandelaar : DiBehavior
+  public class Kandelaar : DiBehavior, IRollbackDispatcher
   {
     UI.SimpleFader fader;
+    [SerializeField]
+    Rollback rollback;
     [Zenject.Inject]
-    public void DepsInject(UI.SimpleFader fader)
+    public void DepsInject(UI.SimpleFader fader, Rollback rollback)
     {
       this.fader = fader;
+      if (!this.rollback) { this.rollback = rollback; }
     }
     Vector3 _defaultPosition;
-    [SerializeField] MessageDispatcher _OnRollback = new MessageDispatcher(MessageKind.Invoke);
     [SerializeField] Holdable _holdable;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
@@ -80,7 +81,7 @@ namespace Assembly.Components.StageGimmicks
       transform.position = _defaultPosition;
       supply.enabled = true;
       _holdable.enabled = true;
-      _OnRollback.Dispatch();
+      rollback.Execute(this);
       return UniTask.CompletedTask;
     }
   }

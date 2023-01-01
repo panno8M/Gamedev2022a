@@ -3,17 +3,17 @@ using UniRx;
 using UniRx.Triggers;
 using Cinemachine;
 using Assembly.GameSystem;
-using Assembly.Components.Pools;
+using Assembly.Components.Actors.Player;
 
 namespace Assembly.Components
 {
   public class CamctlOverride : MonoBehaviour
   {
-    PlayerPool playerPool;
+    PlayerAct player;
     [Zenject.Inject]
-    public void DepsInject(PlayerPool playerPool)
+    public void DepsInject(PlayerAct player)
     {
-      this.playerPool = playerPool;
+      this.player = player;
     }
 
     public enum OverrideMode { Temporary, Forever }
@@ -30,7 +30,7 @@ namespace Assembly.Components
           {
             if (followPlayer)
             {
-              _cmCamera.m_Follow = playerPool.player.transform;
+              _cmCamera.m_Follow = player.transform;
             }
             _cmCamera.Priority = priority;
           });
@@ -40,13 +40,13 @@ namespace Assembly.Components
           .Subscribe(other =>
           {
             _cmCamera.Priority = 0;
-            if (followPlayer && _cmCamera.m_Follow == playerPool.player.transform)
+            if (followPlayer && _cmCamera.m_Follow == player.transform)
             {
               _cmCamera.m_Follow = null;
             }
           });
 
-      playerPool.player.OnAssembleObservable
+      player.OnAssembleObservable
           .Subscribe(_ =>
           {
             _cmCamera.Priority = 0;

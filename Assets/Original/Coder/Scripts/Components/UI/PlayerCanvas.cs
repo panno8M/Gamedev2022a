@@ -3,7 +3,6 @@ using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem.Input;
 using Assembly.Components.Actors.Player;
-using Assembly.Components.Pools;
 using Utilities;
 
 namespace Assembly.Components.UI
@@ -11,15 +10,14 @@ namespace Assembly.Components.UI
   public class PlayerCanvas : MonoBehaviour
   {
     InputControl control;
-    PlayerPool playerPool;
+    PlayerAct player;
     [Zenject.Inject]
-    public void DepsInject(InputControl control, PlayerPool playerPool)
+    public void DepsInject(InputControl control, PlayerAct player)
     {
       this.control = control;
-      this.playerPool = playerPool;
+      this.player = player;
     }
 
-    PlayerAct player;
     [SerializeField] GameObject uiRightArrow;
     [SerializeField] GameObject uiLeftArrow;
     [SerializeField] GameObject uiQuestion;
@@ -32,8 +30,6 @@ namespace Assembly.Components.UI
 
     void Start()
     {
-      player = playerPool.player;
-
       posR = uiRightArrow.transform.localPosition;
       posL = uiLeftArrow.transform.localPosition;
 

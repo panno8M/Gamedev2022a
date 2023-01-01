@@ -5428,6 +5428,7 @@ GameObject:
   - component: {fileID: 6921632980762690573}
   - component: {fileID: 1855202802}
   - component: {fileID: 3112990356196485283}
+  - component: {fileID: 8146613173487752485}
   - component: {fileID: 4445889402597593005}
   - component: {fileID: 281757296479911890}
   - component: {fileID: 3218184137464799008}
@@ -5435,6 +5436,7 @@ GameObject:
   - component: {fileID: 7140775411709922365}
   - component: {fileID: 1168846669}
   - component: {fileID: 15780796179480652}
+  - component: {fileID: 1399977876492955247}
   m_Layer: 17
   m_Name: Player
   m_TagString: Untagged
@@ -5511,6 +5513,7 @@ MonoBehaviour:
   _flame: {fileID: 3218184137464799008}
   _wings: {fileID: 4445889402597593005}
   _life: {fileID: 3112990356196485283}
+  _rebirth: {fileID: 8146613173487752485}
   _behavior: {fileID: 1855202802}
   _animator: {fileID: 281757296479911890}
 --- !u!114 &8070644116307393165
@@ -5570,6 +5573,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
   _damagable: {fileID: 2142224226}
+--- !u!114 &8146613173487752485
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c112e9acebd65c45a362d0e8c09b160, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _actor: {fileID: 1855202803}
 --- !u!114 &4445889402597593005
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5688,6 +5704,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggers: []
+--- !u!114 &1399977876492955247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8353330523506930298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _components:
+  - {fileID: 1855202803}
+  _identifier: 
+  _useSceneContext: 1
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1001 &1516644082
 PrefabInstance:
   m_ObjectHideFlags: 0
