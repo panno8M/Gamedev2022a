@@ -61,7 +61,8 @@ namespace Assembly.Components.StageGimmicks
     }
     async UniTask BreakSequence()
     {
-      Debug.Log("Kandelaar Broken!");
+      await GameTime.HitStop(TimeSpan.FromMilliseconds(500));
+
       _psSmoke.Play();
       supply.enabled = false;
       _holdable.enabled = false;

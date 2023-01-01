@@ -27,6 +27,7 @@ namespace Assembly.Components.Actors
     {
       if (!_actor.phaseDisactive) { return; }
       _actor.patrol.next = baseNode.routes[0].dst;
+      _actor.LookTowards(_actor.patrol.next.transform, 360);
       _actor.ShiftStandby();
       return;
     }
