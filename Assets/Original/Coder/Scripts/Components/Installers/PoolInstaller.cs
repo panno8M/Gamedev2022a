@@ -9,6 +9,7 @@ namespace Assembly.Components.Installers
     [SerializeField] WaterBallPool waterBallPool;
     [SerializeField] BombPool bombPool;
     [SerializeField] HostileDronePool hostileDronePool;
+    [SerializeField] ObserveDronePool observeDronePool;
     [SerializeField] ParticleExplosionPool particleExplosionPool;
     [SerializeField] ParticleImpactSplashPool particleImpactSplashPool;
     public override void InstallBindings()
@@ -23,6 +24,10 @@ namespace Assembly.Components.Installers
 
       Container.Bind<HostileDronePool>()
         .FromComponentInNewPrefab(hostileDronePool)
+        .AsSingle();
+
+      Container.Bind<ObserveDronePool>()
+        .FromComponentInNewPrefab(observeDronePool)
         .AsSingle();
 
       Container.Bind<ParticleExplosionPool>()

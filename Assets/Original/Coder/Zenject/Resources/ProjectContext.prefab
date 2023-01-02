@@ -78,12 +78,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a2db76e9828976d47ab84b42b34fa92d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerPool: {fileID: 781067079, guid: c29cdb2da2f8e424d9d3cbc4a860c06d, type: 3}
   waterBallPool: {fileID: 7682026081087297902, guid: 071a566cbcae60c459c6e67db94b8fe4,
     type: 3}
   bombPool: {fileID: 1997775600735505375, guid: 0ab4c04687caf9049bbbb66575a6a926,
     type: 3}
   hostileDronePool: {fileID: 1252026305158423071, guid: 2c217ed0dd882a64bb95880090525e67,
+    type: 3}
+  observeDronePool: {fileID: 6953478231414603540, guid: 3eeede185e72f404eb90c7728cd2cbcc,
     type: 3}
   particleExplosionPool: {fileID: 2859450526720360663, guid: 460f57f8b6ca7634dac8ef5c4328d489,
     type: 3}
