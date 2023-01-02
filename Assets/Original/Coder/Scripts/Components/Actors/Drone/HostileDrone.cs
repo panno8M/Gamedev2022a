@@ -1,4 +1,5 @@
 using UnityEngine;
+using Assembly.GameSystem.PathNetwork;
 using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors

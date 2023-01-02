@@ -1,4 +1,6 @@
 using UniRx;
+using Assembly.GameSystem.PathNetwork;
+using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors
 {
@@ -7,9 +9,12 @@ namespace Assembly.Components.Actors
   {
     AlarmMgr alarmMgr;
     [Zenject.Inject]
-    public void DepsInject(AlarmMgr alarmMgr)
+    public void DepsInject(
+      AlarmMgr alarmMgr,
+      ParticleExplosionPool psExplosionPool)
     {
       this.alarmMgr = alarmMgr;
+      base.DepsInject(psExplosionPool);
     }
     protected override void Subscribe()
     {

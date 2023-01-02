@@ -6,6 +6,7 @@ using Cysharp.Threading.Tasks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.GameSystem.PathNetwork;
 using Assembly.Components.Pools;
 using Assembly.Params;
 
@@ -31,8 +32,8 @@ namespace Assembly.Components.Actors
   {
     public IDespawnable despawnable { get; set; }
     public ParticleExplosionPool psExplosionPool { get; private set; }
-    [Zenject.Inject]
-    public virtual void DepsInject(ParticleExplosionPool psExplosionPool)
+
+    protected void DepsInject(ParticleExplosionPool psExplosionPool)
     {
       this.psExplosionPool = psExplosionPool;
     }

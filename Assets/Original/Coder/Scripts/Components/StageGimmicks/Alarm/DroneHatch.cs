@@ -34,7 +34,7 @@ namespace Assembly.Components.Actors
 
     void Start()
     {
-      _droneCI.hatch = this;
+      _droneCI.baseNode = this;
       alarmMgr.IsOnAlert
         .Subscribe(b =>
         {
