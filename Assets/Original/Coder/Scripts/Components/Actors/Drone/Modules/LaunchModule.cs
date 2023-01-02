@@ -1,9 +1,6 @@
 using UnityEngine;
-using UniRx;
-using Cysharp.Threading.Tasks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.PathNetwork;
-
 
 namespace Assembly.Components.Actors
 {
@@ -11,17 +8,8 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] public PathNode baseNode;
     [SerializeField] protected DroneAct _actor;
-    [SerializeField] bool launchOnAssemble;
 
-    protected override void Blueprint()
-    {
-      _actor.OnAssemble.Subscribe(_ =>
-        {
-          if (launchOnAssemble)
-          { Launch(); }
-        }).AddTo(this);
-    }
-
+    protected override void Blueprint() { }
 
     public void Launch()
     {

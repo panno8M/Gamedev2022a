@@ -7,7 +7,6 @@ namespace Assembly.Components.Pools
 {
   public class ObserveDronePool : GameObjectPool<ObserveDrone>
   {
-    [System.Serializable]
     public class CreateInfo : ObjectCreateInfo<ObserveDrone>
     {
       public PathNode baseNode;

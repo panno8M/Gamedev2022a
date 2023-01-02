@@ -1,5 +1,4 @@
 using UniRx;
-using Assembly.GameSystem.PathNetwork;
 using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors
@@ -21,8 +20,7 @@ namespace Assembly.Components.Actors
       base.Subscribe();
       aim.Target
         .Where(_ => alarmMgr)
-        .Select(target => target != null)
-        .Subscribe(alarmMgr.SwitchAlarm)
+        .Subscribe(target => alarmMgr.SwitchAlarm(target))
         .AddTo(this);
     }
   }

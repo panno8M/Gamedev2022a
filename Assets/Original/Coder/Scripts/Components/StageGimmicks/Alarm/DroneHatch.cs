@@ -1,58 +1,49 @@
+using System;
+using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.PathNetwork;
 using Assembly.GameSystem.ObjectPool;
-using Assembly.Components.Pools;
 
 namespace Assembly.Components.Actors
 {
-  public class DroneHatch : PathNode
+  public abstract class DroneHatch<T> : PathNode
+    where T : DroneAct
   {
-    AlarmMgr alarmMgr;
-    HostileDronePool hostileDronePool;
-    [Zenject.Inject]
-    public void DepsInject(
-      AlarmMgr alarmMgr,
-      HostileDronePool hostileDronePool,
-      WaterBallPool waterBallPool,
-      ParticleExplosionPool psExplosionPool,
-      ParticleImpactSplashPool psImpactSplashPool)
+    protected IObjectPool<T> pool;
+
+    public T drone;
+
+    public enum LifetimeKind { Scene, Alarm }
+    [SerializeField] ReactiveProperty<LifetimeKind> _Lifetime = new ReactiveProperty<LifetimeKind>();
+    public IObservable<LifetimeKind> Lifetime => _Lifetime;
+    public LifetimeKind lifetime
     {
-      this.alarmMgr = alarmMgr;
-      this.hostileDronePool = hostileDronePool;
-      _droneCI.waterBallPool = waterBallPool;
-      _droneCI.psExplosionPool = psExplosionPool;
-      _droneCI.psImpactSplashPool = psImpactSplashPool;
+      get => _Lifetime.Value;
+      set => _Lifetime.Value = value;
     }
+    protected AlarmMgr alarmMgr;
 
-    HostileDronePool.CreateInfo _droneCI = new HostileDronePool.CreateInfo
+    protected void Subscribe()
     {
-      transformUsage = new TransformUsage { },
-      transformInfo = new TransformInfo { },
-    };
+      Lifetime.Where(lt => lt == LifetimeKind.Scene)
+        .Subscribe(_ => Launch());
 
-    public HostileDrone drone;
-
-    void Start()
-    {
-      _droneCI.baseNode = this;
       alarmMgr.IsOnAlert
+        .Where(_ => lifetime == LifetimeKind.Alarm)
         .Subscribe(b =>
         {
-          if (b)
-          {
-            if (drone) { return; }
-            _droneCI.transformInfo.position = transform.position;
-            drone = hostileDronePool.Spawn(_droneCI);
-            drone.launcher.Launch();
-          }
-          else
-          {
-            if (!drone) { return; }
-            drone.launcher.Collect();
-            drone.despawnable.Despawn();
-            drone = null;
-          }
+          if (b) { Launch(); }
+          else { Collect(); }
         });
+    }
+
+    protected abstract void Launch();
+    protected void Collect()
+    {
+      if (!drone) { return; }
+      drone.launcher.Collect();
+      drone.despawnable.Despawn();
+      drone = null;
     }
   }
 }

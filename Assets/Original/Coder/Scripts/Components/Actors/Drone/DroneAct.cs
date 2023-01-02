@@ -6,7 +6,6 @@ using Cysharp.Threading.Tasks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.GameSystem.ObjectPool;
-using Assembly.GameSystem.PathNetwork;
 using Assembly.Components.Pools;
 using Assembly.Params;
 
