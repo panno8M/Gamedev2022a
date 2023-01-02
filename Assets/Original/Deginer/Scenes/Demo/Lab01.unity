@@ -862,7 +862,7 @@ PrefabInstance:
     - target: {fileID: 9194512790380227558, guid: b91bf1f830a0ecc42986fa8ac7ccee29,
         type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b91bf1f830a0ecc42986fa8ac7ccee29, type: 3}
@@ -2528,9 +2528,49 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
         type: 3}
+      propertyPath: schedule.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
       propertyPath: routes.Array.data[0].dst
       value: 
       objectReference: {fileID: 243226487}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[0]._lifetime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[1]._lifetime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[1].delayMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[1].msecDelay
+      value: 2000
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[2]._lifetime
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[2].delayMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 9021651978431922920, guid: 32c87d83b5ed636449c05415ed53783c,
+        type: 3}
+      propertyPath: schedule.Array.data[2].msecDelay
+      value: 2000
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 32c87d83b5ed636449c05415ed53783c, type: 3}
 --- !u!1001 &1775073643

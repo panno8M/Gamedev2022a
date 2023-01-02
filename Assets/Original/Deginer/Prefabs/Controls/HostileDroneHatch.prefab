@@ -45,6 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   routes: []
-  drone: {fileID: 0}
-  _Lifetime:
-    value: 0
+  schedule:
+  - _lifetime: 0
+    msecDelay: 0

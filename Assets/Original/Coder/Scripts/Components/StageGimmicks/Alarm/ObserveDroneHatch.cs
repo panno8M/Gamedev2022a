@@ -1,7 +1,8 @@
 using Assembly.GameSystem.ObjectPool;
 using Assembly.Components.Pools;
+using Assembly.Components.Actors;
 
-namespace Assembly.Components.Actors
+namespace Assembly.Components.StageGimmicks
 {
   public class ObserveDroneHatch : DroneHatch<ObserveDrone>
   {
@@ -29,12 +30,12 @@ namespace Assembly.Components.Actors
 
       Subscribe();
     }
-    protected override void Launch()
+    protected override ObserveDrone Launch()
     {
-      if (drone) { return; }
       _droneCI.transformInfo.position = transform.position;
-      drone = pool.Spawn(_droneCI);
-      drone.launcher.Launch();
+      ObserveDrone result = pool.Spawn(_droneCI);
+      result.launcher.Launch();
+      return result;
     }
   }
 }
