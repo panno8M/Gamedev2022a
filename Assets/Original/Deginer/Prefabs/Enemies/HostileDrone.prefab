@@ -221,7 +221,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _phase:
-    value: 0
+    _previous: 0
+    _current: 0
   psBurnUp: {fileID: 1176009663848111660}
   param: {fileID: 11400000, guid: ade9deabc9df18247b1040ceaa53f330, type: 2}
   launcher: {fileID: 4220097943033955267}
@@ -282,7 +283,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseNode: {fileID: 0}
   _actor: {fileID: 1210545985916033635}
-  launchOnAssemble: 0
 --- !u!114 &5798258383893932439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,7 +325,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1210545985916033635}
-  next: {fileID: 0}
 --- !u!114 &9119622892683133504
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -407,7 +406,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &1506019995565370137
 MonoBehaviour:
@@ -423,7 +422,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseNode: {fileID: 0}
   _actor: {fileID: 1210545985916033635}
-  launchOnAssemble: 0
 --- !u!1 &1210545986345958735
 GameObject:
   m_ObjectHideFlags: 0

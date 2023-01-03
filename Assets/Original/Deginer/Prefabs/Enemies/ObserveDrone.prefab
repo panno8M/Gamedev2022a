@@ -602,10 +602,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fec872fcf31ac344bd640b8b26679ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  psExplosionPool: {fileID: 0}
   _phase:
-    value: 0
-  _gravity: -3
+    _previous: 0
+    _current: 0
   psBurnUp: {fileID: 4640317560797117958}
   param: {fileID: 11400000, guid: 371a8af886cd1584c90ecba7d9163109, type: 2}
   launcher: {fileID: 4629212793357953519}
@@ -665,7 +664,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseNode: {fileID: 0}
   _actor: {fileID: 8086046639631021109}
-  launchOnAssemble: 1
 --- !u!114 &8086046639631021107
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -721,7 +719,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 120
   m_CollisionDetection: 0
 --- !u!114 &8647019607246088378
 MonoBehaviour:
@@ -749,7 +747,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 8086046639631021109}
-  next: {fileID: 0}
 --- !u!114 &4872073978321717930
 MonoBehaviour:
   m_ObjectHideFlags: 0
