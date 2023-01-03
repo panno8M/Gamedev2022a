@@ -6,6 +6,10 @@ namespace Assembly.Components
 {
   public class Rollback : MonoBehaviour
   {
+    public void Preflight(IRollbackDispatcher dispatcher)
+    {
+      _Preflight.OnNext(dispatcher);
+    }
     public void Execute(IRollbackDispatcher dispatcher)
     {
       _Executtion.OnNext(dispatcher);
@@ -15,6 +19,9 @@ namespace Assembly.Components
     {
       _Transaction.OnNext(dispatcher);
     }
+
+    Subject<IRollbackDispatcher> _Preflight = new Subject<IRollbackDispatcher>();
+    public IObservable<IRollbackDispatcher> OnPreflight => _Preflight;
 
     Subject<IRollbackDispatcher> _Executtion = new Subject<IRollbackDispatcher>();
     public IObservable<IRollbackDispatcher> OnExecute => _Executtion;

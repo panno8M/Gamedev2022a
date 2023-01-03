@@ -75,14 +75,15 @@ namespace Assembly.Components.StageGimmicks
       await UniTask.Delay(1000);
       await RollbackSequence();
     }
-    UniTask RollbackSequence()
+    async UniTask RollbackSequence()
     {
       _damagable.Repair();
       transform.position = _defaultPosition;
       supply.enabled = true;
       _holdable.enabled = true;
+      rollback.Preflight(this);
+      await UniTask.Delay(1000);
       rollback.Execute(this);
-      return UniTask.CompletedTask;
     }
   }
 }

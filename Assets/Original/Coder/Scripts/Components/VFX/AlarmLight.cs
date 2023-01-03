@@ -2,6 +2,7 @@ using UnityEngine;
 using Utilities;
 using UniRx;
 using Assembly.GameSystem;
+using Assembly.Components.StageGimmicks;
 
 public class AlarmLight : DiBehavior
 {

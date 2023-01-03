@@ -1,5 +1,6 @@
 using UnityEngine;
 using Zenject;
+using Assembly.Components.StageGimmicks;
 
 namespace Assembly.Components.Installers
 {

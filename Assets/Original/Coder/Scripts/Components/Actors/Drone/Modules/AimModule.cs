@@ -97,30 +97,41 @@ namespace Assembly.Components.Actors
           }
         });
 
-      _actor.ActivateSwitch(targets: this,
+      _actor.phase.ActivateSwitch(targets: this,
         cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Attention | DronePhase.Standby);
+
+
+      _actor.BehaviorUpdate(this)
+        .Where(_actor.phase.IsAttension)
+        .Subscribe(_ =>
+        {
+          _actor.MoveObjective(Vector3.zero);
+          if (target || !sight.inSight)
+          { _actor.phase.ShiftStandby(); }
+        });
 
       _actor.CameraUpdate(this)
         .Subscribe(_ =>
           {
-            if (_actor.phase == DronePhase.Hostile && target)
+            switch (_actor.phase.current)
             {
-              followSettings.Process(
-                transform: sightTransform,
-                target: target.center);
-            }
-            if (_actor.phase == DronePhase.Attention && sight.inSight)
-            {
-              followSettings.Process(
-                transform: sightTransform,
-                target: sight.inSight.center);
-
-            }
-            if (_actor.phase == DronePhase.Patrol)
-            {
-              swipeSettings.Process(
-                transform: sightTransform,
-                standard: _actor.transform);
+              case DronePhase.Hostile:
+                if (!target) { break; }
+                followSettings.Process(
+                  transform: sightTransform,
+                  target: target.center);
+                break;
+              case DronePhase.Attention:
+                if (!sight.inSight) { break; }
+                followSettings.Process(
+                  transform: sightTransform,
+                  target: sight.inSight.center);
+                break;
+              case DronePhase.Patrol:
+                swipeSettings.Process(
+                  transform: sightTransform,
+                  standard: _actor.transform);
+                break;
             }
           });
     }

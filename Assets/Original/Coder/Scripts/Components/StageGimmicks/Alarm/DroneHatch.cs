@@ -10,8 +10,18 @@ namespace Assembly.Components.StageGimmicks
     where T : DroneAct
   {
     protected IObjectPool<T> pool;
-
     protected AlarmMgr alarmMgr;
+    protected Rollback rollback;
+    protected void DepsInject(
+      IObjectPool<T> pool,
+      AlarmMgr alarmMgr,
+      Rollback rollback)
+    {
+      this.pool = pool;
+      this.alarmMgr = alarmMgr;
+      this.rollback = rollback;
+    }
+
 
     [UnityEngine.SerializeField]
     protected LaunchSchedule[] schedule;
@@ -21,6 +31,17 @@ namespace Assembly.Components.StageGimmicks
     {
       drone = new T[schedule.Length];
       LaunchAll(LaunchSchedule.LifetimeKind.Scene);
+
+      rollback.OnPreflight
+        .Subscribe(_ =>
+        {
+          CollectAll(LaunchSchedule.LifetimeKind.Scene);
+        });
+      rollback.OnExecute
+        .Subscribe(_ =>
+        {
+          LaunchAll(LaunchSchedule.LifetimeKind.Scene);
+        });
 
       alarmMgr.IsOnAlert
         .Subscribe(b =>
@@ -39,7 +60,8 @@ namespace Assembly.Components.StageGimmicks
       else
       {
         Observable.Timer(TimeSpan.FromMilliseconds(msecDelay))
-          .Subscribe(_ => drone[index] = Launch());
+          .Subscribe(_ => drone[index] = Launch())
+          .AddTo(this);
       }
     }
     public void Collect(int index)

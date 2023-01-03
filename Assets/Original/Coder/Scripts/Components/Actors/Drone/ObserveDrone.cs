@@ -1,5 +1,6 @@
 using UniRx;
 using Assembly.Components.Pools;
+using Assembly.Components.StageGimmicks;
 
 namespace Assembly.Components.Actors
 {

@@ -11,18 +11,6 @@ using Assembly.Params;
 
 namespace Assembly.Components.Actors
 {
-  [Flags]
-  public enum DronePhase
-  {
-    Disactive = 0,
-    Standby = 1 << 0,
-    Dead = 1 << 1,
-
-    Launch = 1 << 2,
-    Patrol = 1 << 3,
-    Hostile = 1 << 4,
-    Attention = 1 << 5,
-  }
   [RequireComponent(typeof(FollowObjectModule))]
   [RequireComponent(typeof(PatrolPathModule))]
   [RequireComponent(typeof(LaunchModule))]
@@ -41,8 +29,6 @@ namespace Assembly.Components.Actors
     Subject<Unit> _CameraUpdate = new Subject<Unit>();
     Subject<Unit> _OnAssemble = new Subject<Unit>();
 
-    DronePhase _previousPhase;
-
     Vector3 subjectiveMoveDelta;
     Vector3 objectiveMoveDelta;
     bool subjectiveMoveDeltaChanged;
@@ -58,7 +44,7 @@ namespace Assembly.Components.Actors
       transformInfo = new TransformInfo { },
     };
 
-    [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
+    [SerializeField] DronePhaseUnit _phase = new DronePhaseUnit();
     [SerializeField] ParticleSystem psBurnUp;
 
     public DroneParam param;
@@ -69,39 +55,13 @@ namespace Assembly.Components.Actors
     public ReactionModule reaction;
     public DamagableComponent damagable;
 
-    public IObservable<DronePhase> OnPhaseChanged => _phase;
-    public DronePhase previousPhase => _previousPhase;
-
     public IObservable<Unit> BehaviorUpdate(Behaviour x) => _BehaviorUpdate.Where(_ => x.enabled);
     public IObservable<Unit> CameraUpdate(Behaviour x) => _CameraUpdate.Where(_ => x.enabled);
     public IObservable<Unit> OnAssemble => _OnAssemble;
 
     public float sqrDistance(Transform target) => (target.position - transform.position).sqrMagnitude;
 
-    public DronePhase phase
-    {
-      get { return _phase.Value; }
-      private set
-      {
-        _previousPhase = _phase.Value;
-        _phase.Value = value;
-      }
-    }
-    public void ShiftStandby() { phase = DronePhase.Standby; }
-    public void ShiftDisactive() { phase = DronePhase.Disactive; }
-    public void ShiftLaunch() { phase = DronePhase.Launch; }
-    public void ShiftPatrol() { phase = DronePhase.Patrol; }
-    public void ShiftHostile() { phase = DronePhase.Hostile; }
-    public void ShiftAttention() { phase = DronePhase.Attention; }
-
-
-    public bool phaseDisactive => phase == DronePhase.Disactive;
-    /// <summary>
-    /// DronePhase.Disactive | DronePhase.Dead
-    /// </summary>
-    /// <returns></returns>
-    public bool phaseSilence => (phase & (DronePhase.Disactive | DronePhase.Dead)) != 0;
-
+    public DronePhaseUnit phase => _phase;
     public void MoveSubjective(Vector3 delta)
     {
       subjectiveMoveDelta += delta;
@@ -138,35 +98,17 @@ namespace Assembly.Components.Actors
       return LookTowards(target, param.settings.rotateSpeed);
     }
 
-    public IObservable<DronePhase> OnPhaseEnter(DronePhase phase)
-    {
-      return OnPhaseChanged.Where(x => phase.HasFlag(x));
-    }
-    public IObservable<DronePhase> OnPhaseExit(DronePhase phase)
-    {
-      return OnPhaseChanged.Where(x => phase.HasFlag(previousPhase));
-    }
-
-    public void ActivateSwitch(DronePhase cond, params Behaviour[] targets)
-    {
-      OnPhaseChanged
-        .Subscribe(newPhase =>
-        {
-          bool b = (newPhase & cond) != 0;
-          for (int i = 0; i < targets.Length; i++)
-            if (targets[i])
-            { targets[i].enabled = b; }
-        });
-    }
 
     void Start() { Initialize(); }
     public void Assemble()
     {
+      rigidbody.isKinematic = false;
       _OnAssemble.OnNext(Unit.Default);
     }
     public void Disassemble()
     {
-      ShiftDisactive();
+      rigidbody.isKinematic = true;
+      phase.ShiftSleep();
     }
 
     protected virtual void Prepare()
@@ -193,27 +135,19 @@ namespace Assembly.Components.Actors
       damagable.OnBroken.Subscribe(_ => OnDead().Forget()).AddTo(this);
 
       BehaviorUpdate(this)
-        .Where(_ => phase == DronePhase.Dead)
+        .Where(phase.IsDead)
         .Subscribe(_ => rigidbody.AddForce(param.settings.gravity, ForceMode.Acceleration));
 
       BehaviorUpdate(this)
-        .Where(_ => phase == DronePhase.Attention)
-        .Subscribe(_ =>
-        {
-          MoveObjective(Vector3.zero);
-          if (aim.target || !aim.sight.inSight)
-          { ShiftStandby(); }
-        });
-
-      OnPhaseEnter(DronePhase.Standby)
+        .Where(phase.IsStandby)
         .Subscribe(_ =>
         {
           if (aim.target)
-          { ShiftHostile(); }
+          { phase.ShiftHostile(); }
           else if (aim.sight.inSight)
-          { ShiftAttention(); }
+          { phase.ShiftAttention(); }
           else if (patrol.next)
-          { ShiftPatrol(); }
+          { phase.ShiftPatrol(); }
         });
     }
 
@@ -242,11 +176,10 @@ namespace Assembly.Components.Actors
     async UniTask OnDead()
     {
       psBurnUp.Play();
-      phase = DronePhase.Dead;
+      phase.ShiftDead();
       await UniTask.Delay(1500);
       psExplosionPool.Spawn(_psExplCI,
         timeToDespawn: TimeSpan.FromSeconds(3));
-      ShiftDisactive();
       despawnable.Despawn();
     }
   }

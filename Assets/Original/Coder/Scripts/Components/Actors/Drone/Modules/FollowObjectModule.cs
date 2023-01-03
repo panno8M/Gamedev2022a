@@ -10,13 +10,13 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
-      _actor.ActivateSwitch(targets: this,
+      _actor.phase.ActivateSwitch(targets: this,
         cond: DronePhase.Hostile);
 
       _actor.aim.Target
         .Where(_ => isActiveAndEnabled)
         .Where(target => !target)
-        .Subscribe(_ => _actor.ShiftStandby());
+        .Subscribe(_actor.phase.ShiftStandby);
 
       _actor.BehaviorUpdate(this)
         .Where(_ => _actor.aim.target)

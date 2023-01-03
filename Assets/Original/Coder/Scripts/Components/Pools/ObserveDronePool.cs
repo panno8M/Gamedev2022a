@@ -2,6 +2,7 @@ using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.PathNetwork;
 using Assembly.Components.Actors;
+using Assembly.Components.StageGimmicks;
 
 namespace Assembly.Components.Pools
 {

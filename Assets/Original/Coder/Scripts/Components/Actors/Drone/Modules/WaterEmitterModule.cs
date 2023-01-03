@@ -41,7 +41,7 @@ namespace Assembly.Components.Actors
 
       _waterBallCI.transformInfo.reference = emitterTransform;
 
-      _actor.ActivateSwitch(targets: this,
+      _actor.phase.ActivateSwitch(targets: this,
         cond: DronePhase.Hostile);
 
       _actor.CameraUpdate(this)

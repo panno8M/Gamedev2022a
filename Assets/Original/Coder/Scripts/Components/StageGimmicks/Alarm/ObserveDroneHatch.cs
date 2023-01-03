@@ -8,12 +8,15 @@ namespace Assembly.Components.StageGimmicks
   {
     [Zenject.Inject]
     public void DepsInject(
-      AlarmMgr alarmMgr,
       ObserveDronePool observeDronePool,
+      AlarmMgr alarmMgr,
+      Rollback rollback,
       ParticleExplosionPool psExplosionPool)
     {
-      this.alarmMgr = alarmMgr;
-      this.pool = observeDronePool;
+      base.DepsInject(
+        pool: observeDronePool,
+        alarmMgr: alarmMgr,
+        rollback: rollback);
       _droneCI.psExplosionPool = psExplosionPool;
       _droneCI.alarmMgr = alarmMgr;
     }
