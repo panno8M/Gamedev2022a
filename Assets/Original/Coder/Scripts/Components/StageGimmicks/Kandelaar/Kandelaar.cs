@@ -2,16 +2,23 @@ using System;
 using UniRx;
 using UnityEngine;
 using Assembly.GameSystem;
-using Assembly.GameSystem.Message;
 using Assembly.GameSystem.Damage;
 using Cysharp.Threading.Tasks;
 
 namespace Assembly.Components.StageGimmicks
 {
-  public class Kandelaar : DiBehavior
+  public class Kandelaar : DiBehavior, IRollbackDispatcher
   {
+    UI.SimpleFader fader;
+    [SerializeField]
+    Rollback rollback;
+    [Zenject.Inject]
+    public void DepsInject(UI.SimpleFader fader, Rollback rollback)
+    {
+      this.fader = fader;
+      if (!this.rollback) { this.rollback = rollback; }
+    }
     Vector3 _defaultPosition;
-    [SerializeField] MessageDispatcher _OnRollback = new MessageDispatcher(MessageKind.Invoke);
     [SerializeField] Holdable _holdable;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
@@ -55,40 +62,28 @@ namespace Assembly.Components.StageGimmicks
     }
     async UniTask BreakSequence()
     {
-      Debug.Log("Kandelaar Broken!");
+      await GameTime.HitStop(TimeSpan.FromMilliseconds(500));
+
       _psSmoke.Play();
       supply.enabled = false;
       _holdable.enabled = false;
       await UniTask.Delay(1000);
       _psSmoke.Stop();
-      UI.SimpleFader.Instance.progress.secDuration = 1f;
-      UI.SimpleFader.Instance.progress.SetAsIncrease();
+
+      fader.Rollback().Forget();
 
       await UniTask.Delay(1000);
-
       await RollbackSequence();
-
-      await UniTask.Delay(1000);
-
-      UI.SimpleFader.Instance.progress.SetAsDecrease();
-      await UniTask.Delay(1000);
-
-      UI.SimpleFader.Instance.progress.secDuration = .3f;
-      UI.SimpleFader.Instance.progress.SetAsIncrease();
-      await UniTask.Delay(300);
-      UI.SimpleFader.Instance.progress.SetAsDecrease();
-      await UniTask.Delay(300);
-
-
     }
-    UniTask RollbackSequence()
+    async UniTask RollbackSequence()
     {
       _damagable.Repair();
       transform.position = _defaultPosition;
       supply.enabled = true;
       _holdable.enabled = true;
-      _OnRollback.Dispatch();
-      return UniTask.CompletedTask;
+      rollback.Preflight(this);
+      await UniTask.Delay(1000);
+      rollback.Execute(this);
     }
   }
 }

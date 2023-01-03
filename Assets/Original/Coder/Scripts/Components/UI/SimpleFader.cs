@@ -1,12 +1,12 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
+using Cysharp.Threading.Tasks;
 using Utilities;
 using Assembly.GameSystem;
 
 namespace Assembly.Components.UI
 {
-  public class SimpleFader : UniqueBehaviour<SimpleFader>
+  public class SimpleFader : DiBehavior
   {
     public EzLerp progress = new EzLerp(1);
     public CanvasGroup canvasGroup;
@@ -26,6 +26,37 @@ namespace Assembly.Components.UI
             canvasGroup.alpha = progress.UpdFactor();
           }
         }).AddTo(this);
+    }
+
+    public async UniTask Rollback()
+    {
+      progress.secDuration = 1f;
+      progress.SetAsIncrease();
+
+      await UniTask.Delay(2000);
+
+      progress.SetAsDecrease();
+
+      await UniTask.Delay(1000);
+
+      progress.secDuration = .3f;
+      progress.SetAsIncrease();
+
+      await UniTask.Delay(300);
+
+      progress.SetAsDecrease();
+
+      await UniTask.Delay(300);
+    }
+
+    public async UniTask Fade()
+    {
+      progress.secDuration = 0.5f;
+      progress.SetAsIncrease();
+
+      await UniTask.Delay(1500);
+
+      progress.SetAsDecrease();
     }
   }
 }

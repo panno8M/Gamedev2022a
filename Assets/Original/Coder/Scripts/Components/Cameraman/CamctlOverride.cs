@@ -3,11 +3,19 @@ using UniRx;
 using UniRx.Triggers;
 using Cinemachine;
 using Assembly.GameSystem;
+using Assembly.Components.Actors.Player;
 
 namespace Assembly.Components
 {
   public class CamctlOverride : MonoBehaviour
   {
+    PlayerAct player;
+    [Zenject.Inject]
+    public void DepsInject(PlayerAct player)
+    {
+      this.player = player;
+    }
+
     public enum OverrideMode { Temporary, Forever }
     [SerializeField] CinemachineVirtualCamera _cmCamera;
     [SerializeField] OverrideMode _overrideMode;
@@ -22,7 +30,7 @@ namespace Assembly.Components
           {
             if (followPlayer)
             {
-              _cmCamera.m_Follow = Global.Player.transform;
+              _cmCamera.m_Follow = player.transform;
             }
             _cmCamera.Priority = priority;
           });
@@ -32,13 +40,13 @@ namespace Assembly.Components
           .Subscribe(other =>
           {
             _cmCamera.Priority = 0;
-            if (followPlayer && _cmCamera.m_Follow == Global.Player.transform)
+            if (followPlayer && _cmCamera.m_Follow == player.transform)
             {
               _cmCamera.m_Follow = null;
             }
           });
 
-      Global.Player.OnAssembleObservable
+      player.OnAssembleObservable
           .Subscribe(_ =>
           {
             _cmCamera.Priority = 0;

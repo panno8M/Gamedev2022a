@@ -1,11 +1,18 @@
-using System;
 using UnityEngine;
-using Utilities;
+using UniRx;
 
 namespace Assembly.Components.Actors.Player
 {
   public class PlayerAct : ActorCore<PlayerAct>
   {
+    [UnityEngine.SerializeField]
+    Rollback rollback;
+    [Zenject.Inject]
+    public void DepsInject(Rollback rollback)
+    {
+      this.rollback = rollback;
+    }
+
 
     #region modules
     [SerializeField] PlayerController _ctl;
@@ -15,6 +22,7 @@ namespace Assembly.Components.Actors.Player
     [SerializeField] PlayerFlameReceptor _flame;
     [SerializeField] PlayerWings _wings;
     [SerializeField] PlayerLife _life;
+    [SerializeField] PlayerRebirth _rebirth;
     [SerializeField] PlayerBehavior _behavior;
     [SerializeField] PlayerAnimator _animator;
 
@@ -25,9 +33,17 @@ namespace Assembly.Components.Actors.Player
     internal PlayerFlameReceptor flame => _flame;
     internal PlayerWings wings => _wings;
     internal PlayerLife life => _life;
+    internal PlayerRebirth rebirth => _rebirth;
     internal PlayerBehavior behavior => _behavior;
     internal PlayerAnimator animator => _animator;
     #endregion
+
+
+    void Awake()
+    {
+      Initialize();
+      rebirth.Spawn();
+    }
 
     protected override void OnAssemble()
     {
@@ -39,6 +55,7 @@ namespace Assembly.Components.Actors.Player
       ctl.Initialize();
       physics.Initialize();
       life.Initialize();
+      rebirth.Initialize();
       flame.Initialize();
 
       hand.Initialize();
@@ -46,6 +63,8 @@ namespace Assembly.Components.Actors.Player
       wings.Initialize();
       behavior.Initialize();
       animator.Initialize();
+
+      rollback.OnExecute.Subscribe(_ => rebirth.Respawn());
     }
 
   }

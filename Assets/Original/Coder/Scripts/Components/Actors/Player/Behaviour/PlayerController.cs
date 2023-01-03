@@ -1,11 +1,19 @@
 using System;
 using UniRx;
 using Utilities;
+using Assembly.GameSystem.Input;
 
 namespace Assembly.Components.Actors.Player
 {
   public class PlayerController : ActorBehavior<PlayerAct>
   {
+    InputControl control;
+    [Zenject.Inject]
+    public void DepsInject(InputControl control)
+    {
+      this.control = control;
+    }
+
     public enum Methods { AllOperable, IgnoreAll }
     ReactiveProperty<Methods> ControlMethod = new ReactiveProperty<Methods>();
     public bool isAllOperable => ControlMethod.Value == Methods.AllOperable && isActiveAndEnabled;
@@ -22,6 +30,16 @@ namespace Assembly.Components.Actors.Player
     public IObservable<Unit> Interact => _Interact;
     Subject<Unit> _Respawn = new Subject<Unit>();
     public IObservable<Unit> Respawn => _Respawn;
+    Subject<Unit> _BreathPress = new Subject<Unit>();
+    public IObservable<Unit> BreathPress => _BreathPress;
+
+    ReactiveProperty<UnityEngine.Vector3> _MousePosStage = new ReactiveProperty<UnityEngine.Vector3>();
+    public IObservable<UnityEngine.Vector3> MousePosStage => _MousePosStage;
+    public UnityEngine.Vector3 mousePosStage
+    {
+      get => _MousePosStage.Value;
+      private set => _MousePosStage.Value = value;
+    }
 
     ReactiveProperty<float> _Horizontal = new ReactiveProperty<float>(0);
     public IObservable<float> Horizontal => _Horizontal;
@@ -63,25 +81,36 @@ namespace Assembly.Components.Actors.Player
 
     protected override void Blueprint()
     {
-      Global.Control.GoUp
+      control.GoUp
         .Where(_ => isAllOperable)
         .Multicast(_Up)
         .Connect()
         .AddTo(this);
 
-      Global.Control.Interact
+      control.Interact
         .Where(_ => isAllOperable)
         .Multicast(_Interact)
         .Connect()
         .AddTo(this);
 
-      Global.Control.Respawn
+      control.Respawn
         .Where(_ => isAllOperable)
         .Multicast(_Respawn)
         .Connect()
         .AddTo(this);
 
-      Global.Control.HorizontalMoveInput
+      control.BreathPress
+        .Where(_ => isAllOperable)
+        .Multicast(_BreathPress)
+        .Connect()
+        .AddTo(this);
+
+      control.MousePosStage
+        .Where(_ => isAllOperable)
+        .Subscribe(pos => mousePosStage = pos)
+        .AddTo(this);
+
+      control.HorizontalMoveInput
         .Where(_ => isAllOperable)
         .Subscribe(hmi => horizontal = hmi)
         .AddTo(this);

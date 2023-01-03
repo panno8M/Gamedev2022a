@@ -1,16 +1,13 @@
-using UnityEngine;
-
 namespace Assembly.GameSystem.ObjectPool
 {
-  public class ObjectCreateInfo
+  public abstract class ObjectCreateInfo<T> : IInfuser<T>
+    where T : DiBehavior, IPoolCollectable
   {
-    static readonly ObjectCreateInfo _none = new ObjectCreateInfo();
-    public static ObjectCreateInfo None => _none;
-
-    public Vector3 position;
-    public Quaternion rotation = Quaternion.identity;
-    public Transform parent;
-    public Transform offset;
-    public object userData;
+    public TransformUsage transformUsage = new TransformUsage { };
+    public TransformInfo transformInfo = new TransformInfo { };
+    public virtual void Infuse(T instance)
+    {
+      transformInfo.Infuse(instance.transform, transformUsage);
+    }
   }
 }

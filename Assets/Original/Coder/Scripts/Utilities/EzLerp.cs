@@ -22,24 +22,30 @@ namespace Utilities
 
     float latestCallTime;
 
+    public float localTimeScale = 1f;
     public bool useCurve;
     public AnimationCurve curve;
 
     float _curvedAplha;
-    bool _needsCalc = true;
-    public bool needsCalc => _needsCalc;
-    public bool NeedsCalc<T>(T t) => _needsCalc;
+    ReactiveProperty<bool> _needsCalc = new ReactiveProperty<bool>(true);
+    public bool needsCalc
+    {
+      get { return _needsCalc.Value; }
+      private set { _needsCalc.Value = value; }
+    }
+    public IObservable<bool> NeedsCalc => _needsCalc;
+    public bool isNeedsCalc<T>(T t) => needsCalc;
 
     public float alpha => useCurve ? _curvedAplha : _factor;
     public override float UpdFactor()
     {
       if (latestCallTime == 0) { latestCallTime = Time.time; return 0; }
 
-      var delta = Time.time - latestCallTime;
+      var delta = (Time.time - latestCallTime) * localTimeScale;
       if (delta < 0.001) { return alpha; }
       latestCallTime = Time.time;
 
-      if (!_needsCalc) { return alpha; }
+      if (!needsCalc) { return alpha; }
 
       SetFactor(_factor + (float)mode * delta / secDuration);
 
@@ -48,7 +54,7 @@ namespace Utilities
     public override void SetFactor(float value)
     {
       base.SetFactor(value);
-      _needsCalc = ((isDecreasing && 0 < _factor) || (isIncreasing && _factor < 1));
+      needsCalc = ((isDecreasing && 0 < _factor) || (isIncreasing && _factor < 1));
       if (useCurve)
       {
         _curvedAplha = curve.Evaluate(_factor);
@@ -58,13 +64,13 @@ namespace Utilities
     {
       _factor = 0;
       if (useCurve) { _curvedAplha = curve.Evaluate(0); }
-      _needsCalc = isIncreasing;
+      needsCalc = isIncreasing;
     }
     public override void SetFactor1()
     {
       _factor = 1;
       if (useCurve) { _curvedAplha = curve.Evaluate(1); }
-      _needsCalc = isDecreasing;
+      needsCalc = isDecreasing;
     }
 
     [SerializeField] public float secDuration;
@@ -75,7 +81,7 @@ namespace Utilities
       get { return _mode.Value; }
       set
       {
-        _needsCalc = true;
+        needsCalc = true;
         if (mode != value && latestCallTime != 0)
         {
           latestCallTime = Time.time;
@@ -97,11 +103,17 @@ namespace Utilities
 
     public float elapsedSeconds => alpha * secDuration;
 
-    public void SetAsIncrease(bool b)
+    public void SetMode(bool increase)
     {
-      mode = b ? Mode.Increase : Mode.Decrease;
+      mode = increase ? Mode.Increase : Mode.Decrease;
     }
     public void SetAsIncrease() { mode = Mode.Increase; }
     public void SetAsDecrease() { mode = Mode.Decrease; }
+    public void FlipMode() { mode = (Mode)(-(int)mode); }
+
+    public void SetAsIncrease<T>(T t) { SetAsIncrease(); }
+    public void SetAsDecrease<T>(T t) { SetAsDecrease(); }
+    public void FlipMode<T>(T t) { FlipMode(); }
+
   }
 }

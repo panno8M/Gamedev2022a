@@ -1,12 +1,19 @@
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.Damage;
-using Assembly.Components.Pools;
+using Assembly.Components.Actors.Player;
 
 namespace Assembly.Components.StageGimmicks
 {
   public class Campfire : MonoBehaviour, ISpawnSpot
   {
+    PlayerAct player;
+    [Zenject.Inject]
+    public void DepsInject(PlayerAct player)
+    {
+      this.player = player;
+    }
+
     [SerializeField] DamagableComponent damagable;
     [SerializeField] ParticleSystem psBurnUp;
 
@@ -14,7 +21,7 @@ namespace Assembly.Components.StageGimmicks
     {
       damagable.OnBroken.Subscribe(_ =>
       {
-        Pool.player.activeSpot = this;
+        player.rebirth.activeSpot = this;
       });
     }
     public Vector3 spawnPosition => transform.position;

@@ -6,93 +6,62 @@ using Cysharp.Threading.Tasks;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
 using Assembly.GameSystem.ObjectPool;
+using Assembly.Components.Pools;
+using Assembly.Params;
 
 namespace Assembly.Components.Actors
 {
-  [Flags]
-  public enum DronePhase
-  {
-    Disactive = 0,
-    Standby = 1 << 0,
-    Dead = 1 << 1,
-
-    Launch = 1 << 2,
-    Patrol = 1 << 3,
-    Hostile = 1 << 4,
-  }
   [RequireComponent(typeof(FollowObjectModule))]
   [RequireComponent(typeof(PatrolPathModule))]
   [RequireComponent(typeof(LaunchModule))]
   [RequireComponent(typeof(AimModule))]
   public abstract class DroneAct : DiBehavior, IPoolCollectable
   {
+    public IDespawnable despawnable { get; set; }
+    public ParticleExplosionPool psExplosionPool { get; private set; }
+
+    protected void DepsInject(ParticleExplosionPool psExplosionPool)
+    {
+      this.psExplosionPool = psExplosionPool;
+    }
+
     Subject<Unit> _BehaviorUpdate = new Subject<Unit>();
     Subject<Unit> _CameraUpdate = new Subject<Unit>();
-
-    DronePhase _previousPhase;
+    Subject<Unit> _OnAssemble = new Subject<Unit>();
 
     Vector3 subjectiveMoveDelta;
     Vector3 objectiveMoveDelta;
     bool subjectiveMoveDeltaChanged;
     bool objectiveMoveDeltaChanged;
 
-    ObjectCreateInfo _info = new ObjectCreateInfo { };
+    ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
+    {
+      transformUsage = new TransformUsage
+      {
+        spawnSpace = eopSpawnSpace.Global,
+        referenceUsage = eopReferenceUsage.Global,
+      },
+      transformInfo = new TransformInfo { },
+    };
 
-    [SerializeField] ReactiveProperty<DronePhase> _phase = new ReactiveProperty<DronePhase>();
-    [SerializeField] float _gravity = -3f;
+    [SerializeField] DronePhaseUnit _phase = new DronePhaseUnit();
     [SerializeField] ParticleSystem psBurnUp;
 
-    [SerializeField]
-    public DronePositionConstraints positionConstraints = new DronePositionConstraints
-    {
-      closestDistance = 3,
-      furthestDistance = 4,
-      relativeHeightFromGround = 1,
-      speedFactor = 1,
-    };
-    [SerializeField]
-    public DroneRotationConstraints rotationConstraints = new DroneRotationConstraints
-    {
-      maximumHullTilt = 30,
-      speedFactor = 50,
-    };
-
+    public DroneParam param;
     public LaunchModule launcher;
     public AimModule aim;
     public FollowObjectModule follow;
     public PatrolPathModule patrol;
+    public ReactionModule reaction;
     public DamagableComponent damagable;
-
-    public IObservable<DronePhase> OnPhaseChanged => _phase;
-    public DronePhase previousPhase => _previousPhase;
 
     public IObservable<Unit> BehaviorUpdate(Behaviour x) => _BehaviorUpdate.Where(_ => x.enabled);
     public IObservable<Unit> CameraUpdate(Behaviour x) => _CameraUpdate.Where(_ => x.enabled);
+    public IObservable<Unit> OnAssemble => _OnAssemble;
 
     public float sqrDistance(Transform target) => (target.position - transform.position).sqrMagnitude;
 
-    public DronePhase phase
-    {
-      get { return _phase.Value; }
-      private set
-      {
-        _previousPhase = _phase.Value;
-        _phase.Value = value;
-      }
-    }
-    public void ShiftStandby() { phase = DronePhase.Standby; }
-    public void ShiftDisactive() { phase = DronePhase.Disactive; }
-    public void ShiftLaunch() { phase = DronePhase.Launch; }
-    public void ShiftPatrol() { phase = DronePhase.Patrol; }
-    public void ShiftHostile() { phase = DronePhase.Hostile; }
-
-    public bool phaseDisactive => phase == DronePhase.Disactive;
-    /// <summary>
-    /// DronePhase.Disactive | DronePhase.Dead
-    /// </summary>
-    /// <returns></returns>
-    public bool phaseSilence => (phase & (DronePhase.Disactive | DronePhase.Dead)) != 0;
-
+    public DronePhaseUnit phase => _phase;
     public void MoveSubjective(Vector3 delta)
     {
       subjectiveMoveDelta += delta;
@@ -112,7 +81,7 @@ namespace Assembly.Components.Actors
 
       var angles = rotation.eulerAngles;
       rotation = Quaternion.Euler(
-        Mathf.Clamp((angles.x > 180f ? angles.x - 360f : angles.x), -rotationConstraints.maximumHullTilt, rotationConstraints.maximumHullTilt),
+        param.constraints.ClampAngle(angles.x),
         angles.y,
         angles.z);
 
@@ -126,43 +95,29 @@ namespace Assembly.Components.Actors
     }
     public bool LookTowards(Transform target)
     {
-      return LookTowards(target, rotationConstraints.speed);
+      return LookTowards(target, param.settings.rotateSpeed);
     }
 
-    public IObservable<DronePhase> OnPhaseEnter(DronePhase phase)
-    {
-      return OnPhaseChanged.Where(x => phase.HasFlag(x));
-    }
-    public IObservable<DronePhase> OnPhaseExit(DronePhase phase)
-    {
-      return OnPhaseChanged.Where(x => phase.HasFlag(previousPhase));
-    }
-
-    public void ActivateSwitch(DronePhase cond, params Behaviour[] targets)
-    {
-      OnPhaseChanged
-        .Subscribe(newPhase =>
-        {
-          bool b = (newPhase & cond) != 0;
-          for (int i = 0; i < targets.Length; i++)
-            if (targets[i])
-            { targets[i].enabled = b; }
-        });
-    }
 
     void Start() { Initialize(); }
     public void Assemble()
     {
+      rigidbody.isKinematic = false;
+      _OnAssemble.OnNext(Unit.Default);
     }
     public void Disassemble()
     {
-      ShiftDisactive();
+      rigidbody.isKinematic = true;
+      phase.ShiftSleep();
     }
 
     protected virtual void Prepare()
     {
+      _psExplCI.transformInfo.reference = transform;
+
       follow.Initialize();
       patrol.Initialize();
+      reaction.Initialize();
       launcher.Initialize();
       aim.Initialize();
     }
@@ -180,16 +135,19 @@ namespace Assembly.Components.Actors
       damagable.OnBroken.Subscribe(_ => OnDead().Forget()).AddTo(this);
 
       BehaviorUpdate(this)
-        .Where(_ => phase == DronePhase.Dead)
-        .Subscribe(_ => AddGravity());
+        .Where(phase.IsDead)
+        .Subscribe(_ => rigidbody.AddForce(param.settings.gravity, ForceMode.Acceleration));
 
-      OnPhaseEnter(DronePhase.Standby)
+      BehaviorUpdate(this)
+        .Where(phase.IsStandby)
         .Subscribe(_ =>
         {
           if (aim.target)
-          { ShiftHostile(); }
+          { phase.ShiftHostile(); }
+          else if (aim.sight.inSight)
+          { phase.ShiftAttention(); }
           else if (patrol.next)
-          { ShiftPatrol(); }
+          { phase.ShiftPatrol(); }
         });
     }
 
@@ -203,65 +161,26 @@ namespace Assembly.Components.Actors
     void ApplySubjectiveMove()
     {
       if (!subjectiveMoveDeltaChanged) { return; }
-      rigidbody.AddForce(transform.rotation * subjectiveMoveDelta * positionConstraints.speed - rigidbody.velocity, ForceMode.Acceleration);
+      rigidbody.AddForce(transform.rotation * subjectiveMoveDelta * param.settings.moveSpeed - rigidbody.velocity, ForceMode.Acceleration);
       subjectiveMoveDelta = Vector3.zero;
       subjectiveMoveDeltaChanged = false;
     }
     void ApplyObjectiveMove()
     {
       if (!objectiveMoveDeltaChanged) { return; }
-      rigidbody.AddForce(objectiveMoveDelta * positionConstraints.speed - rigidbody.velocity, ForceMode.Acceleration);
+      rigidbody.AddForce(objectiveMoveDelta * param.settings.moveSpeed - rigidbody.velocity, ForceMode.Acceleration);
       objectiveMoveDelta = Vector3.zero;
       objectiveMoveDeltaChanged = false;
-    }
-
-    void AddGravity()
-    {
-      rigidbody.AddForce(new Vector3(0, _gravity, 0), ForceMode.Acceleration);
     }
 
     async UniTask OnDead()
     {
       psBurnUp.Play();
-      phase = DronePhase.Dead;
+      phase.ShiftDead();
       await UniTask.Delay(1500);
-      _info.position = transform.position;
-      Pools.Pool.psExplosion.Spawn(_info,
+      psExplosionPool.Spawn(_psExplCI,
         timeToDespawn: TimeSpan.FromSeconds(3));
-      ShiftDisactive();
-      gameObject.SetActive(false);
-    }
-  }
-  [System.Serializable]
-  public struct DroneRotationConstraints
-  {
-    public float maximumHullTilt;
-    public float speedFactor;
-    public float speed => speedFactor * Time.deltaTime;
-  }
-
-  [System.Serializable]
-  public struct DronePositionConstraints
-  {
-    public float closestDistance;
-    public float furthestDistance;
-
-    public float relativeHeightFromGround;
-
-    public float speedFactor;
-
-    public float sqrClosestDistance => closestDistance * closestDistance;
-    public float sqrFurthestDistance => furthestDistance * furthestDistance;
-    public float speed => speedFactor;
-
-    public bool HasEnoughHight(Transform transform, out RaycastHit hit)
-    {
-      return !Physics.Raycast(
-        transform.position,
-        Vector3.down,
-        out hit,
-        relativeHeightFromGround,
-        new Layers(Layer.Stage));
+      despawnable.Despawn();
     }
   }
 }

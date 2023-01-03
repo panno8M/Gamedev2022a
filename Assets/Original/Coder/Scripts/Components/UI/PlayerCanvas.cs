@@ -1,6 +1,7 @@
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
+using Assembly.GameSystem.Input;
 using Assembly.Components.Actors.Player;
 using Utilities;
 
@@ -8,7 +9,15 @@ namespace Assembly.Components.UI
 {
   public class PlayerCanvas : MonoBehaviour
   {
+    InputControl control;
     PlayerAct player;
+    [Zenject.Inject]
+    public void DepsInject(InputControl control, PlayerAct player)
+    {
+      this.control = control;
+      this.player = player;
+    }
+
     [SerializeField] GameObject uiRightArrow;
     [SerializeField] GameObject uiLeftArrow;
     [SerializeField] GameObject uiQuestion;
@@ -21,8 +30,6 @@ namespace Assembly.Components.UI
 
     void Start()
     {
-      player = Global.Player;
-
       posR = uiRightArrow.transform.localPosition;
       posL = uiLeftArrow.transform.localPosition;
 
@@ -39,11 +46,11 @@ namespace Assembly.Components.UI
 
 
       Observable.EveryUpdate()
-        .Select(_ => Global.Control.HorizontalMoveInput.Value)
+        .Select(_ => control.HorizontalMoveInput.Value)
         .Subscribe(hmi =>
         {
-          easeR.SetAsIncrease(hmi == 1);
-          easeL.SetAsIncrease(hmi == -1);
+          easeR.SetMode(increase: hmi == 1);
+          easeL.SetMode(increase: hmi == -1);
 
           if (!player.gameObject.activeSelf) { return; }
 

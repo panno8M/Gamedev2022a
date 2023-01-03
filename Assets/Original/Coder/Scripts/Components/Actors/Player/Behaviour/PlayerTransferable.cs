@@ -18,6 +18,7 @@ namespace Assembly.Components.Actors.Player
         Debug.Log("<color=#D36D27FF>" + msg + "</color>");
 #endif
     }
+    [SerializeField] PlayerAct _actor;
 
     [SerializeField] int _secTransferDurationEnter = 250;
     [SerializeField] int _secTransferDurationExit = 250;
@@ -29,7 +30,7 @@ namespace Assembly.Components.Actors.Player
 
     void Start()
     {
-      Global.Control.Interact
+      _actor.ctl.Interact
           .Where(_ => closestPortal && closestPortal.kind == PortalKind.Door)
           .Subscribe(Transfer);
 

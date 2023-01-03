@@ -10,7 +10,15 @@ namespace Assembly.Components.Actors
   {
     [SerializeField] DroneAct _actor;
     PathNode prev;
-    public PathNode next;
+    PathNode _next;
+    public PathNode next
+    {
+      get => _next;
+      set
+      {
+        _next = value;
+      }
+    }
     bool flagTurn;
 
     PathNode Select(PathNode from)
@@ -20,13 +28,13 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
-      _actor.ActivateSwitch(targets: this,
+      _actor.phase.ActivateSwitch(targets: this,
         cond: DronePhase.Patrol);
 
-      _actor.aim.Target
+      _actor.aim.sight.InSight
         .Where(_ => isActiveAndEnabled)
         .Where(target => target)
-        .Subscribe(_ => _actor.ShiftStandby());
+        .Subscribe(_actor.phase.ShiftStandby);
 
       _actor.BehaviorUpdate(this)
         .Where(_ => next)
@@ -55,7 +63,7 @@ namespace Assembly.Components.Actors
         }
       }
       else
-      {rigidbody.velocity = Vector3.zero;}
+      { rigidbody.velocity = Vector3.zero; }
 
     }
   }

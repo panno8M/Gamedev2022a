@@ -1,11 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UniRx;
+using Assembly.GameSystem.Input;
 
 namespace Assembly.Components.UI
 {
   public class OverrayCanvas : MonoBehaviour
   {
+    InputControl control;
+    [Zenject.Inject]
+    public void DepsInject(InputControl control)
+    {
+      this.control = control;
+    }
+
     [SerializeField] Image imgFeather;
 
     Color featherBaseColor = Color.white;
@@ -13,7 +21,7 @@ namespace Assembly.Components.UI
     // Start is called before the first frame update
     void Start()
     {
-      Global.Control.RespawnInput
+      control.RespawnInput
           .Subscribe(b => imgFeather.color = b ? featherPressColor : featherBaseColor)
           .AddTo(this);
     }

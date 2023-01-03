@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Senses.Sight;
 using Assembly.GameSystem;
 using Utilities;
@@ -48,8 +47,12 @@ namespace Assembly.Components.Actors
     public AiSight sight;
 
     [SerializeField] ReactiveProperty<AiVisible> _Target = new ReactiveProperty<AiVisible>();
-    public EzLerp lostTarget = new EzLerp(1);
-    public AiVisible target => _Target.Value;
+    public EzLerp targettingProgress = new EzLerp(1);
+    public AiVisible target
+    {
+      get { return _Target.Value; }
+      private set { _Target.Value = value; }
+    }
     public IObservable<AiVisible> Target => _Target;
 
     public Transform sightTransform;
@@ -68,54 +71,72 @@ namespace Assembly.Components.Actors
 
     protected override void Blueprint()
     {
-      sight.InSight.Subscribe(target =>
-      {
-        if (target)
+      sight.InSight
+        .Subscribe(nextTarget =>
         {
-          _Target.Value = target;
-          lostTarget.SetFactor1();
-          lostTarget.SetAsIncrease();
-        }
-        else
-        {
-          lostTarget.SetAsDecrease();
-        }
-      });
-      _actor.CameraUpdate(this)
-        .Subscribe(_ =>
-        {
-          if (lostTarget.needsCalc)
+          targettingProgress.SetMode(increase: nextTarget);
+          if (nextTarget && !target)
           {
-            if (lostTarget.UpdFactor() == 0)
-            {
-              _Target.Value = null;
-            }
+            _actor.reaction.Question();
+          }
+        });
+      _actor.CameraUpdate(this)
+        .Where(targettingProgress.isNeedsCalc)
+        .Select(targettingProgress.UpdFactor)
+        .Subscribe(fac =>
+        {
+          if (fac == 1 && !target)
+          {
+            target = sight.inSight;
+            _actor.reaction.Exclamation();
+          }
+          if (fac == 0 && target)
+          {
+            target = null;
+            _actor.reaction.GuruGuru();
           }
         });
 
-      _actor.ActivateSwitch(targets: this,
-        cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Standby);
+      _actor.phase.ActivateSwitch(targets: this,
+        cond: DronePhase.Patrol | DronePhase.Hostile | DronePhase.Attention | DronePhase.Standby);
 
-      this.OnEnableAsObservable().Subscribe(_ => Activate(true));
-      this.OnDisableAsObservable().Subscribe(_ => Activate(false));
+
+      _actor.BehaviorUpdate(this)
+        .Where(_actor.phase.IsAttension)
+        .Subscribe(_ =>
+        {
+          _actor.MoveObjective(Vector3.zero);
+          if (target || !sight.inSight)
+          { _actor.phase.ShiftStandby(); }
+        });
 
       _actor.CameraUpdate(this)
         .Subscribe(_ =>
           {
-            if (_actor.phase == DronePhase.Hostile && target)
+            switch (_actor.phase.current)
             {
-              followSettings.Process(
-                transform: sightTransform,
-                target: target.center);
-            }
-            if (_actor.phase == DronePhase.Patrol)
-            {
-              swipeSettings.Process(
-                transform: sightTransform,
-                standard: _actor.transform);
+              case DronePhase.Hostile:
+                if (!target) { break; }
+                followSettings.Process(
+                  transform: sightTransform,
+                  target: target.center);
+                break;
+              case DronePhase.Attention:
+                if (!sight.inSight) { break; }
+                followSettings.Process(
+                  transform: sightTransform,
+                  target: sight.inSight.center);
+                break;
+              case DronePhase.Patrol:
+                swipeSettings.Process(
+                  transform: sightTransform,
+                  standard: _actor.transform);
+                break;
             }
           });
     }
+    void OnEnable() => Activate(true);
+    void OnDisable() => Activate(false);
     void Activate(bool b)
     {
       // sight.enabled = b;

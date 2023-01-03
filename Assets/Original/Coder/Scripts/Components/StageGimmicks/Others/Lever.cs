@@ -31,10 +31,10 @@ namespace Assembly.Components.StageGimmicks
     {
       interactable = GetComponent<Interactable>();
       _OnSwitch.message.intensity = leverProgress;
-      OnLeverSwitch.Subscribe(leverProgress.SetAsIncrease);
+      OnLeverSwitch.Subscribe(leverProgress.SetMode);
 
       this.FixedUpdateAsObservable()
-        .Where(leverProgress.NeedsCalc)
+        .Where(leverProgress.isNeedsCalc)
         .Subscribe(_ =>
         {
           _leverRoot.localRotation = leverProgress.UpdMix(_leverRotateFrom, _leverRotateTo);

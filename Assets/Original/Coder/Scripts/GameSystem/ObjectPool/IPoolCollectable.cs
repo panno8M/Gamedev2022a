@@ -4,5 +4,7 @@ namespace Assembly.GameSystem.ObjectPool
   {
     void Assemble();
     void Disassemble();
+
+    IDespawnable despawnable { set; }
   }
 }

@@ -18,7 +18,7 @@ namespace Assembly.Components.Actors.Player
           {
             if (exhalingProgress.isIncreasing)
             {
-              psFlameBreath.transform.LookAt(Global.Control.MousePosStage.Value);
+              psFlameBreath.transform.LookAt(_actor.ctl.mousePosStage);
               _actor.flame.flameQuantity = 1 - exhalingProgress.UpdFactor();
               if (exhalingProgress.PeekFactor() == 1)
               {
@@ -42,14 +42,14 @@ namespace Assembly.Components.Actors.Player
             psFlameBreath.Stop();
           }).AddTo(this);
 
-      Global.Control.BreathPress
+      _actor.ctl.BreathPress
           .Where(_ => _actor.flame.flameQuantity != 0)
           .Where(_ => !_actor.hand.holder.hasItem)
-          .Subscribe(_ => exhalingProgress.SetAsIncrease())
+          .Subscribe(exhalingProgress.SetAsIncrease)
           .AddTo(this);
 
       _actor.hand.holder.RequestHold
-          .Subscribe(_ => exhalingProgress.SetAsDecrease())
+          .Subscribe(exhalingProgress.SetAsDecrease)
           .AddTo(this);
     }
   }
