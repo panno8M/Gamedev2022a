@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.Components.Pools;
+using Assembly.Components.Items;
 
 namespace Assembly.Components.StageGimmicks
 {

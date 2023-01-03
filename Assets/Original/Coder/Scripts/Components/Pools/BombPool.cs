@@ -1,4 +1,4 @@
-using Assembly.Components.StageGimmicks;
+using Assembly.Components.Items;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 

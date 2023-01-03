@@ -6,7 +6,7 @@ using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
 using Assembly.Components.Pools;
 
-namespace Assembly.Components.StageGimmicks
+namespace Assembly.Components.Items
 {
 
   public class Bomb : DiBehavior, IPoolCollectable
