@@ -2,24 +2,24 @@ using UnityEngine;
 using UniRx;
 using Senses.Sight;
 
-public class SecurityCamera : MonoBehaviour
+namespace Assembly.Components.StageGimmicks
 {
-
-    [SerializeField]AiSight aiSight;
-    Vector3ReactiveProperty targetTransform;
-    SafetyTrigger safetyTrigger;
-
-    void Start(){
-        safetyTrigger = aiSight.gameObject.GetComponent<SafetyTrigger>();
-        aiSight.InSight.Subscribe(x => OnAlarm(x)).AddTo(this);
+  public class SecurityCamera : MonoBehaviour
+  {
+    AlarmMgr alarmMgr;
+    [Zenject.Inject]
+    public void DepsInject(AlarmMgr alarmMgr)
+    {
+      this.alarmMgr = alarmMgr;
     }
 
-    void OnAlarm(AiVisible target){
-        if (target){
-            AlarmMgr.Instance.ActivateAlarm();
-        }else{
-            AlarmMgr.Instance.DisarmAlarm();
-        }
+    [SerializeField] AiSight aiSight;
+
+    void Start()
+    {
+      aiSight.InSight
+        .Subscribe(x => alarmMgr.SwitchAlarm(x))
+        .AddTo(this);
     }
-    
+  }
 }

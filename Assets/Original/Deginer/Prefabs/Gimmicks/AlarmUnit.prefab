@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 418508725700422206}
   - component: {fileID: 418508725700422207}
+  - component: {fileID: 7744411721726412798}
   m_Layer: 0
   m_Name: AlarmUnit
   m_TagString: Untagged
@@ -59,3 +60,16 @@ MonoBehaviour:
       value: -1
   _IsOnAlert:
     value: 0
+--- !u!114 &7744411721726412798
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 418508725700422176}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0eaef5cc119fcc048bb018ee01bd5aa9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  alarmManager: {fileID: 418508725700422176}
