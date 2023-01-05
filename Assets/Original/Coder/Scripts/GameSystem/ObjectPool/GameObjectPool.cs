@@ -31,8 +31,8 @@ namespace Assembly.GameSystem.ObjectPool
 
     public void Despawn(T instance)
     {
-      if (!instance || !instance.isActiveAndEnabled) { return; }
       if (instance == null) throw new ArgumentNullException("instance");
+      if (!instance.isActiveAndEnabled) { return; }
 
       if (q == null) q = new Queue<T>();
 

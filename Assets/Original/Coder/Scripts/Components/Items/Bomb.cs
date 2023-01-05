@@ -5,6 +5,7 @@ using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
 using Assembly.Components.Pools;
+using Assembly.Params;
 
 namespace Assembly.Components.Items
 {
@@ -19,8 +20,10 @@ namespace Assembly.Components.Items
         instance.DepsInject(psExplosionPool);
       }
     }
+    public BombParam param;
 
-    public IDespawnable despawnable { get; set; }
+    public IDespawnable despawnable { private get; set; }
+    public IObservable<Unit> OnExplode => _OnExplode;
     ParticleExplosionPool psExplosionPool;
 
     [Zenject.Inject]
@@ -32,7 +35,7 @@ namespace Assembly.Components.Items
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Holdable _holdable;
-    [SerializeField] float secExplosionDelay = 4;
+    Subject<Unit> _OnExplode = new Subject<Unit>();
 
     PoolManagedParticle.CreateInfo _psExplCI = new PoolManagedParticle.CreateInfo
     {
@@ -50,11 +53,14 @@ namespace Assembly.Components.Items
       SetHoldable(locked: false);
       SetBurnUp(burning: false);
       OnHold(holding: false);
+      _OnExplode.Dispose();
+      _OnExplode = new Subject<Unit>();
     }
     public void Disassemble()
     {
       ResetRigidbody();
       _damagable.Repair();
+      _OnExplode.Dispose();
     }
 
     protected override void Blueprint()
@@ -65,16 +71,18 @@ namespace Assembly.Components.Items
         .AddTo(this);
 
       _damagable.OnBroken
-          .Delay(TimeSpan.FromSeconds(0.5))
+          .Delay(param.timeToBurnUpFromBroken)
           .Subscribe(_ => SetBurnUp(burning: true))
           .AddTo(this);
 
       _damagable.OnBroken
-          .Delay(TimeSpan.FromSeconds(secExplosionDelay))
+          .Delay(param.timeToExplodeFromBroken)
           .Subscribe(_ =>
           {
             SetBurnUp(burning: false);
             psExplosionPool.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
+            _OnExplode.OnNext(Unit.Default);
+            _OnExplode.OnCompleted();
             despawnable.Despawn();
           })
           .AddTo(this);

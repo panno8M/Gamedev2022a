@@ -77,6 +77,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 017ff16e06d97d644a7d80c63bc17e9f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  param: {fileID: 11400000, guid: 4cb339413f6c6574ba2fd7f325760594, type: 2}
+  rollback: {fileID: 0}
+  instances: []
 --- !u!114 &3883346463381662687
 MonoBehaviour:
   m_ObjectHideFlags: 0

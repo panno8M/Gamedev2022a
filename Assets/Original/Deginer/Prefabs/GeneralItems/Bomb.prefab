@@ -177,10 +177,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbf0cd409e75af74e966f7d6a9683fd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  param: {fileID: 11400000, guid: 7f65deae01a0fcb458d5245ea1d6c575, type: 2}
   _psBurnUp: {fileID: 6118583701548417970}
   _damagable: {fileID: 7171335579413191722}
   _holdable: {fileID: 8001553843124519759}
-  secExplosionDelay: 4
 --- !u!1 &7171335579413191716
 GameObject:
   m_ObjectHideFlags: 0

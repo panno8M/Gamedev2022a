@@ -1,14 +1,15 @@
-using System;
 using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.Components.Pools;
 using Assembly.Components.Items;
+using Assembly.Params;
 
 namespace Assembly.Components.StageGimmicks
 {
   public class BombPlacer : MonoBehaviour
   {
+    public BombPlacerParam param;
     BombPool pool;
     [SerializeField]
     Rollback rollback;
@@ -42,19 +43,31 @@ namespace Assembly.Components.StageGimmicks
         {
           reference = transform.GetChild(i),
         };
-        _bombCI.transformInfo = _bombTransformInfos[i];
-        instances[i] = pool.Spawn(_bombCI);
+        SpawnBomb(i);
       }
+
+      rollback.OnPreflight
+        .Subscribe(_ =>
+        {
+          for (int i = 0; i < instances.Length; i++)
+          { pool.Despawn(instances[i]); }
+        });
 
       rollback.OnExecute
         .Subscribe(_ =>
         {
           for (int i = 0; i < instances.Length; i++)
-          {
-            _bombCI.transformInfo = _bombTransformInfos[i];
-            pool.Respawn(instances[i], _bombCI, TimeSpan.FromSeconds(1));
-          }
+          { SpawnBomb(i); }
         });
+    }
+    void SpawnBomb(int index)
+    {
+      _bombCI.transformInfo = _bombTransformInfos[index];
+      instances[index] = pool.Spawn(_bombCI);
+      instances[index].OnExplode
+        .Delay(param.timeToRespawnFromDespawn)
+        .Where(_ => instances[index] && !instances[index].isActiveAndEnabled)
+        .Subscribe(_ => SpawnBomb(index));
     }
   }
 }

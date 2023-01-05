@@ -4,7 +4,7 @@ using Assembly.GameSystem;
 
 namespace Assembly.Params
 {
-  [CreateAssetMenu]
+  [CreateAssetMenu(fileName = "Drone", menuName = "Params/Drone")]
   public class DroneParam : ScriptableObject
   {
     public Settings settings = new Settings
