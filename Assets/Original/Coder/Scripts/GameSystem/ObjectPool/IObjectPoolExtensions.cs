@@ -28,12 +28,12 @@ namespace Assembly.GameSystem.ObjectPool
       return result;
     }
 
-    public static void Respawn<T>(this IObjectPool<T> pool, T instance, IInfuser<T> info, TimeSpan timeToDespawn)
+    public static void Respawn<T>(this IObjectPool<T> pool, T instance, IInfuser<T> info, TimeSpan timeToSpawn)
       where T : UnityEngine.Component
     {
       pool.Despawn(instance);
       Observable
-        .Timer(timeToDespawn)
+        .Timer(timeToSpawn)
         .Subscribe(_ => pool.Spawn(info))
         .AddTo(instance);
     }
