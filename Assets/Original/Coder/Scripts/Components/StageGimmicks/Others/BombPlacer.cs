@@ -22,7 +22,7 @@ namespace Assembly.Components.StageGimmicks
     }
 
     TransformInfo[] _bombTransformInfos;
-    BombPool.CreateInfo _bombCI = new BombPool.CreateInfo
+    Bomb.CreateInfo _bombCI = new Bomb.CreateInfo
     {
       transformUsage = new TransformUsage
       {

@@ -8,9 +8,18 @@ using Assembly.Components.Pools;
 
 namespace Assembly.Components.Items
 {
-
   public class Bomb : DiBehavior, IPoolCollectable
   {
+    public class CreateInfo : ObjectCreateInfo<Bomb>
+    {
+      public ParticleExplosionPool psExplosionPool;
+      public override void Infuse(Bomb instance)
+      {
+        base.Infuse(instance);
+        instance.DepsInject(psExplosionPool);
+      }
+    }
+
     public IDespawnable despawnable { get; set; }
     ParticleExplosionPool psExplosionPool;
 
@@ -25,7 +34,7 @@ namespace Assembly.Components.Items
     [SerializeField] Holdable _holdable;
     [SerializeField] float secExplosionDelay = 4;
 
-    ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
+    PoolManagedParticle.CreateInfo _psExplCI = new PoolManagedParticle.CreateInfo
     {
       transformUsage = new TransformUsage
       {

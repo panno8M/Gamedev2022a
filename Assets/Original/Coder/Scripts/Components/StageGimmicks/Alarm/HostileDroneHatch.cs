@@ -24,7 +24,7 @@ namespace Assembly.Components.StageGimmicks
       _droneCI.psImpactSplashPool = psImpactSplashPool;
     }
 
-    HostileDronePool.CreateInfo _droneCI = new HostileDronePool.CreateInfo
+    HostileDrone.CreateInfo _droneCI = new HostileDrone.CreateInfo
     {
       transformUsage = new TransformUsage { },
       transformInfo = new TransformInfo { },

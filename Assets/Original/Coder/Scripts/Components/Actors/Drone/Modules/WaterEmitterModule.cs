@@ -23,7 +23,7 @@ namespace Assembly.Components.Actors
     [SerializeField] Transform hoseRootTransform;
     [SerializeField] float power;
     [SerializeField] EzLerp launchCoolDown = new EzLerp(3, EzLerp.Mode.Decrease);
-    WaterBallPool.CreateInfo _waterBallCI = new WaterBallPool.CreateInfo
+    WaterBall.CreateInfo _waterBallCI = new WaterBall.CreateInfo
     {
       transformUsage = new TransformUsage
       {

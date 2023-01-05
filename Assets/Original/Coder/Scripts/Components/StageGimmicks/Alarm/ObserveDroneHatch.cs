@@ -21,7 +21,7 @@ namespace Assembly.Components.StageGimmicks
       _droneCI.alarmMgr = alarmMgr;
     }
 
-    ObserveDronePool.CreateInfo _droneCI = new ObserveDronePool.CreateInfo
+    ObserveDrone.CreateInfo _droneCI = new ObserveDrone.CreateInfo
     {
       transformUsage = new TransformUsage { },
       transformInfo = new TransformInfo { },
