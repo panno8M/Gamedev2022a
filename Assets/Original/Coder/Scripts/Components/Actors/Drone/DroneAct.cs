@@ -34,7 +34,7 @@ namespace Assembly.Components.Actors
     bool subjectiveMoveDeltaChanged;
     bool objectiveMoveDeltaChanged;
 
-    ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
+    PoolManagedParticle.CreateInfo _psExplCI = new PoolManagedParticle.CreateInfo
     {
       transformUsage = new TransformUsage
       {

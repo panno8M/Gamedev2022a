@@ -5,13 +5,25 @@ using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
 using Assembly.Components.Pools;
+using Assembly.Params;
 
 namespace Assembly.Components.Items
 {
-
   public class Bomb : DiBehavior, IPoolCollectable
   {
-    public IDespawnable despawnable { get; set; }
+    public class CreateInfo : ObjectCreateInfo<Bomb>
+    {
+      public ParticleExplosionPool psExplosionPool;
+      public override void Infuse(Bomb instance)
+      {
+        base.Infuse(instance);
+        instance.DepsInject(psExplosionPool);
+      }
+    }
+    public BombParam param;
+
+    public IDespawnable despawnable { private get; set; }
+    public IObservable<Unit> OnExplode => _OnExplode;
     ParticleExplosionPool psExplosionPool;
 
     [Zenject.Inject]
@@ -23,9 +35,9 @@ namespace Assembly.Components.Items
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Holdable _holdable;
-    [SerializeField] float secExplosionDelay = 4;
+    Subject<Unit> _OnExplode = new Subject<Unit>();
 
-    ParticlePool.CreateInfo _psExplCI = new ParticlePool.CreateInfo
+    PoolManagedParticle.CreateInfo _psExplCI = new PoolManagedParticle.CreateInfo
     {
       transformUsage = new TransformUsage
       {
@@ -41,11 +53,14 @@ namespace Assembly.Components.Items
       SetHoldable(locked: false);
       SetBurnUp(burning: false);
       OnHold(holding: false);
+      _OnExplode.Dispose();
+      _OnExplode = new Subject<Unit>();
     }
     public void Disassemble()
     {
       ResetRigidbody();
       _damagable.Repair();
+      _OnExplode.Dispose();
     }
 
     protected override void Blueprint()
@@ -56,16 +71,18 @@ namespace Assembly.Components.Items
         .AddTo(this);
 
       _damagable.OnBroken
-          .Delay(TimeSpan.FromSeconds(0.5))
+          .Delay(param.timeToBurnUpFromBroken)
           .Subscribe(_ => SetBurnUp(burning: true))
           .AddTo(this);
 
       _damagable.OnBroken
-          .Delay(TimeSpan.FromSeconds(secExplosionDelay))
+          .Delay(param.timeToExplodeFromBroken)
           .Subscribe(_ =>
           {
             SetBurnUp(burning: false);
             psExplosionPool.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
+            _OnExplode.OnNext(Unit.Default);
+            _OnExplode.OnCompleted();
             despawnable.Despawn();
           })
           .AddTo(this);

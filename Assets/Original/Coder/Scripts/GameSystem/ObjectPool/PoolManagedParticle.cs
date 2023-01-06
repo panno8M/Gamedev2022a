@@ -4,6 +4,8 @@ namespace Assembly.GameSystem.ObjectPool
 {
   public class PoolManagedParticle : DiBehavior, IPoolCollectable
   {
+    public class CreateInfo : ObjectCreateInfo<PoolManagedParticle> { }
+
     public IDespawnable despawnable { get; set; }
     [SerializeField] ParticleSystem _particle;
     public ParticleSystem particle => _particle ?? (_particle = GetComponent<ParticleSystem>());

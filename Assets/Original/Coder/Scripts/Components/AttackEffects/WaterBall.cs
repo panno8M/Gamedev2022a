@@ -10,6 +10,17 @@ namespace Assembly.Components.Effects
 {
   public class WaterBall : DiBehavior, IPoolCollectable
   {
+    public class CreateInfo : ObjectCreateInfo<WaterBall>
+    {
+      public ParticleImpactSplashPool psImpactSplashPool;
+
+      public override void Infuse(WaterBall instance)
+      {
+        base.Infuse(instance);
+        instance.DepsInject(psImpactSplashPool);
+      }
+    }
+
     public IDespawnable despawnable { get; set; }
     ParticleImpactSplashPool psImpactSplashPool;
 
@@ -20,7 +31,7 @@ namespace Assembly.Components.Effects
       this.psImpactSplashPool = psImpactSplashPool;
     }
 
-    ParticlePool.CreateInfo _psSplashCI = new ParticlePool.CreateInfo
+    PoolManagedParticle.CreateInfo _psSplashCI = new PoolManagedParticle.CreateInfo
     {
       transformUsage = new TransformUsage
       {
