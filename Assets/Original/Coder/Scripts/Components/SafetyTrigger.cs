@@ -7,9 +7,10 @@ using UniRx.Triggers;
 [RequireComponent(typeof(Collider))]
 public class SafetyTrigger : MonoBehaviour
 {
-  Collider _raw;
-  public Collider raw => _raw ?? (_raw = GetComponent<Collider>());
-  public List<SafetyTrigger> triggers = new List<SafetyTrigger>();
+  Collider[] _colliders;
+  public Collider[] colliders => _colliders ?? (_colliders = GetComponents<Collider>());
+  List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
+  public List<SafetyTrigger> triggers => _triggers;
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
   Subject<SafetyTrigger> _OnStay = new Subject<SafetyTrigger>();
@@ -51,6 +52,11 @@ public class SafetyTrigger : MonoBehaviour
       _OnEnter.OnNext(trigger);
     }
   }
+  void NoticeStay()
+  {
+    for (int i = 0; i < triggers.Count; i++)
+    { _OnStay.OnNext(triggers[i]); }
+  }
 
   void Start()
   {
@@ -68,25 +74,55 @@ public class SafetyTrigger : MonoBehaviour
         if (x) Remove(x);
       });
 
-    this.OnDisableAsObservable().Subscribe(WhenDisabled);
-
-    void WhenDisabled(Unit _)
-    {
-      foreach (SafetyTrigger col in triggers)
+    Observable.EveryFixedUpdate()
+      .Where(_ => isActiveAndEnabled)
+      .Subscribe(_ =>
       {
-        col?.Remove(this);
-        Remove(col);
+        NoticeEnter();
+        NoticeStay();
+        NoticeExit();
+      }).AddTo(this);
+  }
+
+  void OnEnable()
+  {
+    foreach (Collider collider in colliders)
+    { collider.enabled = true; }
+  }
+
+  void OnDisable()
+  {
+    foreach (SafetyTrigger col in triggers)
+    {
+      col?.Remove(this);
+      Remove(col);
+    }
+    foreach (Collider collider in colliders)
+    { collider.enabled = false; }
+  }
+
+#if UNITY_EDITOR
+  public bool showColliderOutlines;
+  public Color outlineColor;
+
+  void DrawOutline()
+  {
+    if (!showColliderOutlines) { return; }
+    Gizmos.color = outlineColor;
+    _colliders = GetComponents<Collider>();
+    foreach (Collider collider in colliders)
+    {
+      BoxCollider bc = collider as BoxCollider;
+      if (bc)
+      {
+        Gizmos.DrawWireCube(transform.position + bc.center, bc.size);
       }
     }
-
-    Observable.EveryFixedUpdate()
-        .Where(_ => isActiveAndEnabled)
-        .Subscribe(_ =>
-        {
-          NoticeEnter();
-          for (int i = 0; i < triggers.Count; i++)
-          { _OnStay.OnNext(triggers[i]); }
-          NoticeExit();
-        }).AddTo(this);
   }
+
+  void OnDrawGizmos()
+  {
+    DrawOutline();
+  }
+#endif
 }
