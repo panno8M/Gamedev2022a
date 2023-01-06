@@ -145,7 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   lmDamagable:
     serializedVersion: 2
-    m_Bits: 1024
+    m_Bits: 5120
   _damageUnit:
     kind: 2
     scale: 1
