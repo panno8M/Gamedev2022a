@@ -47,12 +47,12 @@ namespace Assembly.Components.StageGimmicks
     {
       if (isBeingAbsorbed) { return; }
       _psSupplyField.Play();
-      _supplyFieldTrigger.raw.enabled = true;
+      _supplyFieldTrigger.enabled = true;
     }
     void OnDisable()
     {
       _psSupplyField.Stop();
-      _supplyFieldTrigger.raw.enabled = false;
+      _supplyFieldTrigger.enabled = false;
     }
   }
 }

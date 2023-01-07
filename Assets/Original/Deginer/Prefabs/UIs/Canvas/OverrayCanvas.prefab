@@ -129,7 +129,7 @@ GameObject:
   - component: {fileID: 6353773474428860895}
   - component: {fileID: 121810276820339648}
   - component: {fileID: 1374874509928406334}
-  - component: {fileID: 7971092048143515688}
+  - component: {fileID: 6007879472436370122}
   m_Layer: 5
   m_Name: Fade
   m_TagString: Untagged
@@ -251,7 +251,7 @@ MonoBehaviour:
     _mode:
       value: -1
   canvasGroup: {fileID: 121810276820339648}
---- !u!114 &7971092048143515688
+--- !u!114 &6007879472436370122
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,10 +260,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 9139196414504176142}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f6bd71add4696d4cab91698edca493c, type: 3}
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  fader: {fileID: 9139196414504176142}
+  _components:
+  - {fileID: 1374874509928406334}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 0
 --- !u!1001 &2501633047282250304
 PrefabInstance:
   m_ObjectHideFlags: 0

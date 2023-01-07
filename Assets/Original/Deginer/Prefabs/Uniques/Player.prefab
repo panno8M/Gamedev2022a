@@ -287,6 +287,7 @@ GameObject:
   - component: {fileID: 2142224226}
   - component: {fileID: 2142224225}
   - component: {fileID: 2142224224}
+  - component: {fileID: 8413766225982693661}
   m_Layer: 12
   m_Name: Damagable
   m_TagString: Player
@@ -362,6 +363,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
+--- !u!114 &8413766225982693661
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2142224222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  triggers: []
 --- !u!1 &5128063384439505513
 GameObject:
   m_ObjectHideFlags: 0
@@ -5506,6 +5520,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _actor: {fileID: 1855202803}
+  rollback: {fileID: 0}
   _ctl: {fileID: 8070644116307393165}
   _physics: {fileID: 6921632980762690573}
   _hand: {fileID: 7140775411709922365}

@@ -237,7 +237,6 @@ MonoBehaviour:
   _monoInstallers:
   - {fileID: 1296401081}
   - {fileID: 121993507}
-  - {fileID: 6907176747719789492}
   _installerPrefabs: []
   _findSiblingMonoInstallers: 0
   _autoRun: 1
@@ -1706,15 +1705,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b91bf1f830a0ecc42986fa8ac7ccee29, type: 3}
---- !u!114 &6907176747719789492 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1217502632539091235, guid: b91bf1f830a0ecc42986fa8ac7ccee29,
-    type: 3}
-  m_PrefabInstance: {fileID: 6907176747719789491}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f6bd71add4696d4cab91698edca493c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
