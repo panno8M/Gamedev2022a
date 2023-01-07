@@ -15,6 +15,11 @@ namespace Senses.Sight
   [RequireComponent(typeof(SafetyTrigger))]
   public class AiSight : MonoBehaviour
   {
+#if UNITY_EDITOR
+#if DEBUG_SIGHT
+    [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SIGHT off.")]
+#endif // DEBUG_SIGHT
+#endif // UNITY_EDITOR
     public SightParam param;
     [SerializeField]
     public Transform root;
@@ -146,7 +151,8 @@ namespace Senses.Sight
         {
           if (inSight && target.gameObject == inSight.gameObject)
           {
-            LostInSight(); }
+            LostInSight();
+          }
           candidates.RemoveAll(x => x.gameObject == target.gameObject);
         });
     }

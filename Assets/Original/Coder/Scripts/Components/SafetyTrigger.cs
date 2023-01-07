@@ -9,11 +9,16 @@ using UniRx.Triggers;
 [RequireComponent(typeof(Collider))]
 public class SafetyTrigger : MonoBehaviour
 {
-  Collider[] _colliders;
+#if UNITY_EDITOR
+#if DEBUG_SAFETY_TRIGGER
+  [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SAFETY_TRIGGER off.")]
+#endif // DEBUG_SAFETY_TRIGGER
+#endif // UNITY_EDITOR
 #if DEBUG_SAFETY_TRIGGER
   [SerializeField]
 #endif
   List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
+  Collider[] _colliders;
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
   Subject<Unit> _OnStay = new Subject<Unit>();
