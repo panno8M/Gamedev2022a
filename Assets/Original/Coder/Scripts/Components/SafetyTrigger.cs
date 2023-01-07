@@ -1,3 +1,5 @@
+// #define DEBUG_SAFETY_TRIGGER
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,20 +10,24 @@ using UniRx.Triggers;
 public class SafetyTrigger : MonoBehaviour
 {
   Collider[] _colliders;
-  public Collider[] colliders => _colliders ?? (_colliders = GetComponents<Collider>());
   List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
-  public List<SafetyTrigger> triggers => _triggers;
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
   Subject<SafetyTrigger> _OnStay = new Subject<SafetyTrigger>();
   Subject<SafetyTrigger> _OnExit = new Subject<SafetyTrigger>();
 
+  List<SafetyTrigger> exitNotifyQueue = new List<SafetyTrigger>();
+  Queue<SafetyTrigger> enterNotifyQueue = new Queue<SafetyTrigger>();
+
+  bool needsCleanUp;
+
+  public Collider[] colliders => _colliders ?? (_colliders = GetComponents<Collider>());
+  public List<SafetyTrigger> triggers => _triggers;
+
   public IObservable<SafetyTrigger> OnEnter => _OnEnter;
   public IObservable<SafetyTrigger> OnStay => _OnStay;
   public IObservable<SafetyTrigger> OnExit => _OnExit;
 
-  List<SafetyTrigger> exitNotifyQueue = new List<SafetyTrigger>();
-  Queue<SafetyTrigger> enterNotifyQueue = new Queue<SafetyTrigger>();
   void Remove(SafetyTrigger trigger)
   {
     exitNotifyQueue.Add(trigger);
@@ -75,12 +81,33 @@ public class SafetyTrigger : MonoBehaviour
       });
 
     Observable.EveryFixedUpdate()
-      .Where(_ => isActiveAndEnabled)
+      .Where(_ => isActiveAndEnabled || needsCleanUp)
       .Subscribe(_ =>
       {
+#if DEBUG_SAFETY_TRIGGER
+        var text =
+          $"[{name}" + (
+          isActiveAndEnabled ?
+            "<color=#0F0>●</color>" :
+          needsCleanUp ?
+            "<color=#F00>●</color>" :
+          "") + "]";
+
+        var enterCount = enterNotifyQueue.Count;
+        NoticeEnter();
+        var stayCount = triggers.Count;
+        NoticeStay();
+        var exitCount = exitNotifyQueue.Count;
+        NoticeExit();
+
+        text += $"<{enterCount},{stayCount},{exitCount}>";
+        Debug.Log(text);
+#else
         NoticeEnter();
         NoticeStay();
         NoticeExit();
+#endif
+        needsCleanUp = false;
       }).AddTo(this);
   }
 
@@ -99,6 +126,7 @@ public class SafetyTrigger : MonoBehaviour
     }
     foreach (Collider collider in colliders)
     { collider.enabled = false; }
+    needsCleanUp = true;
   }
 
 #if UNITY_EDITOR
