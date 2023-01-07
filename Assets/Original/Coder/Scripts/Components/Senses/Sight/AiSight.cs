@@ -3,6 +3,7 @@ using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
+using Assembly.Params;
 using Utilities;
 
 namespace Senses.Sight
@@ -11,9 +12,7 @@ namespace Senses.Sight
   [RequireComponent(typeof(SafetyTrigger))]
   public class AiSight : MonoBehaviour
   {
-    public float sightAngle = 30;
-    public Layer layerObstacle = Layer.Stage;
-
+    public SightParam param;
     [SerializeField] ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
 
     SafetyTrigger trigger;
@@ -47,7 +46,7 @@ namespace Senses.Sight
         .Subscribe(_ =>
         {
           bool hitObstacle = HaveObstaclesInBetween(inSight.center);
-          if (hitObstacle || !IsInAngle(inSight.center, sightAngle))
+          if (hitObstacle || !IsInAngle(inSight.center, param.angle))
           { LostInSight(); }
         });
 
@@ -56,7 +55,7 @@ namespace Senses.Sight
         .Subscribe(target =>
         {
           AiVisible visible = target.GetComponent<AiVisible>();
-          if (!IsInAngle(visible.center, sightAngle)) { return; }
+          if (!IsInAngle(visible.center, param.angle)) { return; }
 
           bool hitObstacle = HaveObstaclesInBetween(visible.center);
 
@@ -75,7 +74,7 @@ namespace Senses.Sight
 
     bool HaveObstaclesInBetween(Transform target)
     {
-      return Physics.Linecast(transform.position, target.position, new Layers(layerObstacle));
+      return Physics.Linecast(transform.position, target.position, new Layers(param.obstacleLayer));
     }
     void FoundOut(AiVisible visible)
     {
@@ -96,8 +95,8 @@ namespace Senses.Sight
     void OnDrawGizmos()
     {
       Gizmos.DrawRay(transform.position, transform.forward);
-      GizmosEx.DrawWireCircle(transform.position + transform.forward, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad));
-      GizmosEx.DrawWireCircle(transform.position + transform.forward / 2, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad) / 2);
+      GizmosEx.DrawWireCircle(transform.position + transform.forward, transform.rotation, Mathf.Tan(param.angle * Mathf.Deg2Rad));
+      GizmosEx.DrawWireCircle(transform.position + transform.forward / 2, transform.rotation, Mathf.Tan(param.angle * Mathf.Deg2Rad) / 2);
     }
   }
 }

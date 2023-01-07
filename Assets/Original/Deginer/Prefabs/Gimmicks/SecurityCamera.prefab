@@ -375,7 +375,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4830826435763696232}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.0000021457674, y: 0, z: -2.2737368e-13}
+  m_LocalPosition: {x: -0.0000021457674, y: 0, z: -0.235}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -394,8 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcc630fd1339aa49a27ee042b28e546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightAngle: 18.46
-  layerObstacle: 6
+  param: {fileID: 11400000, guid: 4416404c5ed14434f864502145bbe690, type: 2}
   _InSight:
     value: {fileID: 0}
 --- !u!135 &4830826435763696235
@@ -423,7 +422,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &4830826436109407594
 GameObject:
   m_ObjectHideFlags: 0

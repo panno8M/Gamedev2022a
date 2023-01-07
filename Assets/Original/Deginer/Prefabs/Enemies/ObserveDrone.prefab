@@ -676,7 +676,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &9001981863741961213
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -974,8 +975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcc630fd1339aa49a27ee042b28e546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sightAngle: 15
-  layerObstacle: 6
+  param: {fileID: 11400000, guid: 4416404c5ed14434f864502145bbe690, type: 2}
   _InSight:
     value: {fileID: 0}
 --- !u!135 &2392761135679778437
@@ -1003,7 +1003,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!108 &6498717570957677465
 Light:
   m_ObjectHideFlags: 0
