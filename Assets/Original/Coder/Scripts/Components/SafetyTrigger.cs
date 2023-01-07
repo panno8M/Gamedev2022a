@@ -13,7 +13,7 @@ public class SafetyTrigger : MonoBehaviour
   List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
-  Subject<SafetyTrigger> _OnStay = new Subject<SafetyTrigger>();
+  Subject<Unit> _OnStay = new Subject<Unit>();
   Subject<SafetyTrigger> _OnExit = new Subject<SafetyTrigger>();
 
   List<SafetyTrigger> exitNotifyQueue = new List<SafetyTrigger>();
@@ -25,7 +25,7 @@ public class SafetyTrigger : MonoBehaviour
   public List<SafetyTrigger> triggers => _triggers;
 
   public IObservable<SafetyTrigger> OnEnter => _OnEnter;
-  public IObservable<SafetyTrigger> OnStay => _OnStay;
+  public IObservable<Unit> OnStay => _OnStay;
   public IObservable<SafetyTrigger> OnExit => _OnExit;
 
   void Remove(SafetyTrigger trigger)
@@ -58,11 +58,7 @@ public class SafetyTrigger : MonoBehaviour
       _OnEnter.OnNext(trigger);
     }
   }
-  void NoticeStay()
-  {
-    for (int i = 0; i < triggers.Count; i++)
-    { _OnStay.OnNext(triggers[i]); }
-  }
+  void NoticeStay() => _OnStay.OnNext(Unit.Default);
 
   void Start()
   {

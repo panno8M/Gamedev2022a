@@ -395,8 +395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   param: {fileID: 11400000, guid: 4416404c5ed14434f864502145bbe690, type: 2}
-  _InSight:
-    value: {fileID: 0}
+  root: {fileID: 4830826435579235714}
 --- !u!135 &4830826435763696235
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -3,7 +3,6 @@ using UnityEngine;
 using UniRx;
 using Senses.Sight;
 using Assembly.GameSystem;
-using Utilities;
 
 namespace Assembly.Components.Actors
 {
@@ -46,16 +45,9 @@ namespace Assembly.Components.Actors
     [SerializeField] DroneAct _actor;
     public AiSight sight;
 
-    [SerializeField] ReactiveProperty<AiVisible> _Target = new ReactiveProperty<AiVisible>();
-    public EzLerp targettingProgress = new EzLerp(1);
-    public AiVisible target
-    {
-      get { return _Target.Value; }
-      private set { _Target.Value = value; }
-    }
-    public IObservable<AiVisible> Target => _Target;
+    public AiVisible target => sight.noticed;
+    public IObservable<AiVisible> Target => sight.Noticed;
 
-    public Transform sightTransform;
     [SerializeField]
     SwipeSettings swipeSettings = new SwipeSettings
     {
@@ -72,29 +64,18 @@ namespace Assembly.Components.Actors
     protected override void Blueprint()
     {
       sight.InSight
-        .Subscribe(nextTarget =>
+        .Subscribe(inSight =>
         {
-          targettingProgress.SetMode(increase: nextTarget);
-          if (nextTarget && !target)
-          {
-            _actor.reaction.Question();
-          }
+          if (inSight && !sight.noticed)
+          { _actor.reaction.Question(); }
         });
-      _actor.CameraUpdate(this)
-        .Where(targettingProgress.isNeedsCalc)
-        .Select(targettingProgress.UpdFactor)
-        .Subscribe(fac =>
+      sight.Noticed
+        .Subscribe(noticed =>
         {
-          if (fac == 1 && !target)
-          {
-            target = sight.inSight;
-            _actor.reaction.Exclamation();
-          }
-          if (fac == 0 && target)
-          {
-            target = null;
-            _actor.reaction.GuruGuru();
-          }
+          if (noticed)
+          { _actor.reaction.Exclamation(); }
+          else
+          { _actor.reaction.GuruGuru(); }
         });
 
       _actor.phase.ActivateSwitch(targets: this,
@@ -116,31 +97,26 @@ namespace Assembly.Components.Actors
             switch (_actor.phase.current)
             {
               case DronePhase.Hostile:
-                if (!target) { break; }
+                if (!sight.noticed) { break; }
                 followSettings.Process(
-                  transform: sightTransform,
+                  transform: sight.root,
                   target: target.center);
                 break;
               case DronePhase.Attention:
                 if (!sight.inSight) { break; }
                 followSettings.Process(
-                  transform: sightTransform,
+                  transform: sight.root,
                   target: sight.inSight.center);
                 break;
               case DronePhase.Patrol:
                 swipeSettings.Process(
-                  transform: sightTransform,
+                  transform: sight.root,
                   standard: _actor.transform);
                 break;
             }
           });
     }
-    void OnEnable() => Activate(true);
-    void OnDisable() => Activate(false);
-    void Activate(bool b)
-    {
-      // sight.enabled = b;
-      sightTransform.gameObject.SetActive(b);
-    }
+    void OnEnable() => sight.enabled = true;
+    void OnDisable() => sight.enabled = false;
   }
 }
