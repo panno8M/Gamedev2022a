@@ -17,7 +17,7 @@ namespace Assembly.Components.StageGimmicks
 
     void Start()
     {
-      aiSight.InSight
+      aiSight.Noticed
         .Subscribe(x => alarmMgr.SwitchAlarm(x))
         .AddTo(this);
     }

@@ -1,3 +1,5 @@
+// #define DEBUG_SIGHT
+
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,10 +19,19 @@ namespace Senses.Sight
     [SerializeField]
     public Transform root;
 
+#if DEBUG_SIGHT
+    [SerializeField]
+#endif
     ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
+#if DEBUG_SIGHT
+    [SerializeField]
+#endif
     ReactiveProperty<AiVisible> _Noticed = new ReactiveProperty<AiVisible>();
 
     SafetyTrigger trigger;
+#if DEBUG_SIGHT
+    [SerializeField]
+#endif
     List<AiVisible> candidates = new List<AiVisible>();
     int frameCount;
 
@@ -85,7 +96,15 @@ namespace Senses.Sight
           {
             bool hitObstacle = HaveObstaclesInBetween(inSight.center);
             if (hitObstacle || !IsInAngle(inSight.center, param.angle))
-            { LostInSight(); }
+            {
+#if UNITY_EDITOR
+              Debug.DrawLine(
+                transform.position,
+                inSight.center.position,
+                (hitObstacle ? Color.green : Color.blue), 1);
+#endif
+              LostInSight();
+            }
           }
           else
           {
@@ -93,7 +112,7 @@ namespace Senses.Sight
             {
               AiVisible candidate = candidates[i];
 
-              if (!IsInAngle(candidate.center, param.angle)) { return; }
+              if (!IsInAngle(candidate.center, param.angle)) { continue; }
 
               bool hitObstacle = HaveObstaclesInBetween(candidate.center);
 
@@ -122,10 +141,12 @@ namespace Senses.Sight
           candidates.Add(visible);
         });
       trigger.OnExit
+        .Where(_ => !param.allowWatchingOnExitSightArea)
         .Subscribe(target =>
         {
-          if (inSight && target == inSight)
-          { LostInSight(); }
+          if (inSight && target.gameObject == inSight.gameObject)
+          {
+            LostInSight(); }
           candidates.RemoveAll(x => x.gameObject == target.gameObject);
         });
     }

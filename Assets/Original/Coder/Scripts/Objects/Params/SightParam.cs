@@ -13,6 +13,9 @@ namespace Assembly.Params
     [Tooltip("NoticeImmediatelyがtrueの場合無視される")]
     public float secondsToNotice = 1;
 
+    [Tooltip("Allow Watching On Exit Sight Area\n一度ターゲットしたオブジェクトがコライダで指定したエリア外へ出た時もターゲットし続ける")]
+    public bool allowWatchingOnExitSightArea;
+
 
     [Header("For Optimization")]
     public int frameSkips = 3;

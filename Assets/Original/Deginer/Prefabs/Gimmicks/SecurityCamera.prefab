@@ -394,7 +394,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2dcc630fd1339aa49a27ee042b28e546, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  param: {fileID: 11400000, guid: 4416404c5ed14434f864502145bbe690, type: 2}
+  param: {fileID: 11400000, guid: a1842a9985a54e54587163ec7c7747d9, type: 2}
   root: {fileID: 4830826435579235714}
 --- !u!135 &4830826435763696235
 SphereCollider:

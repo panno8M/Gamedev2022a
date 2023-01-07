@@ -10,6 +10,9 @@ using UniRx.Triggers;
 public class SafetyTrigger : MonoBehaviour
 {
   Collider[] _colliders;
+#if DEBUG_SAFETY_TRIGGER
+  [SerializeField]
+#endif
   List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
