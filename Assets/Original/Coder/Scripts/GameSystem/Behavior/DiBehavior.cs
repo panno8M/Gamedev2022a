@@ -36,7 +36,7 @@ namespace Assembly.GameSystem
       }
       _AfterInitializeObservers.Clear();
     }
-    protected abstract void Blueprint();
+    protected virtual void Blueprint() { }
 
     Rigidbody _rigidbody;
     Transform _transform;
@@ -66,6 +66,20 @@ namespace Assembly.GameSystem
   }
   public static class GameObjectExtensions
   {
+    public static void SetActive(this Behaviour behaviour, bool value)
+      => behaviour.gameObject.SetActive(value);
+    public static bool SetActiveOnce(this Behaviour behaviour, bool value)
+    {
+      if (behaviour.gameObject.activeSelf == value) { return false; }
+      behaviour.SetActive(value);
+      return true;
+    }
+
+    public static void Activate(this Behaviour behaviour) => behaviour.SetActive(true);
+    public static void Disactivate(this Behaviour behaviour) => behaviour.SetActive(false);
+    public static bool ActivateOnce(this Behaviour behaviour) => behaviour.SetActiveOnce(true);
+    public static bool DisactivateOnce(this Behaviour behaviour) => behaviour.SetActiveOnce(false);
+
     public static T Instantiate<T>(this GameObject prefab)
       where T : DiBehavior
     {

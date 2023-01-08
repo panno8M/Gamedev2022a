@@ -1,91 +1,183 @@
+// #define DEBUG_SIGHT
+
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UniRx;
 using UniRx.Triggers;
 using Assembly.GameSystem;
+using Assembly.Params;
 using Utilities;
 
 namespace Senses.Sight
 {
   [RequireComponent(typeof(SphereCollider))]
   [RequireComponent(typeof(SafetyTrigger))]
-  public class AiSight : MonoBehaviour
+  public class AiSight : DiBehavior
   {
-    public float sightAngle = 30;
-    public Layer layerObstacle = Layer.Stage;
+#if UNITY_EDITOR
+#if DEBUG_SIGHT
+    [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SIGHT off.")]
+#endif // DEBUG_SIGHT
+#endif // UNITY_EDITOR
+    public SightParam param;
+    [SerializeField]
+    public Transform root;
 
-    [SerializeField] ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
+#if DEBUG_SIGHT
+    [SerializeField]
+#endif
+    ReactiveProperty<AiVisible> _InSight = new ReactiveProperty<AiVisible>();
+#if DEBUG_SIGHT
+    [SerializeField]
+#endif
+    ReactiveProperty<AiVisible> _Noticed = new ReactiveProperty<AiVisible>();
 
     SafetyTrigger trigger;
+#if DEBUG_SIGHT
+    [SerializeField]
+#endif
+    List<AiVisible> candidates = new List<AiVisible>();
+    int frameCount;
 
     public AiVisible inSight
     {
-      get { return _InSight.Value; }
-      private set { _InSight.Value = value; }
+      get => _InSight.Value;
+      private set => _InSight.Value = value;
+    }
+    public AiVisible noticed
+    {
+      get => _Noticed.Value;
+      private set => _Noticed.Value = value;
     }
 
     public IObservable<AiVisible> InSight => _InSight;
+    public IObservable<AiVisible> Noticed => _Noticed;
+
+    EzLerp noticeProgress = new EzLerp();
+
+    void Awake()
+    {
+      trigger = GetComponent<SafetyTrigger>();
+      noticeProgress.secDuration = param.secondsToNotice;
+    }
+
+    void OnEnable()
+    {
+      trigger.enabled = true;
+    }
+    void OnDisable()
+    {
+      inSight = null;
+      noticed = null;
+      noticeProgress.SetFactor0();
+      candidates.Clear();
+
+      trigger.enabled = false;
+    }
 
     void Start()
     {
-      trigger = GetComponent<SafetyTrigger>();
-
-      this.OnEnableAsObservable()
-        .Subscribe(_ =>
+      this.FixedUpdateAsObservable()
+        .Where(_ => isActiveAndEnabled)
+        .Where(_ => !param.noticeImmediately)
+        .Where(noticeProgress.isNeedsCalc)
+        .Select(noticeProgress.UpdFactor)
+        .Subscribe(fac =>
         {
-          trigger.enabled = true;
-        });
-      this.OnDisableAsObservable()
-        .Subscribe(_ =>
-        {
-          trigger.enabled = false;
-          inSight = null;
+          if (fac == 1 && !noticed) { noticed = inSight; }
+          if (fac == 0 && noticed) { noticed = null; }
         });
 
       trigger.OnStay
-        .Where(_ => inSight)
         .Subscribe(_ =>
         {
-          bool hitObstacle = HaveObstaclesInBetween(inSight.center);
-          if (hitObstacle || !IsInAngle(inSight.center, sightAngle))
-          { LostInSight(); }
+          if (frameCount++ < param.frameSkips) { return; }
+          else { frameCount = 0; }
+
+          if (inSight)
+          {
+            bool hitObstacle = HaveObstaclesInBetween(inSight.center);
+            if (hitObstacle || !IsInAngle(inSight.center, param.angle))
+            {
+#if UNITY_EDITOR
+              Debug.DrawLine(
+                transform.position,
+                inSight.center.position,
+                (hitObstacle ? Color.green : Color.blue), 1);
+#endif
+              LostInSight();
+            }
+          }
+          else
+          {
+            for (int i = 0; i < candidates.Count; i++)
+            {
+              AiVisible candidate = candidates[i];
+
+              if (!IsInAngle(candidate.center, param.angle)) { continue; }
+
+              bool hitObstacle = HaveObstaclesInBetween(candidate.center);
+
+#if UNITY_EDITOR
+              Debug.DrawLine(
+                transform.position,
+                candidate.center.position,
+                (hitObstacle ? Color.gray : Color.red), 1);
+#endif
+
+              if (!hitObstacle)
+              {
+                FoundOut(candidate);
+                return;
+              }
+            }
+          }
+
         });
 
-      trigger.OnStay
-        .Where(_ => !inSight)
-        .Subscribe(target =>
+      trigger.OnEnter
+        .Subscribe(other =>
         {
-          AiVisible visible = target.GetComponent<AiVisible>();
-          if (!IsInAngle(visible.center, sightAngle)) { return; }
-
-          bool hitObstacle = HaveObstaclesInBetween(visible.center);
-
-          Debug.DrawLine(
-            transform.position,
-            visible.center.position,
-            (hitObstacle ? Color.gray : Color.red), 1);
-
-          if (!hitObstacle) { FoundOut(visible); }
+          AiVisible visible = other.GetComponent<AiVisible>();
+          if (!visible) { return; }
+          candidates.Add(visible);
         });
       trigger.OnExit
-        .Where(_ => inSight)
-        .Where(target => target.GetComponent<AiVisible>() == inSight)
-        .Subscribe(_ => LostInSight());
+        .Where(_ => !param.allowWatchingOnExitSightArea)
+        .Subscribe(target =>
+        {
+          if (inSight && target.gameObject == inSight.gameObject)
+          {
+            LostInSight();
+          }
+          candidates.RemoveAll(x => x.gameObject == target.gameObject);
+        });
     }
 
     bool HaveObstaclesInBetween(Transform target)
     {
-      return Physics.Linecast(transform.position, target.position, new Layers(layerObstacle));
+      return Physics.Linecast(transform.position, target.position, new Layers(param.obstacleLayer));
     }
     void FoundOut(AiVisible visible)
     {
       inSight = visible;
       inSight.Find();
+
+      if (param.noticeImmediately)
+      { noticed = visible; }
+      else
+      { noticeProgress.SetAsIncrease(); }
     }
     void LostInSight()
     {
       inSight.Find(false);
       inSight = null;
+
+      if (param.noticeImmediately)
+      { noticed = null; }
+      else
+      { noticeProgress.SetAsDecrease(); }
     }
 
     bool IsInAngle(Transform target, float angle)
@@ -93,11 +185,13 @@ namespace Senses.Sight
       return (Vector3.Angle(transform.forward, target.position - transform.position) < angle);
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       Gizmos.DrawRay(transform.position, transform.forward);
-      GizmosEx.DrawWireCircle(transform.position + transform.forward, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad));
-      GizmosEx.DrawWireCircle(transform.position + transform.forward / 2, transform.rotation, Mathf.Tan(sightAngle * Mathf.Deg2Rad) / 2);
+      GizmosEx.DrawWireCircle(transform.position + transform.forward, transform.rotation, Mathf.Tan(param.angle * Mathf.Deg2Rad));
+      GizmosEx.DrawWireCircle(transform.position + transform.forward / 2, transform.rotation, Mathf.Tan(param.angle * Mathf.Deg2Rad) / 2);
     }
+#endif
   }
 }
