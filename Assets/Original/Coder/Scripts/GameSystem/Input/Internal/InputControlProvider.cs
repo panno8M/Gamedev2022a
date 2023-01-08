@@ -7,100 +7,61 @@ namespace Assembly.GameSystem.Internal
 {
   public class InputControlProvider
   {
+    Camera mainCamera;
+
     public InputSystem input;
 
-    public ReadOnlyReactiveProperty<float> HorizontalMoveInput;
+    public ReactiveProperty<float> HorizontalMoveInput = new ReactiveProperty<float>();
+    public ReactiveProperty<bool> GoUpInput = new ReactiveProperty<bool>();
+    public ReactiveProperty<bool> BreathInput = new ReactiveProperty<bool>();
+    public ReactiveProperty<bool> RespawnInput = new ReactiveProperty<bool>();
+    public ReactiveProperty<bool> PauseInput = new ReactiveProperty<bool>();
+    public ReactiveProperty<bool> InteractInput = new ReactiveProperty<bool>();
+    public ReactiveProperty<Vector2> MousePosInput = new ReactiveProperty<Vector2>();
+    public ReactiveProperty<Vector3> MousePosStage = new ReactiveProperty<Vector3>();
 
-    public ReadOnlyReactiveProperty<bool> GoUpInput;
-    public IObservable<Unit> GoUp;
+    public Subject<Unit> GoUpFixed = new Subject<Unit>();
+    public Subject<Unit> BreathPressFixed = new Subject<Unit>();
+    public Subject<Unit> BreathReleaseFixed = new Subject<Unit>();
+    public Subject<Unit> RespawnFixed = new Subject<Unit>();
+    public Subject<Unit> PauseFixed = new Subject<Unit>();
+    public Subject<Unit> InteractFixed = new Subject<Unit>();
 
-    public ReadOnlyReactiveProperty<bool> BreathInput;
-    public IObservable<Unit> BreathPress;
-    public IObservable<Unit> BreathRelease;
-
-    public ReadOnlyReactiveProperty<bool> RespawnInput;
-    public IObservable<Unit> Respawn;
-
-    public ReadOnlyReactiveProperty<bool> PauseInput;
-    public IObservable<Unit> Pause;
-
-    public ReadOnlyReactiveProperty<Vector2> MousePosInput;
-    public ReadOnlyReactiveProperty<Vector3> MousePosStage;
-
-    public ReadOnlyReactiveProperty<bool> InteractInput;
-    public IObservable<Unit> Interact;
 
     public InputControlProvider()
     {
+      mainCamera = Camera.main;
       input = new InputSystem();
       input.Enable();
 
-      HorizontalMoveInput = input.Player.HorizontalMove.AsAxis();
-      GoUpInput = input.Player.GoUp.AsButton();
-      BreathInput = input.Player.Breath.AsButton();
-      MousePosInput = input.Player.MousePos.As2dAxis();
-      InteractInput = input.Player.Interact.AsButton();
-      RespawnInput = input.Player.Respawn.AsButton();
-      PauseInput = input.Player.Pause.AsButton();
+      input.Player.HorizontalMove.AsAxis(HorizontalMoveInput);
+      input.Player.MousePos.AsAxis2d(MousePosInput);
+      input.Player.GoUp.AsButton(GoUpInput, GoUpFixed);
+      input.Player.Breath.AsButton(BreathInput, BreathPressFixed);
+      input.Player.Interact.AsButton(InteractInput, InteractFixed);
+      input.Player.Respawn.AsButton(RespawnInput, RespawnFixed);
+      input.Player.Pause.AsButton(PauseInput, PauseFixed);
 
-      GoUp = GoUpInput
-          .Where(x => x)
-          .AsUnitObservable()
-          .BatchFrame(0, FrameCountType.FixedUpdate)
-          .Share();
 
-      BreathPress = BreathInput
-          .Where(x => x)
-          .AsUnitObservable()
-          .BatchFrame(0, FrameCountType.FixedUpdate)
-          .Share();
-
-      BreathRelease = BreathInput
-          .Where(x => !x)
-          .AsUnitObservable()
-          .BatchFrame(0, FrameCountType.FixedUpdate)
-          .Share();
-
-      Respawn = RespawnInput
-          .Where(x => x)
-          .AsUnitObservable()
-          .BatchFrame(0, FrameCountType.FixedUpdate)
-          .Share();
-
-      Pause = PauseInput
-          .Where(x => x)
-          .AsUnitObservable()
-          .BatchFrame(0, FrameCountType.FixedUpdate)
-          .Share();
-
-      MousePosStage = Camera.main.transform
-          .ObserveEveryValueChanged(x => x.position)
-          .Select(_ => MousePosInput.Value)
-          .Merge(MousePosInput)
-          .Select(pos => MousePos_ScreenToGameStage(pos) ?? MousePosStage?.Value ?? Vector3.zero)
-          .ToReadOnlyReactiveProperty();
-
-      Interact = InteractInput
-          .Where(x => x)
-          .AsUnitObservable()
-          .BatchFrame(0, FrameCountType.FixedUpdate)
-          .Share();
+      mainCamera.transform
+        .ObserveEveryValueChanged(x => x.position)
+        .Subscribe(_ =>
+          MousePos_ScreenToGameStage(MousePosInput, MousePosStage));
+      MousePosInput.Subscribe(_ =>
+        MousePos_ScreenToGameStage(MousePosInput, MousePosStage));
     }
 
     static LayerMask stsc = new Layers(Layer.ScreenToStageConverter);
-    public static Vector3? MousePos_ScreenToGameStage(Vector3 screenPos)
+    void MousePos_ScreenToGameStage(
+      ReactiveProperty<Vector2> screenPos,
+      ReactiveProperty<Vector3> stagePos)
     {
-      screenPos.z = 1.0f;
-      var worldPos = Camera.main.ScreenToWorldPoint(screenPos);
-      var camPos = Camera.main.transform.position;
+      var worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPos.Value.x, screenPos.Value.y, 1));
+      var camPos = mainCamera.transform.position;
       if (Physics.Raycast(camPos, (worldPos - camPos), out RaycastHit hit, 100f, stsc))
       {
         Debug.DrawRay(camPos, hit.point, Color.red);
-        return new Vector3(hit.point.x, hit.point.y, 0);
-      }
-      else
-      {
-        return null;
+        stagePos.Value = new Vector3(hit.point.x, hit.point.y, 0);
       }
     }
   }

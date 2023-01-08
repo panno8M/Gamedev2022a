@@ -9,6 +9,7 @@ namespace Assembly.Components
   public class DroneReactionSet : DiBehavior
   {
     public enum Kind { None, Question, Exclamation, GuruGuru }
+    Camera mainCamera;
     EzLerp lifetime = new EzLerp(1);
     Kind _kind;
     [SerializeField] GameObject uiQuestion;
@@ -24,6 +25,7 @@ namespace Assembly.Components
 
     protected override void Blueprint()
     {
+      mainCamera = Camera.main;
       this.FixedUpdateAsObservable()
         .Where(lifetime.isNeedsCalc)
         .Select(lifetime.UpdFactor)
@@ -35,7 +37,7 @@ namespace Assembly.Components
         .Where(_ => kind != Kind.None)
         .Subscribe(_ =>
         {
-          transform.rotation = Camera.main.transform.rotation;
+          transform.rotation = mainCamera.transform.rotation;
         });
       kind = Kind.None;
     }
