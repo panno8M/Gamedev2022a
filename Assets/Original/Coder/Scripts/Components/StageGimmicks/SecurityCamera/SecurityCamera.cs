@@ -3,6 +3,7 @@ using UniRx;
 using Senses.Sight;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Message;
+using Assembly.GameSystem.Damage;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -17,12 +18,16 @@ namespace Assembly.Components.StageGimmicks
     }
 
     [SerializeField] AiSight aiSight;
+    [SerializeField] DamagableComponent damagable;
 
     void Start()
     {
       aiSight.Noticed
         .Subscribe(x => alarmMgr.SwitchAlarm(x))
         .AddTo(this);
+
+      damagable.OnBroken
+        .Subscribe(_ => Destroy(gameObject));
     }
 
     public void ReceiveMessage(MessageUnit message)
