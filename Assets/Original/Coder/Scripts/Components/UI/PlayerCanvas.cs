@@ -46,7 +46,7 @@ namespace Assembly.Components.UI
 
 
       Observable.EveryUpdate()
-        .Select(_ => control.HorizontalMoveInput.Value)
+        .Select(_ => control.horizontalMoveInput)
         .Subscribe(hmi =>
         {
           easeR.SetMode(increase: hmi == 1);

@@ -10,32 +10,38 @@ namespace Assembly.GameSystem.Input
     InputControlProvider _provider;
     InputControlProvider provider => _provider ?? (_provider = new InputControlProvider());
 
-    public ReadOnlyReactiveProperty<float> HorizontalMoveInput => provider.HorizontalMoveInput;
+    public IObservable<float> HorizontalMoveInput => provider.HorizontalMoveInput;
+    public IObservable<bool> GoUpInput => provider.GoUpInput;
+    public IObservable<bool> BreathInput => provider.BreathInput;
+    public IObservable<bool> RespawnInput => provider.RespawnInput;
+    public IObservable<bool> PauseInput => provider.PauseInput;
+    public IObservable<bool> InteractInput => provider.InteractInput;
+    public IObservable<Vector2> MousePosInput => provider.MousePosInput;
+    public IObservable<Vector3> MousePosStage => provider.MousePosStage;
 
-    public ReadOnlyReactiveProperty<bool> GoUpInput => provider.GoUpInput;
-    public IObservable<Unit> GoUp => provider.GoUp;
+    public float horizontalMoveInput => provider.HorizontalMoveInput.Value;
+    public bool goUpInput => provider.GoUpInput.Value;
+    public bool breathInput => provider.BreathInput.Value;
+    public bool respawnInput => provider.RespawnInput.Value;
+    public bool pauseInput => provider.PauseInput.Value;
+    public bool interactInput => provider.InteractInput.Value;
+    public Vector2 mousePosInput => provider.MousePosInput.Value;
+    public Vector3 mousePosStage => provider.MousePosStage.Value;
 
-    public ReadOnlyReactiveProperty<bool> BreathInput => provider.BreathInput;
-    public IObservable<Unit> BreathPress => provider.BreathPress;
-    public IObservable<Unit> BreathRelease => provider.BreathRelease;
 
-    public ReadOnlyReactiveProperty<bool> RespawnInput => provider.RespawnInput;
-    public IObservable<Unit> Respawn => provider.Respawn;
-    public ReadOnlyReactiveProperty<bool> PauseInput => provider.PauseInput;
-    public IObservable<Unit> Pause => provider.Pause;
-
-    public ReadOnlyReactiveProperty<Vector2> MousePosInput => provider.MousePosInput;
-    public ReadOnlyReactiveProperty<Vector3> MousePosStage => provider.MousePosStage;
-
-    public ReadOnlyReactiveProperty<bool> InteractInput => provider.InteractInput;
-    public IObservable<Unit> Interact => provider.Interact;
+    public IObservable<Unit> GoUpFixed => provider.GoUpFixed.BatchFrame(0, FrameCountType.FixedUpdate);
+    public IObservable<Unit> BreathPressFixed => provider.BreathPressFixed.BatchFrame(0, FrameCountType.FixedUpdate);
+    public IObservable<Unit> BreathReleaseFixed => provider.BreathReleaseFixed.BatchFrame(0, FrameCountType.FixedUpdate);
+    public IObservable<Unit> RespawnFixed => provider.RespawnFixed.BatchFrame(0, FrameCountType.FixedUpdate);
+    public IObservable<Unit> PauseFixed => provider.PauseFixed.BatchFrame(0, FrameCountType.FixedUpdate);
+    public IObservable<Unit> InteractFixed => provider.InteractFixed.BatchFrame(0, FrameCountType.FixedUpdate);
 
     protected override void Blueprint()
     {
       throw new NotImplementedException();
     }
 
-#if DEBUG
+#if UNITY_EDITOR
     void Awake()
     {
       Inspect();

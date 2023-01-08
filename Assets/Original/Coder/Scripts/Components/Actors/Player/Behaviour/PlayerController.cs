@@ -81,25 +81,25 @@ namespace Assembly.Components.Actors.Player
 
     protected override void Blueprint()
     {
-      control.GoUp
+      control.GoUpFixed
         .Where(_ => isAllOperable)
         .Multicast(_Up)
         .Connect()
         .AddTo(this);
 
-      control.Interact
+      control.InteractFixed
         .Where(_ => isAllOperable)
         .Multicast(_Interact)
         .Connect()
         .AddTo(this);
 
-      control.Respawn
+      control.RespawnFixed
         .Where(_ => isAllOperable)
         .Multicast(_Respawn)
         .Connect()
         .AddTo(this);
 
-      control.BreathPress
+      control.BreathPressFixed
         .Where(_ => isAllOperable)
         .Multicast(_BreathPress)
         .Connect()
