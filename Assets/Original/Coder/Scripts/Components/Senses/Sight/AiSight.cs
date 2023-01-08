@@ -13,7 +13,7 @@ namespace Senses.Sight
 {
   [RequireComponent(typeof(SphereCollider))]
   [RequireComponent(typeof(SafetyTrigger))]
-  public class AiSight : MonoBehaviour
+  public class AiSight : DiBehavior
   {
 #if UNITY_EDITOR
 #if DEBUG_SIGHT
@@ -64,7 +64,6 @@ namespace Senses.Sight
 
     void OnEnable()
     {
-      root.gameObject.SetActive(true);
       trigger.enabled = true;
     }
     void OnDisable()
@@ -75,7 +74,6 @@ namespace Senses.Sight
       candidates.Clear();
 
       trigger.enabled = false;
-      root.gameObject.SetActive(false);
     }
 
     void Start()

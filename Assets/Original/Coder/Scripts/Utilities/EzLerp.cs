@@ -28,6 +28,18 @@ namespace Utilities
 
     float _curvedAplha;
     ReactiveProperty<bool> _needsCalc = new ReactiveProperty<bool>(true);
+    void decideCalculationNeeds()
+    {
+      switch (_mode.Value)
+      {
+        case Mode.Decrease:
+          needsCalc = 0 < _factor;
+          return;
+        case Mode.Increase:
+          needsCalc = _factor < 1;
+          return;
+      }
+    }
     public bool needsCalc
     {
       get { return _needsCalc.Value; }
@@ -39,22 +51,27 @@ namespace Utilities
     public float alpha => useCurve ? _curvedAplha : _factor;
     public override float UpdFactor()
     {
-      if (latestCallTime == 0) { latestCallTime = Time.time; return 0; }
+      if (latestCallTime == 0)
+      {
+        latestCallTime = Time.time;
+        decideCalculationNeeds();
+        return alpha;
+      }
 
-      var delta = (Time.time - latestCallTime) * localTimeScale;
-      if (delta < 0.001) { return alpha; }
+      var delta = (Time.time - latestCallTime);
+      if (delta == 0) { return alpha; }
       latestCallTime = Time.time;
 
       if (!needsCalc) { return alpha; }
 
-      SetFactor(_factor + (float)mode * delta / secDuration);
+      SetFactor(_factor + (float)mode * delta * localTimeScale / secDuration);
 
       return alpha;
     }
     public override void SetFactor(float value)
     {
       base.SetFactor(value);
-      needsCalc = ((isDecreasing && 0 < _factor) || (isIncreasing && _factor < 1));
+      decideCalculationNeeds();
       if (useCurve)
       {
         _curvedAplha = curve.Evaluate(_factor);
@@ -81,11 +98,10 @@ namespace Utilities
       get { return _mode.Value; }
       set
       {
+        if (mode == value) { return; }
         needsCalc = true;
-        if (mode != value && latestCallTime != 0)
-        {
-          latestCallTime = Time.time;
-        }
+        // latestCallTime == 0、つまりUpdateが呼ばれる前の初期化時ではTime.timeを呼ぶと例外が投げられる
+        if (latestCallTime != 0) { latestCallTime = Time.time; }
         _mode.Value = value;
       }
     }

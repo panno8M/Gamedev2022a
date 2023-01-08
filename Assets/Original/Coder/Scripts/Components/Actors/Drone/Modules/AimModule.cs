@@ -116,7 +116,7 @@ namespace Assembly.Components.Actors
             }
           });
     }
-    void OnEnable() => sight.enabled = true;
-    void OnDisable() => sight.enabled = false;
+    void OnEnable() => sight.ActivateOnce();
+    void OnDisable() => sight.DisactivateOnce();
   }
 }
