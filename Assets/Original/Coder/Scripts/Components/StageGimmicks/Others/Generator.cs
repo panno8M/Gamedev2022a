@@ -17,6 +17,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField]
     MessageDispatcher _OnPutKandelaar = new MessageDispatcher(MessageKind.Power);
 
+    [SerializeField]
     EzLerp powerProgress = new EzLerp(3);
 
     protected override void Blueprint()

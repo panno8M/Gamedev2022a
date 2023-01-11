@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 // #define DEBUG_SIGHT
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -15,11 +17,10 @@ namespace Senses.Sight
   [RequireComponent(typeof(SafetyTrigger))]
   public class AiSight : DiBehavior
   {
-#if UNITY_EDITOR
 #if DEBUG_SIGHT
     [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SIGHT off.")]
+    byte __headerTarget__;
 #endif // DEBUG_SIGHT
-#endif // UNITY_EDITOR
     public SightParam param;
     [SerializeField]
     public Transform root;

@@ -569,6 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa649abd227d71d40b4c5ae576a342d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blinkParam: {fileID: 11400000, guid: 9771a03ec7ccbcb499e3a78046922aa6, type: 2}
   inverseSignal: 1
   aiSight: {fileID: 4830826435763696228}
   damagable: {fileID: 865709230060645572}

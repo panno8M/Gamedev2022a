@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+// #define DEBUG_ALARM
+#endif
+
 using System;
 using UnityEngine;
 using UniRx;
@@ -9,6 +13,14 @@ namespace Assembly.Components.StageGimmicks
 {
   public class AlarmMgr : DiBehavior
   {
+#if DEBUG_ALARM
+    [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_ALARM off.")]
+    byte __headerTarget__;
+#endif
+
+#if DEBUG_ALARM
+    [SerializeField]
+#endif
     Rollback rollback;
     [Zenject.Inject]
     public void DepsInject(Rollback rollback)
@@ -20,8 +32,14 @@ namespace Assembly.Components.StageGimmicks
     public IObservable<bool> IsOnAlert => _IsOnAlert;
     public bool isOnAlert
     {
-      get { return _IsOnAlert.Value; }
-      private set { _IsOnAlert.Value = value; }
+      get => _IsOnAlert.Value;
+      private set
+      {
+        _IsOnAlert.Value = value;
+#if DEBUG_ALARM
+        Debug.Log($"isOnAlert: {isOnAlert} ({name})");
+#endif
+      }
     }
     public void ActivateAlarm() => SwitchAlarm(true);
     public void DisarmAlarm() => SwitchAlarm(false);
@@ -42,11 +60,11 @@ namespace Assembly.Components.StageGimmicks
         {
           isOnAlert = fac != 0;
         });
-      rollback.OnExecute
+      rollback.OnPreflight
         .Subscribe(_ =>
         {
           alarmProgress.SetFactor0();
-          alarmProgress.SetMode(increase: false);
+          alarmProgress.SetAsDecrease();
         });
     }
   }

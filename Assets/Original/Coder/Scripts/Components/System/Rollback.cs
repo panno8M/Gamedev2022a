@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+// #define DEBUG_ROLLBACK
+#endif
+
 using System;
 using UnityEngine;
 using UniRx;
@@ -6,12 +10,22 @@ namespace Assembly.Components
 {
   public class Rollback : MonoBehaviour
   {
+#if DEBUG_ROLLBACK
+    [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_ROLLBACK off.")]
+    byte __headerTarget__;
+#endif
     public void Preflight(IRollbackDispatcher dispatcher)
     {
+#if DEBUG_ROLLBACK
+      Debug.Log($"{name}: Preflight");
+#endif
       _Preflight.OnNext(dispatcher);
     }
     public void Execute(IRollbackDispatcher dispatcher)
     {
+#if DEBUG_ROLLBACK
+      Debug.Log($"{name}: Execute");
+#endif
       _Executtion.OnNext(dispatcher);
     }
 
