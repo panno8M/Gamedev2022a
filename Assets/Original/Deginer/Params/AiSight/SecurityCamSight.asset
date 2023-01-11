@@ -17,4 +17,12 @@ MonoBehaviour:
   noticeImmediately: 0
   secondsToNotice: 0.5
   allowWatchingOnExitSightArea: 0
+  blink:
+    useBlink: 0
+    secondsToWait:
+      min: Infinity
+      max: Infinity
+    secondsToBlink:
+      min: 0
+      max: 0
   frameSkips: 2
