@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 // #define DEBUG_SAFETY_TRIGGER
+#endif
 
 using System;
 using System.Collections.Generic;
@@ -9,12 +11,9 @@ using UniRx.Triggers;
 [RequireComponent(typeof(Collider))]
 public class SafetyTrigger : MonoBehaviour
 {
-#if UNITY_EDITOR
 #if DEBUG_SAFETY_TRIGGER
   [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SAFETY_TRIGGER off.")]
-#endif // DEBUG_SAFETY_TRIGGER
-#endif // UNITY_EDITOR
-#if DEBUG_SAFETY_TRIGGER
+  byte __headerTarget__;
   [SerializeField]
 #endif
   List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
