@@ -64,11 +64,11 @@ namespace Utilities
 
       if (!needsCalc) { return alpha; }
 
-      SetFactor(_factor + (float)mode * delta * localTimeScale / secDuration);
+      _SetFactor(_factor + (float)mode * delta * localTimeScale / secDuration);
 
       return alpha;
     }
-    public override void SetFactor(float value)
+    void _SetFactor(float value)
     {
       base.SetFactor(value);
       decideCalculationNeeds();
@@ -77,18 +77,14 @@ namespace Utilities
         _curvedAplha = curve.Evaluate(_factor);
       }
     }
-    public override void SetFactor0()
+    public override void SetFactor(float value)
     {
-      _factor = 0;
-      if (useCurve) { _curvedAplha = curve.Evaluate(0); }
-      needsCalc = isIncreasing;
+      base.SetFactor(value);
+      if (useCurve) { _curvedAplha = curve.Evaluate(_factor); }
+      needsCalc = true;
     }
-    public override void SetFactor1()
-    {
-      _factor = 1;
-      if (useCurve) { _curvedAplha = curve.Evaluate(1); }
-      needsCalc = isDecreasing;
-    }
+    public override void SetFactor0() => SetFactor(0);
+    public override void SetFactor1() => SetFactor(1);
 
     [SerializeField] public float secDuration;
 
