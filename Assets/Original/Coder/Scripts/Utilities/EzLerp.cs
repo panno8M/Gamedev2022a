@@ -31,13 +31,27 @@ namespace Utilities
     public AnimationCurve curve;
 
 #if DEBUG_EZ_LERP
+    [Header("Debug")]
+#endif
+#if DEBUG_EZ_LERP
     [SerializeField]
 #endif
     ReactiveProperty<Mode> _mode = new ReactiveProperty<Mode>(Mode.Decrease);
-
-    float latestCallTime;
-    float _curvedAplha;
+#if DEBUG_EZ_LERP
+    [SerializeField]
+#endif
     ReactiveProperty<bool> _needsCalc = new ReactiveProperty<bool>(true);
+#if DEBUG_EZ_LERP
+    [SerializeField]
+#endif
+    float latestCallTime;
+#if DEBUG_EZ_LERP
+    [SerializeField]
+#endif
+    float _curvedAplha;
+#if DEBUG_EZ_LERP
+    [SerializeField] int __updateCount;
+#endif
 
     public Mode mode
     {
@@ -88,6 +102,9 @@ namespace Utilities
       if (!needsCalc) { return alpha; }
 
       _SetFactor(_factor + (float)mode * delta * localTimeScale / secDuration);
+#if DEBUG_EZ_LERP
+      __updateCount++;
+#endif
 
       return alpha;
     }
