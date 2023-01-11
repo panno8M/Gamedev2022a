@@ -1783,6 +1783,12 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.y
       value: 90
       objectReference: {fileID: 0}
+    - target: {fileID: 4830826436109407589, guid: c5047fe0983cdf343b7e8d3317f1fa64,
+        type: 3}
+      propertyPath: blinkParam
+      value: 
+      objectReference: {fileID: 11400000, guid: 79bcf58651867e346871402d82069ca6,
+        type: 2}
     - target: {fileID: 4830826436109407594, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
       propertyPath: m_Name
