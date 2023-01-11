@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+// #define DEBUG_MIX_FACTOR
+#endif
+
 using System;
 using UnityEngine;
 
@@ -6,7 +10,11 @@ namespace Utilities
   [Serializable]
   public class MixFactor
   {
-    [SerializeField][Range(0f, 1f)] protected float _factor;
+#if DEBUG_MIX_FACTOR
+    [SerializeField][Range(0f, 1f)]
+#endif
+    protected float _factor;
+
     public virtual float UpdFactor() { return _factor; }
     public virtual float PeekFactor() { return _factor; }
     public float UpdFactor<T>(T t) => UpdFactor();
