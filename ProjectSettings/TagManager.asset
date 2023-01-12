@@ -17,7 +17,7 @@ TagManager:
   - Water
   - UI
   - Physics/Stage
-  - Ctlvol/Trigger
+  - Physics/Trigger
   - Ctlvol/ForPlayer
   - Senses/AiVisible
   - Senses/Damagable
