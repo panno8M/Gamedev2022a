@@ -1,3 +1,4 @@
+using UnityEngine;
 using UniRx;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.PathNetwork;
@@ -29,8 +30,10 @@ namespace Assembly.Components.Actors
       ParticleExplosionPool psExplosionPool)
     {
       this.alarmMgr = alarmMgr;
+      searchLight.DepsInject(alarmMgr);
       base.DepsInject(psExplosionPool);
     }
+    [SerializeField] SearchLight searchLight;
     protected override void Subscribe()
     {
       base.Subscribe();
