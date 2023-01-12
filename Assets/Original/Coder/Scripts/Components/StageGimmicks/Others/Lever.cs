@@ -10,6 +10,7 @@ namespace Assembly.Components.StageGimmicks
   [RequireComponent(typeof(SafetyTrigger))]
   public class Lever : MonoBehaviour, IInteractable
   {
+    [SerializeField]
     ReactiveProperty<bool> _LeverSwitch = new ReactiveProperty<bool>();
     Interactable interactable;
 
@@ -31,6 +32,7 @@ namespace Assembly.Components.StageGimmicks
     {
       interactable = GetComponent<Interactable>();
       _OnSwitch.message.intensity = leverProgress;
+      if (leverSwitch) { leverProgress.SetAsIncrease(); leverProgress.SetFactor1(); }
       OnLeverSwitch.Subscribe(leverProgress.SetMode);
 
       this.FixedUpdateAsObservable()

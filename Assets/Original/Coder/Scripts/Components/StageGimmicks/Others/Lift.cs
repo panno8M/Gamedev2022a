@@ -24,6 +24,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] OperationMode mode;
     [SerializeField] bool ignorePower;
     [SerializeField] Vector3 _positionDelta;
+    Vector3 positionDelta => transform.localRotation * _positionDelta;
 
     [SerializeField] GameObject _plateObject;
     [SerializeField] Color _acitivatedColor;
@@ -89,7 +90,30 @@ namespace Assembly.Components.StageGimmicks
 
     void UpdatePosition(Transform transform, MixFactor intensity)
     {
-      transform.localPosition = intensity.UpdAdd(_positionDefault, _positionDelta);
+      transform.localPosition = intensity.UpdAdd(_positionDefault, positionDelta);
     }
+
+#if UNITY_EDITOR
+    Mesh _plateMesh;
+    Vector3 _positionDefaultGlobal;
+    void OnDrawGizmos()
+    {
+      Vector3 positionDelta = this.positionDelta;
+
+      Gizmos.color = ignorePower ? Color.white : Color.red;
+      if (!Application.isPlaying || _positionDefaultGlobal == Vector3.zero)
+      { _positionDefaultGlobal = transform.position; }
+      if (!ignorePower) { UnityEditor.Handles.Label(_positionDefaultGlobal + positionDelta / 2, "(needs power)"); }
+      Gizmos.DrawLine(_positionDefaultGlobal, _positionDefaultGlobal + positionDelta);
+      if (_plateObject)
+      {
+        if (!_plateMesh) { _plateMesh = _plateObject.GetComponent<MeshFilter>()?.sharedMesh; }
+        if (_plateMesh)
+        {
+          Gizmos.DrawMesh(_plateMesh, _positionDefaultGlobal + positionDelta, _plateObject.transform.rotation, _plateObject.transform.localScale);
+        }
+      }
+    }
+#endif
   }
 }
