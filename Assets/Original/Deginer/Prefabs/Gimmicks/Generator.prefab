@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 1536601184234249524}
   - component: {fileID: 1536601184234249527}
   - component: {fileID: 1536601184234249526}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Generator
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -148,8 +148,16 @@ MonoBehaviour:
     receivers: []
     message:
       kind: 1
-      intensity:
-        _factor: 0
+  powerProgress:
+    secDuration: 3
+    localTimeScale: 1
+    useCurve: 0
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
 --- !u!65 &1536601184234249527
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -175,4 +183,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}

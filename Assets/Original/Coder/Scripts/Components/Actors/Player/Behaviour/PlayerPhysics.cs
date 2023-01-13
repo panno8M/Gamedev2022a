@@ -92,14 +92,14 @@ namespace Assembly.Components.Actors.Player
 
           _BehaviorUpdate.OnNext(Unit.Default);
 
-          _isOnGroundAtLast = _isOnGround;
-          _isOnGround = false;
-          obstacleColliding = false;
-
           obstacleClimbable = obstacleColliding && !Physics.CheckBox(
             transform.position + steppableBoxCenter.SignX(_actor.ctl.lookDirection),
             steppableBoxExtents,
             Quaternion.identity, new Layers(Layer.Stage, Layer.Dynamics));
+
+          _isOnGroundAtLast = _isOnGround;
+          _isOnGround = false;
+          obstacleColliding = false;
         });
     }
     void OnDrawGizmos()
