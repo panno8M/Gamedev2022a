@@ -150,7 +150,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 8
   m_CollisionDetection: 0
 --- !u!114 &2644991908084150663
 MonoBehaviour:
@@ -164,7 +164,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &7171335578761235705
 MonoBehaviour:
   m_ObjectHideFlags: 0
