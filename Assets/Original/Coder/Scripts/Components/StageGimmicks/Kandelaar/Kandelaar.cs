@@ -1,9 +1,10 @@
 using System;
-using UniRx;
 using UnityEngine;
+using UniRx;
+using Cysharp.Threading.Tasks;
+using Cinemachine;
 using Assembly.GameSystem;
 using Assembly.GameSystem.Damage;
-using Cysharp.Threading.Tasks;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -22,6 +23,8 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] Holdable _holdable;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] ParticleSystem _psSmoke;
+    [SerializeField] CinemachineVirtualCamera virtualCamera;
+    [SerializeField] CinemachineImpulseSource impulseSource;
     public KandelaarSupply supply;
 
     protected override void Blueprint()
@@ -62,7 +65,13 @@ namespace Assembly.Components.StageGimmicks
     }
     async UniTask BreakSequence()
     {
+      virtualCamera.Priority = 100;
       await GameTime.HitStop(TimeSpan.FromMilliseconds(500));
+      impulseSource.GenerateImpulseAt(transform.position, new Vector3(0, -1, 0));
+      await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+      impulseSource.GenerateImpulseAt(transform.position, new Vector3(1, 0, 0));
+      await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
+      impulseSource.GenerateImpulseAt(transform.position, new Vector3(0, 0, 1));
 
       _psSmoke.Play();
       supply.enabled = false;
@@ -81,6 +90,7 @@ namespace Assembly.Components.StageGimmicks
       transform.position = _defaultPosition;
       supply.enabled = true;
       _holdable.enabled = true;
+      virtualCamera.Priority = 0;
       rollback.Preflight(this);
       await UniTask.Delay(1000);
       rollback.Execute(this);

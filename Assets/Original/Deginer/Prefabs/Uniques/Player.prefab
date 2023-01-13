@@ -75,7 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &293357031
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +208,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &847327825
 GameObject:
   m_ObjectHideFlags: 0
@@ -325,7 +327,7 @@ MonoBehaviour:
   param:
     stamina: 1
     secCoolDownToNextDamage: 0
-    allowDamageSource: 2
+    allowDamageSource: 0
     damageDisabled: 0
   inspector:
     IsBroken: 0
@@ -375,7 +377,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1 &5128063384439505513
 GameObject:
   m_ObjectHideFlags: 0
@@ -5663,7 +5666,7 @@ MonoBehaviour:
   _actor: {fileID: 1855202803}
   psFlameBreath: {fileID: 5944828297956823533}
   exhalingProgress:
-    _factor: 0
+    secDuration: 2
     localTimeScale: 1
     useCurve: 0
     curve:
@@ -5672,9 +5675,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    secDuration: 2
-    _mode:
-      value: -1
 --- !u!114 &7140775411709922365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5718,7 +5718,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &1399977876492955247
 MonoBehaviour:
   m_ObjectHideFlags: 0
