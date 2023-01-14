@@ -90,6 +90,8 @@ MonoBehaviour:
     type: 3}
   particleImpactSplashPool: {fileID: 8005433166638923493, guid: 0d2f1b99fb624bb46a3a6451f595fef3,
     type: 3}
+  signalLinePool: {fileID: 4861806639525466784, guid: 3512f240cef56f6478de5a8f2f04a8e3,
+    type: 3}
 --- !u!114 &4516686996886904212
 MonoBehaviour:
   m_ObjectHideFlags: 0

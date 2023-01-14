@@ -1,6 +1,5 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
 using Utilities;
 using Assembly.GameSystem.Message;
@@ -8,9 +7,11 @@ using Assembly.GameSystem.Message;
 namespace Assembly.Components.StageGimmicks
 {
   [RequireComponent(typeof(SafetyTrigger))]
+  [RequireComponent(typeof(SignalLineDrawer))]
   public class PressurePlate : MonoBehaviour
   {
     SafetyTrigger SafetyTrigger;
+    SignalLineDrawer signalLineDrawer;
 
     enum Mode { Relax = -1, Press = 1 }
     [SerializeField] MessageDispatcher _OnPress = new MessageDispatcher();
@@ -29,6 +30,8 @@ namespace Assembly.Components.StageGimmicks
     void Start()
     {
       SafetyTrigger = GetComponent<SafetyTrigger>();
+      (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
+      signalLineDrawer.dispatchers.Add(_OnPress);
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
@@ -36,8 +39,6 @@ namespace Assembly.Components.StageGimmicks
       _OnPress.message.intensity = animateProgress;
 
       AnimatePress().Forget();
-      // this.FixedUpdateAsObservable()
-      //   .Subscribe(_ => CalcFrame());
 
       SafetyTrigger.OnEnter
         .Subscribe(trigger =>

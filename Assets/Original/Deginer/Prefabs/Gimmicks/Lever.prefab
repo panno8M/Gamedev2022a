@@ -128,6 +128,7 @@ GameObject:
   - component: {fileID: 8281354616794140825}
   - component: {fileID: 8281354616794140820}
   - component: {fileID: 8281354616794140826}
+  - component: {fileID: 5673732674592895420}
   m_Layer: 13
   m_Name: Lever
   m_TagString: Untagged
@@ -164,6 +165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c38721442db49b14196956e98a48dda5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _LeverSwitch:
+    value: 0
   _leverRoot: {fileID: 8281354616456575676}
   _leverRotateFrom: {x: 0, y: 0, z: -0.25881904, w: 0.9659258}
   _leverRotateTo: {x: 0, y: 0, z: 0.25881904, w: 0.9659258}
@@ -171,10 +174,9 @@ MonoBehaviour:
     receivers: []
     message:
       kind: 0
-      intensity:
-        _factor: 0
   leverProgress:
-    _factor: 0
+    secDuration: 0.5
+    localTimeScale: 1
     useCurve: 1
     curve:
       serializedVersion: 2
@@ -200,9 +202,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    secDuration: 0.5
-    _mode:
-      value: -1
 --- !u!114 &8281354616794140825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -240,7 +239,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  triggers: []
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
+--- !u!114 &5673732674592895420
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8281354616794140822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cfe7468484f2d7f4cad246126c29b035, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8281354617729077790
 GameObject:
   m_ObjectHideFlags: 0
