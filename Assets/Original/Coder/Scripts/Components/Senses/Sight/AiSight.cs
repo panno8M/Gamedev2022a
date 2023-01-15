@@ -34,7 +34,7 @@ namespace Senses.Sight
 #endif
     ReactiveProperty<AiVisible> _Noticed = new ReactiveProperty<AiVisible>();
 
-    SafetyTrigger trigger;
+    SafetyTrigger _trigger;
 #if DEBUG_SIGHT
     [SerializeField]
 #endif
@@ -59,13 +59,13 @@ namespace Senses.Sight
 
     void Awake()
     {
-      trigger = GetComponent<SafetyTrigger>();
+      _trigger = GetComponent<SafetyTrigger>();
       noticeProgress.secDuration = param.secondsToNotice;
     }
 
     void OnEnable()
     {
-      trigger.enabled = true;
+      _trigger.enabled = true;
     }
     void OnDisable()
     {
@@ -74,7 +74,7 @@ namespace Senses.Sight
       noticeProgress.SetFactor0();
       candidates.Clear();
 
-      trigger.enabled = false;
+      _trigger.enabled = false;
     }
 
     void Start()
@@ -90,7 +90,7 @@ namespace Senses.Sight
           if (fac == 0 && noticed) { noticed = null; }
         });
 
-      trigger.OnStay
+      _trigger.OnStay
         .Subscribe(_ =>
         {
           if (frameCount++ < param.frameSkips) { return; }
@@ -137,14 +137,14 @@ namespace Senses.Sight
 
         });
 
-      trigger.OnEnter
+      _trigger.OnEnter
         .Subscribe(other =>
         {
           AiVisible visible = other.GetComponent<AiVisible>();
           if (!visible) { return; }
           candidates.Add(visible);
         });
-      trigger.OnExit
+      _trigger.OnExit
         .Where(_ => !param.allowWatchingOnExitSightArea)
         .Subscribe(target =>
         {

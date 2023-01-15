@@ -10,7 +10,7 @@ namespace Assembly.Components.StageGimmicks
   [RequireComponent(typeof(SignalLineDrawer))]
   public class PressurePlate : MonoBehaviour
   {
-    SafetyTrigger SafetyTrigger;
+    SafetyTrigger _trigger;
     SignalLineDrawer signalLineDrawer;
 
     enum Mode { Relax = -1, Press = 1 }
@@ -29,7 +29,7 @@ namespace Assembly.Components.StageGimmicks
 
     void Start()
     {
-      SafetyTrigger = GetComponent<SafetyTrigger>();
+      _trigger = GetComponent<SafetyTrigger>();
       (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
       signalLineDrawer.dispatchers.Add(_OnPress);
       _positionDefault = _plateObject.transform.localPosition;
@@ -40,17 +40,17 @@ namespace Assembly.Components.StageGimmicks
 
       AnimatePress().Forget();
 
-      SafetyTrigger.OnEnter
+      _trigger.OnEnter
         .Subscribe(trigger =>
         {
           targetMode = Mode.Press;
         }).AddTo(this);
-      SafetyTrigger.OnExit
+      _trigger.OnExit
         .Subscribe(trigger =>
         {
-          if (SafetyTrigger.triggers.Count == 0)
+          if (this._trigger.others.Count == 0)
           {
-            targetMode = Mode.Relax;
+                targetMode = Mode.Relax;
           }
         }).AddTo(this);
     }

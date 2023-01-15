@@ -8,7 +8,7 @@ namespace Assembly.Components
   [RequireComponent(typeof(SafetyTrigger))]
   public class Holder : MonoBehaviour
   {
-    SafetyTrigger _safetyTrigger;
+    SafetyTrigger _trigger;
     [SerializeField] List<Holdable> _accessibles = new List<Holdable>();
 
     Subject<Holdable> _RequestHold = new Subject<Holdable>();
@@ -27,10 +27,10 @@ namespace Assembly.Components
     void Awake()
     {
       GetComponent<Collider>().isTrigger = true;
-      _safetyTrigger = GetComponent<SafetyTrigger>();
+      _trigger = GetComponent<SafetyTrigger>();
 
-      _safetyTrigger.OnEnter.Subscribe(AddToAccessibles);
-      _safetyTrigger.OnExit.Subscribe(RemoveFromAccessibles);
+      _trigger.OnEnter.Subscribe(AddToAccessibles);
+      _trigger.OnExit.Subscribe(RemoveFromAccessibles);
 
       void AddToAccessibles(SafetyTrigger trigger)
       {

@@ -13,7 +13,7 @@ namespace Assembly.Components.StageGimmicks
   public class Generator : DiBehavior
   {
     Collider _collider;
-    SafetyTrigger _safetyTrigger;
+    SafetyTrigger _trigger;
     [SerializeField]
     MessageDispatcher _OnPutKandelaar = new MessageDispatcher(MessageKind.Power);
 
@@ -28,18 +28,18 @@ namespace Assembly.Components.StageGimmicks
     {
       _collider = GetComponent<Collider>();
       _collider.isTrigger = true;
-      _safetyTrigger = GetComponent<SafetyTrigger>();
+      _trigger = GetComponent<SafetyTrigger>();
 
       _OnPutKandelaar.message.intensity = powerProgress;
 
-      _safetyTrigger.OnEnter
+      _trigger.OnEnter
         .Where(trigger => trigger.CompareTag(Tag.Kandelaar.GetName()))
         .Subscribe(trigger =>
         {
           powerProgress.SetAsIncrease();
           trigger.GetComponent<Kandelaar>().supply.isBeingAbsorbed = true;
         }).AddTo(this);
-      _safetyTrigger.OnExit
+      _trigger.OnExit
         .Where(trigger => trigger.CompareTag(Tag.Kandelaar.GetName()))
         .Subscribe(trigger =>
         {

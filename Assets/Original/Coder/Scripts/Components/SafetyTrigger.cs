@@ -16,7 +16,7 @@ public class SafetyTrigger : MonoBehaviour
   byte __headerTarget__;
   [SerializeField]
 #endif
-  List<SafetyTrigger> _triggers = new List<SafetyTrigger>();
+  List<SafetyTrigger> _ohters = new List<SafetyTrigger>();
   Collider[] _colliders;
 
   Subject<SafetyTrigger> _OnEnter = new Subject<SafetyTrigger>();
@@ -29,7 +29,7 @@ public class SafetyTrigger : MonoBehaviour
   bool needsCleanUp;
 
   public Collider[] colliders => _colliders ?? (_colliders = GetComponents<Collider>());
-  public List<SafetyTrigger> triggers => _triggers;
+  public List<SafetyTrigger> others => _ohters;
 
   public IObservable<SafetyTrigger> OnEnter => _OnEnter;
   public IObservable<Unit> OnStay => _OnStay;
@@ -51,7 +51,7 @@ public class SafetyTrigger : MonoBehaviour
     if (exitNotifyQueue.Count == 0) { return; }
     foreach (SafetyTrigger trigger in exitNotifyQueue)
     {
-      triggers.Remove(trigger);
+      others.Remove(trigger);
       _OnExit.OnNext(trigger);
     }
     exitNotifyQueue.Clear();
@@ -61,7 +61,7 @@ public class SafetyTrigger : MonoBehaviour
     while (enterNotifyQueue.Count != 0)
     {
       SafetyTrigger trigger = enterNotifyQueue.Dequeue();
-      triggers.Add(trigger);
+      others.Add(trigger);
       _OnEnter.OnNext(trigger);
     }
   }
@@ -122,10 +122,10 @@ public class SafetyTrigger : MonoBehaviour
 
   void OnDisable()
   {
-    foreach (SafetyTrigger col in triggers)
+    foreach (SafetyTrigger other in others)
     {
-      col?.Remove(this);
-      Remove(col);
+      other?.Remove(this);
+      Remove(other);
     }
     foreach (Collider collider in colliders)
     { collider.enabled = false; }

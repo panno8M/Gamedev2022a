@@ -8,12 +8,12 @@ namespace Assembly.Components.StageGimmicks
   [RequireComponent(typeof(BoxCollider))]
   public class KillVolume : MonoBehaviour
   {
-    SafetyTrigger safetyTrigger;
+    SafetyTrigger _trigger;
     void Start()
     {
-      safetyTrigger = GetComponent<SafetyTrigger>();
+      _trigger = GetComponent<SafetyTrigger>();
 
-      safetyTrigger.OnEnter
+      _trigger.OnEnter
         .Select(ohter => ohter.GetComponent<IDamagable>())
         .Where(damagable => damagable != null)
         .Subscribe(damagable =>

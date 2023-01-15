@@ -5,7 +5,12 @@ namespace Assembly.Components
   [RequireComponent(typeof(SafetyTrigger))]
   public class Interactor : MonoBehaviour
   {
-    [SerializeField] SafetyTrigger safetyTrigger;
+    SafetyTrigger _trigger;
+
+    public void Awake()
+    {
+      _trigger = GetComponent<SafetyTrigger>();
+    }
 
     public void Interact()
     {
@@ -15,9 +20,9 @@ namespace Assembly.Components
 
     bool FindInteractableInAround(out Interactable result)
     {
-      for (int i = 0; i < safetyTrigger.triggers.Count; i++)
+      for (int i = 0; i < _trigger.others.Count; i++)
       {
-        SafetyTrigger trigger = safetyTrigger.triggers[i];
+        SafetyTrigger trigger = _trigger.others[i];
         if (result = trigger?.GetComponent<Interactable>())
         { return true; }
       }
