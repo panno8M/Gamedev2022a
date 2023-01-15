@@ -22,10 +22,12 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField]
 #endif
     Rollback rollback;
+    LightShift lightShift;
     [Zenject.Inject]
-    public void DepsInject(Rollback rollback)
+    public void DepsInject(Rollback rollback, LightShift lightShift)
     {
       this.rollback = rollback;
+      this.lightShift = lightShift;
     }
     [SerializeField] EzLerp alarmProgress = new EzLerp(10);
     [SerializeField] ReactiveProperty<bool> _IsOnAlert = new ReactiveProperty<bool>();
@@ -66,6 +68,14 @@ namespace Assembly.Components.StageGimmicks
           alarmProgress.SetFactor0();
           alarmProgress.SetAsDecrease();
         });
+      IsOnAlert.Subscribe(alert =>
+        {
+          if (alert) { lightShift.Set((int)LightShiftKind.Alert); }
+          else { lightShift.Set((int)LightShiftKind.Normal); }
+        });
     }
+
+    enum LightShiftKind
+    { Normal, Alert }
   }
 }
