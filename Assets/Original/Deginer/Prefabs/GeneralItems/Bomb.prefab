@@ -194,6 +194,7 @@ GameObject:
   - component: {fileID: 7171335579413191720}
   - component: {fileID: 739709127349373722}
   - component: {fileID: 7171335579413191722}
+  - component: {fileID: 7496848647012259685}
   m_Layer: 10
   m_Name: Damagable
   m_TagString: Untagged
@@ -268,6 +269,20 @@ MonoBehaviour:
     TotalDamageFire: 0
     TotalDamageWater: 0
     TotalDamageExplosion: 0
+--- !u!114 &7496848647012259685
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171335579413191716}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showColliderOutlines: 0
+  outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!1001 &3300968820264836923
 PrefabInstance:
   m_ObjectHideFlags: 0
