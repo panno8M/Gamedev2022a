@@ -50,9 +50,13 @@ namespace Assembly.Components.StageGimmicks
         {
           if (this._trigger.others.Count == 0)
           {
-                targetMode = Mode.Relax;
+            targetMode = Mode.Relax;
           }
         }).AddTo(this);
+    }
+    void OnDestroy()
+    {
+      if (_plateMaterial) { Destroy(_plateMaterial); }
     }
 
     void CalcFrame()

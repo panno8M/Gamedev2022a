@@ -18,6 +18,7 @@ namespace Assembly.Components.Actors
         .Where(target => !target)
         .Subscribe(_actor.phase.ShiftStandby);
 
+      RaycastHit hit;
       _actor.BehaviorUpdate(this)
         .Where(_ => _actor.aim.target)
         .Subscribe(_ =>
@@ -34,7 +35,7 @@ namespace Assembly.Components.Actors
             _actor.MoveSubjective(Vector3.forward);
           }
 
-          if (!_actor.param.constraints.HasEnoughHight(transform, out RaycastHit hit))
+          if (!_actor.param.constraints.HasEnoughHight(transform, out hit))
           {
             _actor.MoveObjective(Vector3.up);
           }

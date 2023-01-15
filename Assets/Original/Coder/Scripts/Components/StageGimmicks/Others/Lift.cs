@@ -63,6 +63,10 @@ namespace Assembly.Components.StageGimmicks
         .Where(x => mode == OperationMode.PingPong && !x)
         .Subscribe(animateProgress.FlipMode);
     }
+    void OnDestroy()
+    {
+      if (_plateMaterial) { Destroy(_plateMaterial); }
+    }
 
     public void ReceiveMessage(MessageUnit message)
     {

@@ -52,13 +52,14 @@ namespace Assembly.GameSystem.Internal
     }
 
     static LayerMask stsc = new Layers(Layer.ScreenToStageConverter);
+    RaycastHit hit;
     void MousePos_ScreenToGameStage(
       ReactiveProperty<Vector2> screenPos,
       ReactiveProperty<Vector3> stagePos)
     {
       var worldPos = mainCamera.ScreenToWorldPoint(new Vector3(screenPos.Value.x, screenPos.Value.y, 1));
       var camPos = mainCamera.transform.position;
-      if (Physics.Raycast(camPos, (worldPos - camPos), out RaycastHit hit, 100f, stsc))
+      if (Physics.Raycast(camPos, (worldPos - camPos), out hit, 100f, stsc))
       {
         Debug.DrawRay(camPos, hit.point, Color.red);
         stagePos.Value = new Vector3(hit.point.x, hit.point.y, 0);
