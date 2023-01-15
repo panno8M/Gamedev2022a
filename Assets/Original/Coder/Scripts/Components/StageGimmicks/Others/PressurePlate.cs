@@ -1,6 +1,5 @@
 using UnityEngine;
 using UniRx;
-using UniRx.Triggers;
 using Cysharp.Threading.Tasks;
 using Utilities;
 using Assembly.GameSystem.Message;
@@ -8,9 +7,11 @@ using Assembly.GameSystem.Message;
 namespace Assembly.Components.StageGimmicks
 {
   [RequireComponent(typeof(SafetyTrigger))]
+  [RequireComponent(typeof(SignalLineDrawer))]
   public class PressurePlate : MonoBehaviour
   {
-    SafetyTrigger SafetyTrigger;
+    SafetyTrigger _trigger;
+    SignalLineDrawer signalLineDrawer;
 
     enum Mode { Relax = -1, Press = 1 }
     [SerializeField] MessageDispatcher _OnPress = new MessageDispatcher();
@@ -28,7 +29,9 @@ namespace Assembly.Components.StageGimmicks
 
     void Start()
     {
-      SafetyTrigger = GetComponent<SafetyTrigger>();
+      _trigger = GetComponent<SafetyTrigger>();
+      (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
+      signalLineDrawer.dispatchers.Add(_OnPress);
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
@@ -36,22 +39,24 @@ namespace Assembly.Components.StageGimmicks
       _OnPress.message.intensity = animateProgress;
 
       AnimatePress().Forget();
-      // this.FixedUpdateAsObservable()
-      //   .Subscribe(_ => CalcFrame());
 
-      SafetyTrigger.OnEnter
+      _trigger.OnEnter
         .Subscribe(trigger =>
         {
           targetMode = Mode.Press;
         }).AddTo(this);
-      SafetyTrigger.OnExit
+      _trigger.OnExit
         .Subscribe(trigger =>
         {
-          if (SafetyTrigger.triggers.Count == 0)
+          if (this._trigger.others.Count == 0)
           {
             targetMode = Mode.Relax;
           }
         }).AddTo(this);
+    }
+    void OnDestroy()
+    {
+      if (_plateMaterial) { Destroy(_plateMaterial); }
     }
 
     void CalcFrame()

@@ -24,6 +24,10 @@ namespace Assembly.Components
     [SerializeField] EzLerp progress;
 
     void Start() => Initialize();
+    void OnDestroy()
+    {
+      if (material) { Destroy(material); }
+    }
 
     protected override void Blueprint()
     {

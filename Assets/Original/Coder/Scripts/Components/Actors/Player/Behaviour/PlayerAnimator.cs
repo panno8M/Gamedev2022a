@@ -43,28 +43,26 @@ namespace Assembly.Components.Actors.Player
           .AddTo(this);
     }
 
-    void Walk(bool b)
-    {
-      _anim.SetBool("Walk", b);
-    }
-    void Walk(float move)
-    {
-      Walk(move != 0);
-    }
+    void Walk(bool b) => _anim.SetBool(walk, b);
+    void Breath(bool b) => _anim.SetBool(fire, b);
+    void Hold(Holdable holdable) => _anim.SetBool(grab, holdable);
+    void Die(bool b) => _anim.SetBool(die, b);
+    void Jump(bool b) => _anim.SetBool(jump, b);
+    void Flap(int i) => _anim.SetTrigger(wing);
 
-    void Hold(Holdable holdable)
-    {
-      _anim.SetBool("Grab", holdable);
-    }
 
-    void Breath(bool b) { _anim.SetBool("Fire", b); }
-    void Breath(EzLerp.Mode mode) { _anim.SetBool("Fire", mode == EzLerp.Mode.Increase); }
-    void Die(bool b) { _anim.SetBool("Die", b); }
-    void Die(Unit _) { Die(true); }
-    void Revival(Unit _) { Die(false); }
-    void Jump(bool b) { _anim.SetBool("Jump", b); }
-    void Jump(Unit _) { Jump(true); }
-    void Land(Unit _) { Jump(false); }
-    void Flap(int i) { _anim.SetTrigger("Wing"); }
+    void Walk(float move) => Walk(move != 0);
+    void Breath(EzLerp.Mode mode) => Breath(mode == EzLerp.Mode.Increase);
+    void Die(Unit _) => Die(true);
+    void Revival(Unit _) => Die(false);
+    void Jump(Unit _) => Jump(true);
+    void Land(Unit _) => Jump(false);
+
+    static readonly int walk = Animator.StringToHash("Walk");
+    static readonly int grab = Animator.StringToHash("Grab");
+    static readonly int fire = Animator.StringToHash("Fire");
+    static readonly int die = Animator.StringToHash("Die");
+    static readonly int jump = Animator.StringToHash("Jump");
+    static readonly int wing = Animator.StringToHash("Wing");
   }
 }
