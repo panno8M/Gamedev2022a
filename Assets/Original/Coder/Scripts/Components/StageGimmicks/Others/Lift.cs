@@ -49,7 +49,7 @@ namespace Assembly.Components.StageGimmicks
 
     void Start()
     {
-      _positionDefault = transform.localPosition;
+      _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
 
@@ -57,7 +57,7 @@ namespace Assembly.Components.StageGimmicks
 
       this.FixedUpdateAsObservable()
         .Where(animateProgress.isNeedsCalc)
-        .Subscribe(_ => UpdatePosition(transform, animateProgress));
+        .Subscribe(_ => UpdatePosition(_plateObject.transform, animateProgress));
 
       animateProgress.NeedsCalc
         .Where(x => mode == OperationMode.PingPong && !x)
@@ -76,7 +76,7 @@ namespace Assembly.Components.StageGimmicks
           switch (mode)
           {
             case OperationMode.FollowIntensity:
-              UpdatePosition(transform, message.intensity);
+              UpdatePosition(_plateObject.transform, message.intensity);
               break;
             case OperationMode.PingPong:
               timescaleSignal = message.intensity.PeekFactor();
@@ -106,7 +106,7 @@ namespace Assembly.Components.StageGimmicks
 
       Gizmos.color = ignorePower ? Color.white : Color.red;
       if (!Application.isPlaying || _positionDefaultGlobal == Vector3.zero)
-      { _positionDefaultGlobal = transform.position; }
+      { _positionDefaultGlobal = _plateObject.transform.position; }
       if (!ignorePower) { UnityEditor.Handles.Label(_positionDefaultGlobal + positionDelta / 2, "(needs power)"); }
       Gizmos.DrawLine(_positionDefaultGlobal, _positionDefaultGlobal + positionDelta);
       if (_plateObject)
