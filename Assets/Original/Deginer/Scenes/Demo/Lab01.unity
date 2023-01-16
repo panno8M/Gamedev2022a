@@ -676,7 +676,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &181420595 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 3226532361410823873, guid: b1de424e82b892849a9437b870098d1f,
+  m_CorrespondingSourceObject: {fileID: 3102840360280871051, guid: b1de424e82b892849a9437b870098d1f,
     type: 3}
   m_PrefabInstance: {fileID: 181420593}
   m_PrefabAsset: {fileID: 0}
@@ -4867,8 +4867,7 @@ MonoBehaviour:
   mode: 2
   inverseSignal: 0
   _positionDelta: {x: 0, y: 3, z: 0}
-  _plateObject: {fileID: 181420595}
-  _acitivatedColor: {r: 1, g: 0, b: 0, a: 1}
+  _target: {fileID: 181420595}
   animateProgress:
     secDuration: 3
     localTimeScale: 1
