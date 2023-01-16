@@ -15,7 +15,7 @@ namespace Assembly.Components.StageGimmicks
     Collider _collider;
     SafetyTrigger _trigger;
     [SerializeField]
-    MessageDispatcher _OnPutKandelaar = new MessageDispatcher(MessageKind.Power);
+    PowerSupplier _OnPutKandelaar = new PowerSupplier();
 
     [SerializeField]
     EzLerp powerProgress = new EzLerp(3);
@@ -29,8 +29,6 @@ namespace Assembly.Components.StageGimmicks
       _collider = GetComponent<Collider>();
       _collider.isTrigger = true;
       _trigger = GetComponent<SafetyTrigger>();
-
-      _OnPutKandelaar.message.intensity = powerProgress;
 
       _trigger.OnEnter
         .Where(trigger => trigger.CompareTag(Tag.Kandelaar.GetName()))
@@ -52,7 +50,7 @@ namespace Assembly.Components.StageGimmicks
           .Subscribe(_ =>
           {
             powerProgress.UpdFactor();
-            _OnPutKandelaar.Dispatch();
+            _OnPutKandelaar.Supply(powerProgress);
           });
     }
 

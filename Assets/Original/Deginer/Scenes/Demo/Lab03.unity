@@ -130,16 +130,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder
@@ -253,7 +243,7 @@ PrefabInstance:
     - target: {fileID: 4830826436109407589, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
       propertyPath: inverseSignal
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4830826436109407594, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
@@ -1049,11 +1039,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
-      propertyPath: ignorePower
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
-        type: 3}
       propertyPath: _positionDelta.y
       value: 3
       objectReference: {fileID: 0}
@@ -1709,16 +1694,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder
@@ -1788,16 +1763,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder
@@ -2839,11 +2804,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
-      propertyPath: ignorePower
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
-        type: 3}
       propertyPath: _positionDelta.y
       value: -1.5
       objectReference: {fileID: 0}
@@ -2975,7 +2935,7 @@ PrefabInstance:
     - target: {fileID: 4830826436109407589, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
       propertyPath: inverseSignal
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4830826436109407594, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
@@ -3183,7 +3143,7 @@ PrefabInstance:
     - target: {fileID: 4830826436109407589, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
       propertyPath: inverseSignal
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4830826436109407594, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
@@ -3934,16 +3894,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder
@@ -4563,16 +4513,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder
@@ -4748,11 +4688,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1536601184234249524, guid: 508b21a291010e1419894efb67282533,
         type: 3}
-      propertyPath: _OnPutKandelaar.message.kind
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1536601184234249524, guid: 508b21a291010e1419894efb67282533,
-        type: 3}
       propertyPath: _OnPutKandelaar.receivers.Array.size
       value: 7
       objectReference: {fileID: 0}
@@ -4880,7 +4815,7 @@ PrefabInstance:
     - target: {fileID: 4830826436109407589, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
       propertyPath: inverseSignal
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4830826436109407594, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
@@ -5510,7 +5445,7 @@ PrefabInstance:
     - target: {fileID: 4830826436109407589, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
       propertyPath: inverseSignal
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4830826436109407594, guid: c5047fe0983cdf343b7e8d3317f1fa64,
         type: 3}
@@ -5817,6 +5752,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
+      propertyPath: inverseSignal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
+        type: 3}
       propertyPath: _positionDelta.x
       value: 0
       objectReference: {fileID: 0}
@@ -6054,17 +5994,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6686342510742171555, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
         type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6686342510742171555, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6686342510742171555, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_LocalPosition.z
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -6379,6 +6309,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
+      propertyPath: inverseSignal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
+        type: 3}
       propertyPath: _positionDelta.x
       value: 0
       objectReference: {fileID: 0}
@@ -6582,16 +6517,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder

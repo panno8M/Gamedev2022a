@@ -2246,16 +2246,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: alarmIntensity
-      value: 400
-      objectReference: {fileID: 0}
-    - target: {fileID: 3228717123469257825, guid: e55c663f4e71f79479c49c069792aa09,
-        type: 3}
-      propertyPath: normalIntensity
-      value: 200
-      objectReference: {fileID: 0}
     - target: {fileID: 3228717123469257826, guid: e55c663f4e71f79479c49c069792aa09,
         type: 3}
       propertyPath: m_RootOrder

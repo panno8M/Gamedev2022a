@@ -22,7 +22,7 @@ namespace Assembly.Components.StageGimmicks
       PingPong = 1 << 1,
     }
     [SerializeField] OperationMode mode;
-    [SerializeField] bool ignorePower;
+    [SerializeField] bool inverseSignal;
     [SerializeField] Vector3 _positionDelta;
     Vector3 positionDelta => transform.localRotation * _positionDelta;
 
@@ -47,13 +47,18 @@ namespace Assembly.Components.StageGimmicks
     Material _plateMaterial;
     Color _relaxColor;
 
+    void UpdateTimeScale()
+      => animateProgress.localTimeScale = inverseSignal
+        ? timescalePower * (1 - timescaleSignal)
+        : timescalePower * timescaleSignal;
+
     void Start()
     {
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
 
-      animateProgress.localTimeScale = timescalePower * timescaleSignal;
+      UpdateTimeScale();
 
       this.FixedUpdateAsObservable()
         .Where(animateProgress.isNeedsCalc)
@@ -83,13 +88,14 @@ namespace Assembly.Components.StageGimmicks
               break;
           }
           break;
-        case MessageKind.Power:
-          if (ignorePower) { break; }
-          timescalePower = message.intensity.PeekFactor();
-          _plateMaterial.color = message.intensity.Mix(_relaxColor, _acitivatedColor);
-          break;
       }
-      animateProgress.localTimeScale = timescaleSignal * timescalePower;
+      UpdateTimeScale();
+    }
+    public void Powered(MixFactor powerGain)
+    {
+      timescalePower = powerGain.PeekFactor();
+      _plateMaterial.color = powerGain.Mix(_relaxColor, _acitivatedColor);
+      UpdateTimeScale();
     }
 
     void UpdatePosition(Transform transform, MixFactor intensity)
@@ -104,10 +110,9 @@ namespace Assembly.Components.StageGimmicks
     {
       Vector3 positionDelta = this.positionDelta;
 
-      Gizmos.color = ignorePower ? Color.white : Color.red;
+      Gizmos.color = Color.white;
       if (!Application.isPlaying || _positionDefaultGlobal == Vector3.zero)
       { _positionDefaultGlobal = _plateObject.transform.position; }
-      if (!ignorePower) { UnityEditor.Handles.Label(_positionDefaultGlobal + positionDelta / 2, "(needs power)"); }
       Gizmos.DrawLine(_positionDefaultGlobal, _positionDefaultGlobal + positionDelta);
       if (_plateObject)
       {

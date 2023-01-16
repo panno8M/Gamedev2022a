@@ -1,5 +1,6 @@
 using UnityEngine;
 using Assembly.GameSystem.Message;
+using Utilities;
 
 public class Sprinkler : MonoBehaviour, IMessageListener
 {
@@ -17,4 +18,5 @@ public class Sprinkler : MonoBehaviour, IMessageListener
   {
     emission.rateOverTime = message.intensity.UpdMix(defaultRate, 0);
   }
+  public void Powered(MixFactor powerGain) { }
 }

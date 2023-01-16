@@ -557,6 +557,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c808cf7bc42db8b42aa37f99ea6326bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerUsage: 0
 --- !u!114 &4830826436109407589
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,7 +571,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blinkParam: {fileID: 11400000, guid: 9771a03ec7ccbcb499e3a78046922aa6, type: 2}
-  inverseSignal: 1
+  inverseSignal: 0
   aiSight: {fileID: 4830826435763696228}
   damagable: {fileID: 865709230060645572}
 --- !u!1001 &4830826434780932848

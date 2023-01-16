@@ -10,6 +10,11 @@ namespace Utilities
   [Serializable]
   public class MixFactor
   {
+    public MixFactor() { }
+    public MixFactor(float f)
+    {
+      _factor = f;
+    }
 #if DEBUG_MIX_FACTOR
     [SerializeField][Range(0f, 1f)]
 #endif
@@ -22,6 +27,7 @@ namespace Utilities
     public virtual void SetFactor(float value) { _factor = Mathf.Clamp01(value); }
     public virtual void SetFactor0() { _factor = 0; }
     public virtual void SetFactor1() { _factor = 1; }
+    public virtual void AddFactor(float value) => SetFactor(PeekFactor() + value);
 
     public bool isFactor0 => PeekFactor() == 0;
     public bool isFactor1 => PeekFactor() == 1;

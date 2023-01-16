@@ -30,13 +30,9 @@ namespace Assembly.GameSystem.Message
     public void Dispatch() { Dispatch(message); }
 
 
-
     public void DrawArrow(Transform transform, MessageUnit message)
     {
-      Gizmos.color =
-        message.kind == MessageKind.Signal ? Color.green :
-        message.kind == MessageKind.Power ? Color.red :
-        Color.gray;
+      Gizmos.color = Color.green;
 
       foreach (MessageReceiver receiver in receivers)
       {
@@ -49,5 +45,31 @@ namespace Assembly.GameSystem.Message
       DrawArrow(transform, message);
     }
 
+  }
+
+  [Serializable]
+  public class PowerSupplier
+  {
+    float watts;
+    public List<MessageReceiver> receivers = new List<MessageReceiver>();
+    public void Supply(MixFactor watts)
+    {
+      float currentWatts = watts.PeekFactor();
+      float deltaWatts = currentWatts - this.watts;
+      foreach (MessageReceiver receiver in receivers)
+      { receiver.Supply(deltaWatts); }
+      this.watts = currentWatts;
+    }
+
+    public void DrawArrow(Transform transform)
+    {
+      Gizmos.color = Color.red;
+
+      foreach (MessageReceiver receiver in receivers)
+      {
+        if (!receiver) { continue; }
+        GizmosEx.DrawArrow(transform.position, receiver.transform.position);
+      }
+    }
   }
 }

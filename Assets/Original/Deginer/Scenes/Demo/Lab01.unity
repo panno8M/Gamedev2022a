@@ -4348,12 +4348,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 440331444}
   m_PrefabAsset: {fileID: 0}
---- !u!4 &1939604706 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8353330523506930297, guid: 8c8b076293f7c694ab8c0776d8ee7594,
-    type: 3}
-  m_PrefabInstance: {fileID: 795568541}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1944643668
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4461,40 +4455,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cameraman
       objectReference: {fileID: 0}
-    - target: {fileID: 6686342510194614738, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_Follow
-      value: 
-      objectReference: {fileID: 1939604706}
-    - target: {fileID: 6686342510194614739, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6686342510194614739, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6686342510194614739, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6
-      objectReference: {fileID: 0}
     - target: {fileID: 6686342510742171555, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6686342510742171555, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 6686342510742171555, guid: ab0325ceb5677ab4b9a173ed8b8f2b39,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -6
+      value: 0.00000013466315
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ab0325ceb5677ab4b9a173ed8b8f2b39, type: 3}
@@ -4901,7 +4865,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 2
-  ignorePower: 1
+  inverseSignal: 0
   _positionDelta: {x: 0, y: 3, z: 0}
   _plateObject: {fileID: 181420595}
   _acitivatedColor: {r: 1, g: 0, b: 0, a: 1}
@@ -4942,6 +4906,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c808cf7bc42db8b42aa37f99ea6326bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerUsage: 0
 --- !u!1001 &7990284753970848909
 PrefabInstance:
   m_ObjectHideFlags: 0

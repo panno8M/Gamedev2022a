@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+// #define DEBUG_SECURITY_CAMERA
+#endif
+
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
@@ -6,6 +10,7 @@ using Assembly.GameSystem;
 using Assembly.GameSystem.Message;
 using Assembly.GameSystem.Damage;
 using Assembly.Params;
+using Utilities;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -23,29 +28,40 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] AiSight aiSight;
     [SerializeField] DamagableComponent damagable;
 
-    bool _poweron;
+#if DEBUG_SECURITY_CAMERA
+    [SerializeField]
+#endif
+    bool _signalOn;
+#if DEBUG_SECURITY_CAMERA
+    [SerializeField]
+#endif
+    bool _powerOn;
+#if DEBUG_SECURITY_CAMERA
+    [SerializeField]
+#endif
     bool _blinking;
-    bool poweron
+
+    bool isSightActivable => _signalOn && _powerOn && !_blinking;
+    bool signalOn
     {
-      get => _poweron;
-      set
-      {
-        _poweron = value;
-        aiSight.SetActiveOnce(poweron && !blinking);
-      }
+      get => _signalOn;
+      set { _signalOn = value; aiSight.SetActiveOnce(isSightActivable); }
+    }
+    bool powerOn
+    {
+      get => _powerOn;
+      set { _powerOn = value; aiSight.SetActiveOnce(isSightActivable); }
     }
     bool blinking
     {
       get => _blinking;
-      set
-      {
-        _blinking = value;
-        aiSight.SetActiveOnce(poweron && !blinking);
-      }
+      set { _blinking = value; aiSight.SetActiveOnce(isSightActivable); }
     }
 
     void Start()
     {
+      signalOn = inverseSignal;
+
       aiSight.Noticed
         .Subscribe(x => alarmMgr.SwitchAlarm(x))
         .AddTo(this);
@@ -72,13 +88,16 @@ namespace Assembly.Components.StageGimmicks
       switch (message.kind)
       {
         case MessageKind.Signal:
-        case MessageKind.Invoke:
           if (message.intensity.PeekFactor() == 0)
-          { poweron = inverseSignal; }
+          { signalOn = !inverseSignal; }
           if (message.intensity.PeekFactor() == 1)
-          { poweron = !inverseSignal; }
+          { signalOn = inverseSignal; }
           break;
       }
+    }
+    public void Powered(MixFactor powerGain)
+    {
+      powerOn = powerGain.PeekFactor() == 1;
     }
   }
 }
