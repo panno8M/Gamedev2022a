@@ -47,13 +47,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mode: 1
-  ignorePower: 0
-  _power: 0
+  inverseSignal: 0
   _positionDelta: {x: 0, y: 2, z: 0}
-  _plateObject: {fileID: 6593485100501450072}
-  _acitivatedColor: {r: 1, g: 0, b: 0, a: 1}
+  _target: {fileID: 6593485100501450072}
   animateProgress:
-    _factor: 0
+    secDuration: 1
     localTimeScale: 1
     useCurve: 0
     curve:
@@ -62,9 +60,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    secDuration: 1
-    _mode:
-      value: -1
 --- !u!114 &7188727669002237215
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -77,6 +72,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c808cf7bc42db8b42aa37f99ea6326bd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  powerUsage: 0
 --- !u!1 &6593485100501450072
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using UnityEngine;
 using Assembly.GameSystem.Message;
+using Utilities;
 
 namespace Assembly.Components.StageGimmicks
 {
@@ -36,6 +37,7 @@ namespace Assembly.Components.StageGimmicks
           break;
       }
     }
+    public void Powered(MixFactor powerGain) { }
 
   }
 }

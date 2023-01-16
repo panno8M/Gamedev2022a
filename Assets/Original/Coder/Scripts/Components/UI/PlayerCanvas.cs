@@ -18,21 +18,10 @@ namespace Assembly.Components.UI
       this.player = player;
     }
 
-    [SerializeField] GameObject uiRightArrow;
-    [SerializeField] GameObject uiLeftArrow;
     [SerializeField] GameObject uiQuestion;
-
-    Vector3 posR;
-    Vector3 posL;
-    [SerializeField] float moveDelta;
-    [SerializeField] EzLerp easeR = new EzLerp(1);
-    [SerializeField] EzLerp easeL = new EzLerp(1);
 
     void Start()
     {
-      posR = uiRightArrow.transform.localPosition;
-      posL = uiLeftArrow.transform.localPosition;
-
       player.OnEnableAsObservable()
           .Subscribe(_ => gameObject.SetActive(true)).AddTo(this);
       player.OnDisableAsObservable()
@@ -43,20 +32,6 @@ namespace Assembly.Components.UI
           .Select(_ => !player.hand.holder.hasItem && player.hand.holder.accessibles.Count != 0)
           .DistinctUntilChanged()
           .Subscribe(b => uiQuestion.SetActive(b));
-
-
-      Observable.EveryUpdate()
-        .Select(_ => control.horizontalMoveInput)
-        .Subscribe(hmi =>
-        {
-          easeR.SetMode(increase: hmi == 1);
-          easeL.SetMode(increase: hmi == -1);
-
-          if (!player.gameObject.activeSelf) { return; }
-
-          uiRightArrow.transform.localPosition = easeR.UpdAddX(posR, moveDelta);
-          uiLeftArrow.transform.localPosition = easeL.UpdAddX(posL, -moveDelta);
-        }).AddTo(this);
     }
     void LateUpdate()
     {

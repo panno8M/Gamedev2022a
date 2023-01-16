@@ -12,21 +12,19 @@ public class AlarmLight : DiBehavior
   {
     this.alarmMgr = alarmMgr;
   }
-  [SerializeField] bool alarm;
   [SerializeField] new Light light;
 
-  [SerializeField] Color normalColor;
-  [SerializeField] float normalTemperature;
-  [SerializeField] float normalIntensity;
-
-  [SerializeField] Gradient alarmColor;
-  [SerializeField] float alarmTemperature;
-  [SerializeField] float alarmIntensity;
+  [SerializeField] Gradient gradient;
+  [SerializeField] float temperature;
+  [SerializeField] float intensity;
 
   [SerializeField] float scrollSpeed = 1;
 
   [SerializeField] EzLerp transProgress;
-  [SerializeField][Range(0, 1)] float alarmGradProgress;
+#if DEBUG_ALARM_LIGHT
+  [SerializeField]
+#endif
+  [Range(0, 1)] float alarmGradProgress;
 
   void Start() { Initialize(); }
   protected override void Blueprint()
@@ -36,8 +34,8 @@ public class AlarmLight : DiBehavior
 
     alarmMgr.IsOnAlert.Subscribe(b =>
     {
-      transProgress.SetMode(increase: alarm = b);
-      if (alarm) { transProgress.SetFactor1(); }
+      transProgress.SetMode(increase: b);
+      if (b) { transProgress.SetFactor1(); }
     });
   }
   void Update()
@@ -45,8 +43,8 @@ public class AlarmLight : DiBehavior
     alarmGradProgress = Mathf.PingPong(Time.time * scrollSpeed, 1);
 
     transProgress.UpdFactor();
-    light.intensity = transProgress.Mix(normalIntensity, alarmIntensity);
-    light.colorTemperature = transProgress.Mix(normalTemperature, alarmTemperature);
-    light.color = transProgress.Mix(normalColor, alarmColor.Evaluate(alarmGradProgress));
+    light.intensity = transProgress.Add(0, intensity);
+    light.colorTemperature = temperature;
+    light.color = gradient.Evaluate(alarmGradProgress);
   }
 }

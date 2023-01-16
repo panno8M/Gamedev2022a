@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 418508725700422206}
   - component: {fileID: 418508725700422207}
-  - component: {fileID: 7744411721726412798}
+  - component: {fileID: 4309144316577206846}
   m_Layer: 0
   m_Name: AlarmUnit
   m_TagString: Untagged
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   alarmProgress:
-    _factor: 0
+    secDuration: 10
     localTimeScale: 1
     useCurve: 0
     curve:
@@ -55,12 +55,9 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    secDuration: 10
-    _mode:
-      value: -1
   _IsOnAlert:
     value: 0
---- !u!114 &7744411721726412798
+--- !u!114 &4309144316577206846
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -69,7 +66,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 418508725700422176}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eaef5cc119fcc048bb018ee01bd5aa9, type: 3}
+  m_Script: {fileID: 11500000, guid: 0166d8ff8d905b048b2448179e1f5d11, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  alarmManager: {fileID: 418508725700422176}
+  _components:
+  - {fileID: 418508725700422207}
+  _identifier: 
+  _useSceneContext: 0
+  _context: {fileID: 0}
+  _bindType: 0

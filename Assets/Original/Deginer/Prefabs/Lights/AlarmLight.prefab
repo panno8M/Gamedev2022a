@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3228717123469257826}
+  - component: {fileID: 3228717123469257825}
   - component: {fileID: 3228717123469257827}
   - component: {fileID: 3228717123469257852}
-  - component: {fileID: 3228717123469257825}
   m_Layer: 0
   m_Name: AlarmLight
   m_TagString: Untagged
@@ -34,6 +34,61 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+--- !u!114 &3228717123469257825
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3228717123469257853}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 960c09eb6997b3a48a927ac014ad616a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  light: {fileID: 3228717123469257827}
+  gradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 0, b: 0.07430792, a: 1}
+    key1: {r: 0.7229745, g: 0.030495238, b: 0.032345798, a: 1}
+    key2: {r: 0.509434, g: 0.05400198, b: 0, a: 0.5176471}
+    key3: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
+    key4: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
+    key5: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
+    key6: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
+    key7: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
+    ctime0: 47802
+    ctime1: 60524
+    ctime2: 65535
+    ctime3: 0
+    ctime4: 0
+    ctime5: 0
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 3
+    m_NumAlphaKeys: 2
+  temperature: 2000
+  intensity: 200
+  scrollSpeed: 0.56
+  transProgress:
+    secDuration: 2
+    localTimeScale: 1
+    useCurve: 0
+    curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
 --- !u!108 &3228717123469257827
 Light:
   m_ObjectHideFlags: 0
@@ -85,10 +140,10 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 4
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
-  m_BounceIntensity: 1
+  m_BounceIntensity: 0
   m_ColorTemperature: 6000
   m_UseColorTemperature: 1
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
@@ -116,65 +171,3 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
---- !u!114 &3228717123469257825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3228717123469257853}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 960c09eb6997b3a48a927ac014ad616a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  alarm: 0
-  light: {fileID: 3228717123469257827}
-  normalColor: {r: 0.6627451, g: 0.9490196, b: 1, a: 1}
-  normalTemperature: 6000
-  normalIntensity: 10
-  alarmColor:
-    serializedVersion: 2
-    key0: {r: 1, g: 0, b: 0.07430792, a: 1}
-    key1: {r: 0.7229745, g: 0.030495238, b: 0.032345798, a: 1}
-    key2: {r: 0.509434, g: 0.05400198, b: 0, a: 0.5176471}
-    key3: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
-    key4: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
-    key5: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
-    key6: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
-    key7: {r: 0.5882353, g: 0.45882353, b: 0.101960786, a: 0.5176471}
-    ctime0: 47802
-    ctime1: 60524
-    ctime2: 65535
-    ctime3: 0
-    ctime4: 0
-    ctime5: 0
-    ctime6: 0
-    ctime7: 0
-    atime0: 0
-    atime1: 65535
-    atime2: 0
-    atime3: 0
-    atime4: 0
-    atime5: 0
-    atime6: 0
-    atime7: 0
-    m_Mode: 0
-    m_NumColorKeys: 3
-    m_NumAlphaKeys: 2
-  alarmTemperature: 2000
-  alarmIntensity: 20
-  scrollSpeed: 0.56
-  transProgress:
-    _factor: 0
-    useCurve: 0
-    curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    secDuration: 2
-    _mode:
-      value: -1
-  alarmGradProgress: 0
