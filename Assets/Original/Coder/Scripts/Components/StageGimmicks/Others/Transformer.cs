@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-#define DEBUG_TRANSFORMER
+// #define DEBUG_TRANSFORMER
 #endif
 
 using UnityEngine;
@@ -12,10 +12,6 @@ namespace Assembly.Components.StageGimmicks
 {
   public class Transformer : MonoBehaviour, IMessageListener
   {
-#if DEBUG_TRANSFORMER
-    [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_TRANSFORMER off.")]
-    byte __headerTarget__;
-#endif
     enum OperationMode
     {
       FollowIntensity = 1 << 0,

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 889259706891757632}
   - component: {fileID: 5131602618368807889}
   - component: {fileID: 1080847948254743764}
+  - component: {fileID: 3064205831858131986}
   m_Layer: 19
   m_Name: Sight
   m_TagString: Untagged
@@ -50,6 +51,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   param: {fileID: 11400000, guid: 4416404c5ed14434f864502145bbe690, type: 2}
   root: {fileID: 7084538955021183379}
+  _InSight:
+    value: {fileID: 0}
+  _Noticed:
+    value: {fileID: 0}
+  candidates: []
 --- !u!114 &5131602618368807889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -62,6 +68,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ohters: []
   showColliderOutlines: 0
   outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!135 &1080847948254743764
@@ -77,6 +84,22 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &3064205831858131986
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 231369532562010417}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &1210545985825812285
 GameObject:
   m_ObjectHideFlags: 0
@@ -283,7 +306,7 @@ MonoBehaviour:
   hoseRootTransform: {fileID: 1210545986821765796}
   power: 300
   launchCoolDown:
-    _factor: 0
+    secDuration: 3
     localTimeScale: 1
     useCurve: 0
     curve:
@@ -292,9 +315,6 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    secDuration: 3
-    _mode:
-      value: -1
 --- !u!114 &6005332447257279349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -346,6 +366,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ohters: []
   showColliderOutlines: 0
   outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &3232116125892301783
