@@ -137,6 +137,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
         type: 3}
+      propertyPath: mode
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2937608538443871515, guid: 876332488bde5b54e8207085c4fa2540,
+        type: 3}
       propertyPath: ignorePower
       value: 1
       objectReference: {fileID: 0}
