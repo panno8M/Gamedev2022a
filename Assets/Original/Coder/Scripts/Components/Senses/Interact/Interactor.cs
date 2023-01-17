@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UniRx;
 
 namespace Assembly.Components
 {
@@ -6,10 +8,24 @@ namespace Assembly.Components
   public class Interactor : MonoBehaviour
   {
     SafetyTrigger _trigger;
+    [SerializeField] List<Interactable> _accessibles = new List<Interactable>();
 
     public void Awake()
     {
       _trigger = GetComponent<SafetyTrigger>();
+      _trigger.OnEnter.Subscribe(AddToAccessibles);
+      _trigger.OnExit.Subscribe(RemoveFromAccessibles);
+
+      void AddToAccessibles(SafetyTrigger trigger)
+      {
+        Interactable interactable = trigger.GetComponent<Interactable>();
+        if (interactable) { _accessibles.Add(interactable); }
+      }
+      void RemoveFromAccessibles(SafetyTrigger trigger)
+      {
+        Interactable interactable = trigger.GetComponent<Interactable>();
+        if (interactable) { _accessibles.Remove(interactable); }
+      }
     }
 
     public void Interact()
@@ -18,16 +34,10 @@ namespace Assembly.Components
       { interactable.Attempt(); }
     }
 
-    bool FindInteractableInAround(out Interactable result)
+    public bool FindInteractableInAround(out Interactable result)
     {
-      for (int i = 0; i < _trigger.others.Count; i++)
-      {
-        SafetyTrigger trigger = _trigger.others[i];
-        if (result = trigger?.GetComponent<Interactable>())
-        { return true; }
-      }
-      result = null;
-      return false;
+      result = _accessibles.Count == 0 ? null : _accessibles[0];
+      return _accessibles.Count != 0;
     }
   }
 }

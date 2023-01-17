@@ -17,11 +17,6 @@ namespace Assembly.Components
     public IObservable<Holder> OnHold => _OnHold;
     public IObservable<Holder> OnRelease => _OnRelease;
 
-    void OnDisable()
-    {
-      ReleaseMe();
-    }
-
     public bool HoldAccepted(Holder holder)
     {
       if (!enabled) { return false; }
@@ -38,7 +33,20 @@ namespace Assembly.Components
 
     public void ReleaseMe()
     {
-      owner?.Release(this);
+      if (owner && owner.isActiveAndEnabled)
+      {
+        owner.Release(this);
+      }
+    }
+
+    public new bool enabled
+    {
+      get => base.enabled;
+      set
+      {
+        if (!value) { ReleaseMe(); }
+        base.enabled = value;
+      }
     }
   }
 }
