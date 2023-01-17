@@ -20,9 +20,12 @@ namespace Assembly.Components
     public IObservable<Holdable> RequestHold => _RequestHold;
     public IObservable<Holdable> RequestRelease => _RequestRelease;
     public IObservable<Holdable> HoldingItem => _HoldingItem;
-    public Holdable holdingItem => _HoldingItem.Value;
+    public Holdable holdingItem
+    {
+      get => _HoldingItem.Value;
+      set => _HoldingItem.Value = value;
+    }
     public bool hasItem => holdingItem != null;
-    public List<Holdable> accessibles => _accessibles;
 
     void Awake()
     {
@@ -54,17 +57,18 @@ namespace Assembly.Components
       if (!item.HoldAccepted(this)) { return; }
       ReleaseForce();
 
-      _HoldingItem.Value = item;
+      holdingItem = item;
+      _accessibles.Remove(item);
       _RequestHold.OnNext(item);
 
       _previousParentOfHoldingItem = item.rb.transform.parent;
       item.rb.transform.SetParent(transform);
       item.rb.transform.localPosition = Vector3.zero;
     }
-    public bool Hold(Holdable item)
+    public bool Hold(Holdable item, bool swapItem = true)
     {
       if (item == null) { return false; }
-      if (hasItem) { return false; }
+      if (hasItem && !swapItem) { return false; }
       HoldForce(item);
       return true;
     }
@@ -80,31 +84,18 @@ namespace Assembly.Components
       else { holdingItem.rb.transform.parent = null; }
 
       _RequestRelease.OnNext(holdingItem);
-      _HoldingItem.Value = null;
+      _accessibles.Add(holdingItem);
+      holdingItem = null;
     }
     public void Release(Holdable item)
     {
       if (item != holdingItem) { return; }
       ReleaseForce();
     }
-
-    public bool AttemptToHold()
+    public bool FindHoldableInAround(out Holdable result)
     {
-      if (_accessibles.Count == 0) { return false; }
-      if (_accessibles.Count == 1) { Hold(_accessibles[0]); return true; }
-      float closestDistance = Mathf.Infinity;
-      int closestIndex = 2;
-      for (int i = 1; i != _accessibles.Count; i++)
-      {
-        float distance = (_accessibles[i].transform.position - transform.position).sqrMagnitude;
-        if (closestDistance > distance)
-        {
-          closestDistance = distance;
-          closestIndex = i;
-        }
-      }
-      Hold(_accessibles[closestIndex]);
-      return true;
+      result = _accessibles.Count == 0 ? null : _accessibles[0];
+      return _accessibles.Count != 0;
     }
   }
 

@@ -14,10 +14,18 @@ namespace Assembly.Components.Actors.Player
       _actor.ctl.Interact
         .Subscribe(_ =>
         {
-          if (_holder.hasItem)
-          { _holder.ReleaseForce(); }
-          else if (!_holder.AttemptToHold())
-          { _interactor.Interact(); }
+          if (_holder.FindHoldableInAround(out Holdable holdable))
+          {
+            _holder.Hold(holdable);
+          }
+          else if (interactor.FindInteractableInAround(out Interactable interactable))
+          {
+            _interactor.Interact();
+          }
+          else if (_holder.hasItem)
+          {
+            _holder.ReleaseForce();
+          }
         }).AddTo(this);
 
       _holder.HoldingItem

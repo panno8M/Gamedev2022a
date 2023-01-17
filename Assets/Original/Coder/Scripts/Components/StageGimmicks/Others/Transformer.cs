@@ -1,5 +1,5 @@
 #if UNITY_EDITOR
-// #define DEBUG_TRANSFORMER
+#define DEBUG_TRANSFORMER
 #endif
 
 using UnityEngine;
@@ -20,7 +20,10 @@ namespace Assembly.Components.StageGimmicks
     {
       FollowIntensity = 1 << 0,
       PingPong = 1 << 1,
+      Invoke = 1 << 2,
     }
+    [Header("General")]
+
     [SerializeField] OperationMode mode;
     [SerializeField] bool inverseSignal;
     [SerializeField] Vector3 _positionDelta;
@@ -28,6 +31,10 @@ namespace Assembly.Components.StageGimmicks
 
     [SerializeField] GameObject _target;
     [SerializeField] EzLerp animateProgress;
+
+    [Header("For Invoke Mode")]
+
+    [SerializeField][Range(0, 0.99f)] float signalThrethold = .5f;
 
 #if DEBUG_TRANSFORMER
     [Header("Debug")]
@@ -39,24 +46,42 @@ namespace Assembly.Components.StageGimmicks
 #if DEBUG_TRANSFORMER
     [SerializeField]
 #endif
-    float timescaleSignal = 0;
+    float timescalePingPong = 1;
 
     Vector3 _positionDefault;
 
     void UpdateTimeScale()
-      => animateProgress.localTimeScale = inverseSignal
-        ? timescalePower * (1 - timescaleSignal)
-        : timescalePower * timescaleSignal;
+      => animateProgress.localTimeScale = timescalePower * timescalePingPong;
 
     void Start()
     {
       _positionDefault = _target.transform.localPosition;
 
+      switch (mode)
+      {
+        case OperationMode.Invoke:
+        case OperationMode.FollowIntensity:
+          if (inverseSignal)
+          {
+            animateProgress.SetFactor1();
+            animateProgress.SetAsIncrease();
+          }
+          break;
+        case OperationMode.PingPong:
+          if (inverseSignal)
+          { animateProgress.SetAsIncrease(); }
+          else
+          { timescalePingPong = 0; }
+          break;
+      }
       UpdateTimeScale();
 
       this.FixedUpdateAsObservable()
         .Where(animateProgress.isNeedsCalc)
-        .Subscribe(_ => UpdatePosition(_target.transform, animateProgress));
+        .Subscribe(_ =>
+        {
+          _target.transform.localPosition = animateProgress.UpdAdd(_positionDefault, positionDelta);
+        });
 
       animateProgress.NeedsCalc
         .Where(x => mode == OperationMode.PingPong && !x)
@@ -71,25 +96,25 @@ namespace Assembly.Components.StageGimmicks
           switch (mode)
           {
             case OperationMode.FollowIntensity:
-              UpdatePosition(_target.transform, message.intensity);
+              _target.transform.localPosition =
+                _positionDefault + positionDelta * message.intensity.Invpeek(inverseSignal);
               break;
             case OperationMode.PingPong:
-              timescaleSignal = message.intensity.PeekFactor();
+              timescalePingPong = message.intensity.Invpeek(inverseSignal);
+              UpdateTimeScale();
+              break;
+            case OperationMode.Invoke:
+              animateProgress.SetMode(
+                (message.intensity.PeekFactor() >= signalThrethold) ^ inverseSignal);
               break;
           }
           break;
       }
-      UpdateTimeScale();
     }
     public void Powered(MixFactor powerGain)
     {
       timescalePower = powerGain.PeekFactor();
       UpdateTimeScale();
-    }
-
-    void UpdatePosition(Transform transform, MixFactor intensity)
-    {
-      transform.localPosition = intensity.UpdAdd(_positionDefault, positionDelta);
     }
 
 #if UNITY_EDITOR

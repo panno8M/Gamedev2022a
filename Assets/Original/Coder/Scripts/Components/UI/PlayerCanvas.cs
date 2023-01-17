@@ -29,7 +29,9 @@ namespace Assembly.Components.UI
 
       Observable
           .EveryUpdate()
-          .Select(_ => !player.hand.holder.hasItem && player.hand.holder.accessibles.Count != 0)
+          .Select(_ =>
+            (player.hand.holder.FindHoldableInAround(out Holdable holdable)) ||
+            (player.hand.interactor.FindInteractableInAround(out Interactable interactable)))
           .DistinctUntilChanged()
           .Subscribe(b => uiQuestion.SetActive(b));
     }
