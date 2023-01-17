@@ -20,6 +20,9 @@ namespace Utilities
 #endif
     protected float _factor;
 
+    public float Invpeek() => 1 - PeekFactor();
+    public float Invpeek(bool b) => b ? Invpeek() : PeekFactor();
+
     public virtual float UpdFactor() { return _factor; }
     public virtual float PeekFactor() { return _factor; }
     public float UpdFactor<T>(T t) => UpdFactor();

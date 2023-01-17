@@ -107,6 +107,7 @@ namespace Assembly.Components.Items
 
     void SetHoldable(bool locked)
     {
+      if (locked) { _holdable.ReleaseMe(); }
       _holdable.enabled = !locked;
     }
     void SetBurnUp(bool burning)
