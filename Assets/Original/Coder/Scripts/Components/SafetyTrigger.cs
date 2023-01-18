@@ -12,8 +12,6 @@ using UniRx.Triggers;
 public class SafetyTrigger : MonoBehaviour
 {
 #if DEBUG_SAFETY_TRIGGER
-  [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SAFETY_TRIGGER off.")]
-  byte __headerTarget__;
   [SerializeField]
 #endif
   List<SafetyTrigger> _ohters = new List<SafetyTrigger>();
@@ -73,14 +71,14 @@ public class SafetyTrigger : MonoBehaviour
       .Subscribe(other =>
       {
         SafetyTrigger x = other.GetComponent<SafetyTrigger>();
-        if (x) Add(x);
+        if (x) { Add(x); x.Add(this); }
       });
 
     this.OnTriggerExitAsObservable()
       .Subscribe(other =>
       {
         SafetyTrigger x = other.GetComponent<SafetyTrigger>();
-        if (x) Remove(x);
+        if (x) { Remove(x); x.Remove(this); }
       });
 
     Observable.EveryFixedUpdate()
@@ -98,7 +96,7 @@ public class SafetyTrigger : MonoBehaviour
 
         var enterCount = enterNotifyQueue.Count;
         NoticeEnter();
-        var stayCount = triggers.Count;
+        var stayCount = others.Count;
         NoticeStay();
         var exitCount = exitNotifyQueue.Count;
         NoticeExit();

@@ -661,6 +661,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ohters: []
   showColliderOutlines: 0
   outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &9001981863741961213
@@ -925,6 +926,7 @@ GameObject:
   - component: {fileID: 2392761135679778437}
   - component: {fileID: 4964035379130095719}
   - component: {fileID: 6337576669734667478}
+  - component: {fileID: 6300995998906035982}
   m_Layer: 19
   m_Name: Sight
   m_TagString: Untagged
@@ -963,6 +965,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   param: {fileID: 11400000, guid: 4416404c5ed14434f864502145bbe690, type: 2}
   root: {fileID: 3046311783173419245}
+  _InSight:
+    value: {fileID: 0}
+  _Noticed:
+    value: {fileID: 0}
+  candidates: []
 --- !u!135 &2392761135679778437
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -988,6 +995,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4217728db11f48458c76f152dc82005, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ohters: []
   showColliderOutlines: 0
   outlineColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &6337576669734667478
@@ -1043,6 +1051,22 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
+--- !u!54 &6300995998906035982
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6541430772093747012}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 126
+  m_CollisionDetection: 0
 --- !u!1 &6588817983426805733
 GameObject:
   m_ObjectHideFlags: 0

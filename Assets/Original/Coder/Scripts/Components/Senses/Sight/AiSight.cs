@@ -17,10 +17,6 @@ namespace Senses.Sight
   [RequireComponent(typeof(SafetyTrigger))]
   public class AiSight : DiBehavior
   {
-#if DEBUG_SIGHT
-    [Header("[Debug Inspector]\ndon't forget to turn symbol DEBUG_SIGHT off.")]
-    byte __headerTarget__;
-#endif // DEBUG_SIGHT
     public SightParam param;
     [SerializeField]
     public Transform root;
@@ -34,11 +30,12 @@ namespace Senses.Sight
 #endif
     ReactiveProperty<AiVisible> _Noticed = new ReactiveProperty<AiVisible>();
 
-    SafetyTrigger _trigger;
 #if DEBUG_SIGHT
     [SerializeField]
 #endif
     List<AiVisible> candidates = new List<AiVisible>();
+
+    SafetyTrigger _trigger;
     int frameCount;
 
     public AiVisible inSight
