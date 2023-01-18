@@ -21,6 +21,7 @@ namespace Assembly.Components.StageGimmicks
     {
 
       _supplyFieldTrigger.OnEnter
+        .Where(trigger => trigger.CompareTag("Player"))
         .Subscribe(trigger =>
         {
           if (!isActiveAndEnabled) { return; }
