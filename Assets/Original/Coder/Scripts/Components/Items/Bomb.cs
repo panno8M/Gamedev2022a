@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
+using Cinemachine;
 using UniRx;
+using UniRx.Triggers;
 using Assembly.GameSystem;
 using Assembly.GameSystem.ObjectPool;
 using Assembly.GameSystem.Damage;
 using Assembly.Components.Pools;
 using Assembly.Params;
+using Utilities;
 
 namespace Assembly.Components.Items
 {
@@ -35,6 +38,8 @@ namespace Assembly.Components.Items
     [SerializeField] ParticleSystem _psBurnUp;
     [SerializeField] DamagableComponent _damagable;
     [SerializeField] Holdable _holdable;
+    [SerializeField] CinemachineImpulseSource impulseSource;
+    [SerializeField] SpriteRenderer spriteRenderer;
     Subject<Unit> _OnExplode = new Subject<Unit>();
 
     PoolManagedParticle.CreateInfo _psExplCI = new PoolManagedParticle.CreateInfo
@@ -46,6 +51,8 @@ namespace Assembly.Components.Items
       },
       transformInfo = new TransformInfo { },
     };
+    Material material;
+    EzLerp explosionProgress;
 
     public void Assemble()
     {
@@ -55,17 +62,28 @@ namespace Assembly.Components.Items
       OnHold(holding: false);
       _OnExplode.Dispose();
       _OnExplode = new Subject<Unit>();
+      material.SetFloat("_Fac", 0);
     }
     public void Disassemble()
     {
       ResetRigidbody();
       _damagable.Repair();
       _OnExplode.Dispose();
+      explosionProgress.SetAsDecrease();
+      explosionProgress.SetFactor0();
+    }
+
+    void OnDestroy()
+    {
+      if (material) { Destroy(material); }
     }
 
     protected override void Blueprint()
     {
       _psExplCI.transformInfo.reference = transform;
+      explosionProgress = new EzLerp(param.timeToExplodeFromBroken.Seconds - param.timeToBurnUpFromBroken.Seconds);
+      material = spriteRenderer.material;
+
       _damagable.OnBroken
         .Subscribe(_ => SetHoldable(locked: true))
         .AddTo(this);
@@ -81,6 +99,7 @@ namespace Assembly.Components.Items
           {
             SetBurnUp(burning: false);
             psExplosionPool.Spawn(_psExplCI, TimeSpan.FromSeconds(1));
+            impulseSource.GenerateImpulse();
             _OnExplode.OnNext(Unit.Default);
             _OnExplode.OnCompleted();
             despawnable.Despawn();
@@ -92,6 +111,14 @@ namespace Assembly.Components.Items
       _holdable.OnRelease
           .Delay(TimeSpan.FromMilliseconds(100))
           .Subscribe(_ => ResetRigidbody());
+
+      this.FixedUpdateAsObservable()
+        .Where(explosionProgress.isNeedsCalc)
+        .Select(explosionProgress.UpdFactor)
+        .Subscribe(fac =>
+        {
+          material.SetFloat("_Fac", param.exprodeColorCurve.Evaluate(fac));
+        });
     }
     void ResetRigidbody()
     {
@@ -113,7 +140,10 @@ namespace Assembly.Components.Items
     void SetBurnUp(bool burning)
     {
       if (burning)
-      { _psBurnUp.Play(); }
+      {
+        _psBurnUp.Play();
+        explosionProgress.SetAsIncrease();
+      }
       else
       { _psBurnUp.Stop(); }
     }
