@@ -27,7 +27,7 @@ namespace Assembly.Components.UI
       titleFadeProgress.SetFactor1();
       titleFadeProgress.SetAsIncrease();
 
-      trigger.OnEnter
+      trigger.OnExit
         .Subscribe(titleFadeProgress.SetAsDecrease);
       this.UpdateAsObservable()
         .Where(titleFadeProgress.isNeedsCalc)
