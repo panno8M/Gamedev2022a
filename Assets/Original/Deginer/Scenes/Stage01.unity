@@ -842,8 +842,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 35, y: 0.5, z: 4}
-  m_Center: {x: 15, y: -0.25, z: 0}
+  m_Size: {x: 35, y: 2.2597766, z: 4}
+  m_Center: {x: 15, y: -1.1298883, z: 0}
 --- !u!1001 &142154937
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10922,8 +10922,6 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   signalThrethold: 0.5
-  timescalePower: 1
-  timescalePingPong: 1
 --- !u!1001 &3409820569533992568
 PrefabInstance:
   m_ObjectHideFlags: 0
