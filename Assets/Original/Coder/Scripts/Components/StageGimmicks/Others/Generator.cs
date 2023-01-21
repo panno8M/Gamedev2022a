@@ -56,7 +56,7 @@ namespace Assembly.Components.StageGimmicks
 
     void OnDrawGizmos()
     {
-      _OnPutKandelaar.DrawArrow(transform);
+      _OnPutKandelaar.DrawArrow(transform, nameof(_OnPutKandelaar));
     }
   }
 }

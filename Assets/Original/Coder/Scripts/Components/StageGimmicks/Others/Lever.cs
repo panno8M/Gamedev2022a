@@ -58,7 +58,7 @@ namespace Assembly.Components.StageGimmicks
 
     void OnDrawGizmos()
     {
-      _OnSwitch.DrawArrow(transform);
+      _OnSwitch.DrawArrow(transform, nameof(_OnSwitch));
     }
   }
 }
