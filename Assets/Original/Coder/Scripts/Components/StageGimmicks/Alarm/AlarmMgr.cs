@@ -29,6 +29,7 @@ namespace Assembly.Components.StageGimmicks
       this.rollback = rollback;
       this.lightShift = lightShift;
     }
+    [SerializeField] AudioSource alarmSpeaker;
     [SerializeField] EzLerp alarmProgress = new EzLerp(10);
     [SerializeField] ReactiveProperty<bool> _IsOnAlert = new ReactiveProperty<bool>();
     public IObservable<bool> IsOnAlert => _IsOnAlert;
@@ -70,8 +71,16 @@ namespace Assembly.Components.StageGimmicks
         });
       IsOnAlert.Subscribe(alert =>
         {
-          if (alert) { lightShift.Set((int)LightShiftKind.Alert); }
-          else { lightShift.Set((int)LightShiftKind.Normal); }
+          if (alert)
+          {
+            lightShift.Set((int)LightShiftKind.Alert);
+            alarmSpeaker.Play();
+          }
+          else
+          {
+            lightShift.Set((int)LightShiftKind.Normal);
+            alarmSpeaker.Stop();
+          }
         });
     }
 
