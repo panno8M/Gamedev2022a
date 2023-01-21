@@ -8,6 +8,7 @@ namespace Assembly.GameSystem.Message
   [Serializable]
   public class MessageDispatcher
   {
+    float lastTime;
     public List<MessageReceiver> receivers = new List<MessageReceiver>();
     public MessageUnit message = new MessageUnit();
 
@@ -22,6 +23,7 @@ namespace Assembly.GameSystem.Message
 
     public void Dispatch(MessageUnit message)
     {
+      lastTime = Time.time;
       foreach (MessageReceiver receiver in receivers)
       {
         receiver.Recieve(message);
@@ -30,21 +32,17 @@ namespace Assembly.GameSystem.Message
     public void Dispatch() { Dispatch(message); }
 
 
-    public void DrawArrow(Transform transform, MessageUnit message)
+    public void DrawArrow(Transform transform, string label)
     {
-      Gizmos.color = Color.green;
+      Gizmos.color = (Time.time - lastTime < 0.1) ? Color.yellow : Color.green;
 
       foreach (MessageReceiver receiver in receivers)
       {
         if (!receiver) { continue; }
         GizmosEx.DrawArrow(transform.position, receiver.transform.position);
+        UnityEditor.Handles.Label((transform.position + receiver.transform.position) / 2, label);
       }
     }
-    public void DrawArrow(Transform transform)
-    {
-      DrawArrow(transform, message);
-    }
-
   }
 
   [Serializable]
@@ -61,7 +59,7 @@ namespace Assembly.GameSystem.Message
       this.watts = currentWatts;
     }
 
-    public void DrawArrow(Transform transform)
+    public void DrawArrow(Transform transform, string label)
     {
       Gizmos.color = Color.red;
 
@@ -69,6 +67,7 @@ namespace Assembly.GameSystem.Message
       {
         if (!receiver) { continue; }
         GizmosEx.DrawArrow(transform.position, receiver.transform.position);
+        UnityEditor.Handles.Label((transform.position + receiver.transform.position) / 2, label);
       }
     }
   }

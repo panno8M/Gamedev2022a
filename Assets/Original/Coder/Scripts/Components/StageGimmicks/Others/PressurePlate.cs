@@ -10,14 +10,24 @@ namespace Assembly.Components.StageGimmicks
   [RequireComponent(typeof(SignalLineDrawer))]
   public class PressurePlate : MonoBehaviour
   {
+    bool isPressed;
+    [SerializeField]
+    int presscount;
+    bool isToggleFlipped;
     SafetyTrigger _trigger;
     SignalLineDrawer signalLineDrawer;
 
     enum Mode { Relax = -1, Press = 1 }
     [SerializeField] MessageDispatcher _OnPress = new MessageDispatcher();
+    [SerializeField] MessageDispatcher _OnSwitch = new MessageDispatcher();
+    [SerializeField] MessageDispatcher _OnSwitchInv = new MessageDispatcher();
+    [SerializeField][Range(0, 1)] float pressThrethold = .5f;
+
     Mode targetMode = Mode.Relax;
     [SerializeField]
     EzLerp animateProgress = new EzLerp(1);
+    [SerializeField]
+    EzLerp switchProgress = new EzLerp(1);
 
     [SerializeField] GameObject _plateObject;
     Material _plateMaterial;
@@ -37,6 +47,7 @@ namespace Assembly.Components.StageGimmicks
       _relaxColor = _plateMaterial.color;
 
       _OnPress.message.intensity = animateProgress;
+      _OnSwitch.message.intensity = switchProgress;
 
       AnimatePress().Forget();
 
@@ -64,13 +75,27 @@ namespace Assembly.Components.StageGimmicks
       animateProgress.mode = (EzLerp.Mode)targetMode;
       if (animateProgress.needsCalc)
       {
-        _OnPress.Dispatch();
-
         _plateObject.transform.localPosition = animateProgress.UpdAdd(_positionDefault, _positionDelta);
         if (_plateMaterial)
         {
-          _plateMaterial.color = animateProgress.UpdMix(_relaxColor, _pressColor);
+          _plateMaterial.color = animateProgress.Mix(_relaxColor, _pressColor);
         }
+
+        bool isPressedPrev = isPressed;
+        isPressed = (animateProgress.PeekFactor() >= pressThrethold);
+        if (isPressed && !isPressedPrev)
+        {
+          presscount++;
+          switchProgress.SetMode(presscount % 2 == 1);
+        }
+        _OnPress.Dispatch();
+      }
+      if (switchProgress.needsCalc)
+      {
+        switchProgress.UpdFactor();
+        _OnSwitchInv.message.intensity.SetFactor(switchProgress.Invpeek());
+        _OnSwitch.Dispatch();
+        _OnSwitchInv.Dispatch();
       }
 
     }
@@ -86,7 +111,9 @@ namespace Assembly.Components.StageGimmicks
 
     void OnDrawGizmos()
     {
-      _OnPress.DrawArrow(transform);
+      _OnPress.DrawArrow(transform, nameof(_OnPress));
+      _OnSwitch.DrawArrow(transform, nameof(_OnSwitch));
+      _OnSwitchInv.DrawArrow(transform, nameof(_OnSwitchInv));
     }
   }
 }
