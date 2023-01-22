@@ -27,6 +27,8 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] CinemachineImpulseSource impulseSource;
     public KandelaarSupply supply;
 
+    public Holdable holdable => _holdable;
+
     protected override void Blueprint()
     {
       throw new NotImplementedException();
