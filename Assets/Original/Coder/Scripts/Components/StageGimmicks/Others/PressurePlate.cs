@@ -7,7 +7,6 @@ using Assembly.GameSystem.Message;
 namespace Assembly.Components.StageGimmicks
 {
   [RequireComponent(typeof(SafetyTrigger))]
-  [RequireComponent(typeof(SignalLineDrawer))]
   public class PressurePlate : MonoBehaviour
   {
     bool isPressed;
@@ -15,7 +14,6 @@ namespace Assembly.Components.StageGimmicks
     int presscount;
     bool isToggleFlipped;
     SafetyTrigger _trigger;
-    SignalLineDrawer signalLineDrawer;
 
     enum Mode { Relax = -1, Press = 1 }
     [SerializeField] MessageDispatcher _OnPress = new MessageDispatcher();
@@ -40,8 +38,6 @@ namespace Assembly.Components.StageGimmicks
     void Start()
     {
       _trigger = GetComponent<SafetyTrigger>();
-      (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
-      signalLineDrawer.dispatchers.Add(_OnPress);
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;

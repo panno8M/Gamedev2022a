@@ -9,11 +9,8 @@ using Utilities;
 namespace Assembly.Components.StageGimmicks
 {
   [RequireComponent(typeof(SafetyTrigger))]
-  [RequireComponent(typeof(SignalLineDrawer))]
   public class Lever : MonoBehaviour, IInteractable
   {
-    SignalLineDrawer signalLineDrawer;
-
     [SerializeField]
     ReactiveProperty<bool> _LeverSwitch = new ReactiveProperty<bool>();
     Interactable interactable;
@@ -34,9 +31,6 @@ namespace Assembly.Components.StageGimmicks
 
     void Start()
     {
-      (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
-      signalLineDrawer.dispatchers.Add(_OnSwitch);
-
       interactable = GetComponent<Interactable>();
       _OnSwitch.message.intensity = leverProgress;
       if (leverSwitch) { leverProgress.SetAsIncrease(); leverProgress.SetFactor1(); }
