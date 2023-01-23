@@ -22,6 +22,8 @@ namespace Assembly.Components.StageGimmicks
 
     [SerializeField] OperationMode mode;
     [SerializeField] bool inverseSignal;
+    [Tooltip("inverseSignalかつprewarmの時、移動先からスタートする")]
+    [SerializeField] bool prewarm;
     [SerializeField] Vector3 _positionDelta;
     Vector3 positionDelta => transform.localRotation * _positionDelta;
 
@@ -31,6 +33,11 @@ namespace Assembly.Components.StageGimmicks
     [Header("For Invoke Mode")]
 
     [SerializeField][Range(0, 0.99f)] float signalThrethold = .5f;
+    [SerializeField][Range(0, 0.99f)] float powerThrethold = .5f;
+
+    bool hasEnoughSignal = false;
+    bool hasEnoughPower = true;
+
 
 #if DEBUG_TRANSFORMER
     [Header("Debug")]
@@ -46,9 +53,6 @@ namespace Assembly.Components.StageGimmicks
 
     Vector3 _positionDefault;
 
-    void UpdateTimeScale()
-      => animateProgress.localTimeScale = timescalePower * timescalePingPong;
-
     void Start()
     {
       _positionDefault = _target.transform.localPosition;
@@ -56,10 +60,17 @@ namespace Assembly.Components.StageGimmicks
       switch (mode)
       {
         case OperationMode.Invoke:
+          hasEnoughSignal = inverseSignal;
+          if (hasEnoughSignal)
+          {
+            if (prewarm) animateProgress.SetFactor1();
+            animateProgress.SetAsIncrease();
+          }
+          break;
         case OperationMode.FollowIntensity:
           if (inverseSignal)
           {
-            animateProgress.SetFactor1();
+            if (prewarm) animateProgress.SetFactor1();
             animateProgress.SetAsIncrease();
           }
           break;
@@ -68,9 +79,9 @@ namespace Assembly.Components.StageGimmicks
           { animateProgress.SetAsIncrease(); }
           else
           { timescalePingPong = 0; }
+          animateProgress.localTimeScale = timescalePower * timescalePingPong;
           break;
       }
-      UpdateTimeScale();
 
       this.FixedUpdateAsObservable()
         .Where(animateProgress.isNeedsCalc)
@@ -97,11 +108,11 @@ namespace Assembly.Components.StageGimmicks
               break;
             case OperationMode.PingPong:
               timescalePingPong = message.intensity.Invpeek(inverseSignal);
-              UpdateTimeScale();
+              animateProgress.localTimeScale = timescalePower * timescalePingPong;
               break;
             case OperationMode.Invoke:
-              animateProgress.SetMode(
-                (message.intensity.PeekFactor() >= signalThrethold) ^ inverseSignal);
+              hasEnoughSignal = message.intensity.PeekFactor() >= signalThrethold ^ inverseSignal;
+              animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
               break;
           }
           break;
@@ -109,8 +120,17 @@ namespace Assembly.Components.StageGimmicks
     }
     public void Powered(MixFactor powerGain)
     {
-      timescalePower = powerGain.PeekFactor();
-      UpdateTimeScale();
+      switch (mode)
+      {
+        case OperationMode.Invoke:
+          hasEnoughPower = powerGain.PeekFactor() >= powerThrethold;
+          animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
+          break;
+        case OperationMode.PingPong:
+          timescalePower = powerGain.PeekFactor();
+          animateProgress.localTimeScale = timescalePower * timescalePingPong;
+          break;
+      }
     }
 
 #if UNITY_EDITOR
