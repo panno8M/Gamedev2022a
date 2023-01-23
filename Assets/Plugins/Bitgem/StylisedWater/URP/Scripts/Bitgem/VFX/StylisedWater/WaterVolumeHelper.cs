@@ -20,19 +20,19 @@ namespace Bitgem.VFX.StylisedWater
 
         #region Private static fields
 
-        private static WaterVolumeHelper instance = null;
+        private static WaterVolumeHelper instance;
 
         #endregion
 
         #region Public fields
 
-        public WaterVolumeBase WaterVolume = null;
+        public WaterVolumeBase WaterVolume;
 
         #endregion
 
         #region Public static properties
 
-        public static WaterVolumeHelper Instance { get { return instance; } }
+        public static WaterVolumeHelper Instance => instance;
 
         #endregion
 
@@ -74,9 +74,13 @@ namespace Bitgem.VFX.StylisedWater
 
         #region MonoBehaviour events
 
-        private void Awake()
+        void Awake()
         {
             instance = this;
+        }
+        void OnDestroy()
+        {
+            instance = null;
         }
 
         #endregion
