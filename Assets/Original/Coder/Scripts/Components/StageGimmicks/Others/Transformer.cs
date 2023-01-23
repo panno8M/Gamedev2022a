@@ -95,26 +95,21 @@ namespace Assembly.Components.StageGimmicks
         .Subscribe(animateProgress.FlipMode);
     }
 
-    public void ReceiveMessage(MessageUnit message)
+    public void ReceiveSignal(MixFactor signal)
     {
-      switch (message.kind)
+      switch (mode)
       {
-        case MessageKind.Signal:
-          switch (mode)
-          {
-            case OperationMode.FollowIntensity:
-              _target.transform.localPosition =
-                _positionDefault + positionDelta * message.intensity.Invpeek(inverseSignal);
-              break;
-            case OperationMode.PingPong:
-              timescalePingPong = message.intensity.Invpeek(inverseSignal);
-              animateProgress.localTimeScale = timescalePower * timescalePingPong;
-              break;
-            case OperationMode.Invoke:
-              hasEnoughSignal = message.intensity.PeekFactor() >= signalThrethold ^ inverseSignal;
-              animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
-              break;
-          }
+        case OperationMode.FollowIntensity:
+          _target.transform.localPosition =
+            _positionDefault + positionDelta * signal.Invpeek(inverseSignal);
+          break;
+        case OperationMode.PingPong:
+          timescalePingPong = signal.Invpeek(inverseSignal);
+          animateProgress.localTimeScale = timescalePower * timescalePingPong;
+          break;
+        case OperationMode.Invoke:
+          hasEnoughSignal = signal.PeekFactor() >= signalThrethold ^ inverseSignal;
+          animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
           break;
       }
     }

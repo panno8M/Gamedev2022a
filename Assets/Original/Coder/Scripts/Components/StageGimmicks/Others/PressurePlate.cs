@@ -42,9 +42,6 @@ namespace Assembly.Components.StageGimmicks
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
 
-      _OnPress.message.intensity = animateProgress;
-      _OnSwitch.message.intensity = switchProgress;
-
       AnimatePress().Forget();
 
       _trigger.OnEnter
@@ -65,7 +62,7 @@ namespace Assembly.Components.StageGimmicks
     {
       if (_plateMaterial) { Destroy(_plateMaterial); }
     }
-
+    MixFactor __inv = new MixFactor();
     void CalcFrame()
     {
       animateProgress.mode = (EzLerp.Mode)targetMode;
@@ -84,14 +81,15 @@ namespace Assembly.Components.StageGimmicks
           presscount++;
           switchProgress.SetMode(presscount % 2 == 1);
         }
-        _OnPress.Dispatch();
+        _OnPress.Dispatch(animateProgress);
       }
       if (switchProgress.needsCalc)
       {
         switchProgress.UpdFactor();
-        _OnSwitchInv.message.intensity.SetFactor(switchProgress.Invpeek());
-        _OnSwitch.Dispatch();
-        _OnSwitchInv.Dispatch();
+        __inv.SetFactor(switchProgress.Invpeek());
+
+        _OnSwitch.Dispatch(switchProgress);
+        _OnSwitchInv.Dispatch(__inv);
       }
 
     }
@@ -105,11 +103,13 @@ namespace Assembly.Components.StageGimmicks
       _plateObject.transform.localPosition = _positionDefault;
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       _OnPress.DrawArrow(transform, nameof(_OnPress));
       _OnSwitch.DrawArrow(transform, nameof(_OnSwitch));
       _OnSwitchInv.DrawArrow(transform, nameof(_OnSwitchInv));
     }
+#endif
   }
 }

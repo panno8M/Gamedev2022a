@@ -22,7 +22,6 @@ namespace Assembly.Components.StageGimmicks
     void Start()
     {
       _trigger = GetComponent<SafetyTrigger>();
-      _OnEnter.message.intensity = dispatchProgress;
 
       _trigger.OnEnter.Subscribe(other =>
       {
@@ -49,7 +48,7 @@ namespace Assembly.Components.StageGimmicks
         .Select(dispatchProgress.UpdFactor)
         .Subscribe(fac =>
         {
-          _OnEnter.Dispatch();
+          _OnEnter.Dispatch(dispatchProgress);
         });
     }
 

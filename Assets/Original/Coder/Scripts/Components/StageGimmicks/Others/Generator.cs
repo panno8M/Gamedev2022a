@@ -100,9 +100,11 @@ namespace Assembly.Components.StageGimmicks
       generating = false;
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       _OnPutKandelaar.DrawArrow(transform, nameof(_OnPutKandelaar));
     }
+#endif
   }
 }

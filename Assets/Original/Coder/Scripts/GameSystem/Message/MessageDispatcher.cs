@@ -8,30 +8,30 @@ namespace Assembly.GameSystem.Message
   [Serializable]
   public class MessageDispatcher
   {
+#if UNITY_EDITOR
     float lastTime;
+#endif
+    float signal;
+
     public List<MessageReceiver> receivers = new List<MessageReceiver>();
-    public MessageUnit message = new MessageUnit();
+    // public MessageUnit message = new MessageUnit();
 
-    public MessageDispatcher(MessageKind kind)
+    public void Dispatch(MixFactor signal)
     {
-      message.kind = kind;
-    }
-    public MessageDispatcher()
-    {
-      message.kind = MessageKind.Signal;
-    }
-
-    public void Dispatch(MessageUnit message)
-    {
+#if UNITY_EDITOR
       lastTime = Time.time;
+#endif
+      float cur = signal.PeekFactor();
+      float delta = cur - this.signal;
       foreach (MessageReceiver receiver in receivers)
       {
-        receiver.Recieve(message);
+        receiver.Recieve(delta);
       }
+      this.signal = cur;
     }
-    public void Dispatch() { Dispatch(message); }
 
 
+#if UNITY_EDITOR
     public void DrawArrow(Transform transform, string label)
     {
       Gizmos.color = (Time.time - lastTime < 0.1) ? Color.yellow : Color.green;
@@ -43,6 +43,7 @@ namespace Assembly.GameSystem.Message
         UnityEditor.Handles.Label((transform.position + receiver.transform.position) / 2, label);
       }
     }
+#endif
   }
 
   [Serializable]
@@ -55,10 +56,18 @@ namespace Assembly.GameSystem.Message
       float currentWatts = watts.PeekFactor();
       float deltaWatts = currentWatts - this.watts;
       foreach (MessageReceiver receiver in receivers)
-      { receiver.Supply(deltaWatts); }
+      {
+        if (!receiver)
+        {
+          Debug.LogWarning($"found missing power receiver");
+          continue;
+        }
+        receiver.Supply(deltaWatts);
+      }
       this.watts = currentWatts;
     }
 
+#if UNITY_EDITOR
     public void DrawArrow(Transform transform, string label)
     {
       Gizmos.color = Color.red;
@@ -70,5 +79,6 @@ namespace Assembly.GameSystem.Message
         UnityEditor.Handles.Label((transform.position + receiver.transform.position) / 2, label);
       }
     }
+#endif
   }
 }

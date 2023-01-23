@@ -32,7 +32,6 @@ namespace Assembly.Components.StageGimmicks
     void Start()
     {
       interactable = GetComponent<Interactable>();
-      _OnSwitch.message.intensity = leverProgress;
       if (leverSwitch) { leverProgress.SetAsIncrease(); leverProgress.SetFactor1(); }
       OnLeverSwitch.Subscribe(leverProgress.SetMode);
 
@@ -41,7 +40,7 @@ namespace Assembly.Components.StageGimmicks
         .Subscribe(_ =>
         {
           _leverRoot.localRotation = leverProgress.UpdMix(_leverRotateFrom, _leverRotateTo);
-          _OnSwitch.Dispatch();
+          _OnSwitch.Dispatch(leverProgress);
         });
     }
 
@@ -50,9 +49,11 @@ namespace Assembly.Components.StageGimmicks
       ToggleLever();
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       _OnSwitch.DrawArrow(transform, nameof(_OnSwitch));
     }
+#endif
   }
 }

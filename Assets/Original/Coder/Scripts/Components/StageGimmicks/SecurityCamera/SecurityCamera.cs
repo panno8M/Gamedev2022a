@@ -77,23 +77,18 @@ namespace Assembly.Components.StageGimmicks
       {
         blinking = false;
         await UniTask.Delay(blinkParam.secondsToWait.PickRandomMilliSeconds());
-        blinking = true;
+        if (signalOn && powerOn) { blinking = true; }
         await UniTask.Delay(blinkParam.secondsToBlink.PickRandomMilliSeconds());
         blinking = false;
       }
     }
 
-    public void ReceiveMessage(MessageUnit message)
+    public void ReceiveSignal(MixFactor signal)
     {
-      switch (message.kind)
-      {
-        case MessageKind.Signal:
-          if (message.intensity.PeekFactor() == 0)
-          { signalOn = !inverseSignal; }
-          if (message.intensity.PeekFactor() == 1)
-          { signalOn = inverseSignal; }
-          break;
-      }
+      if (signal.PeekFactor() == 0)
+      { signalOn = !inverseSignal; }
+      if (signal.PeekFactor() == 1)
+      { signalOn = inverseSignal; }
     }
     public void Powered(MixFactor powerGain)
     {

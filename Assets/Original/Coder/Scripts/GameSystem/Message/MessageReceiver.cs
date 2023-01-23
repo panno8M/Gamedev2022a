@@ -10,39 +10,42 @@ namespace Assembly.GameSystem.Message
 {
   public class MessageReceiver : MonoBehaviour
   {
-    enum PowerUsage { Add, Ignore }
+    enum PowerUsage { Add, AlwaysOn }
     [SerializeField] PowerUsage powerUsage;
 #if DEBUG_MESSAGE
     [SerializeField]
 #endif
+    float signalGainUnnormalized;
     float powerGainUnnormalized;
+
+    MixFactor signalGain = new MixFactor();
     MixFactor powerGain = new MixFactor();
 
-    Subject<MessageUnit> _OnMessageRecieve = new Subject<MessageUnit>();
-    IObservable<MessageUnit> OnMessageRecieve => _OnMessageRecieve;
-
+    Subject<MixFactor> _OnRecieveSignal = new Subject<MixFactor>();
     Subject<MixFactor> _OnPowered = new Subject<MixFactor>();
 
     void Start()
     {
       foreach (IMessageListener receiver in gameObject.GetComponentsInChildren<IMessageListener>())
       {
-        OnMessageRecieve.Subscribe(receiver.ReceiveMessage);
+        _OnRecieveSignal.Subscribe(receiver.ReceiveSignal);
         _OnPowered.Subscribe(receiver.Powered);
       }
       Supply(0);
     }
 
-    public void Recieve(MessageUnit message)
+    public void Recieve(float deltaSignal)
     {
-      _OnMessageRecieve.OnNext(message);
+      signalGainUnnormalized += deltaSignal;
+      signalGain.SetFactor(signalGainUnnormalized);
+      _OnRecieveSignal.OnNext(signalGain);
     }
 
     public void Supply(float deltaWatts)
     {
       switch (powerUsage)
       {
-        case PowerUsage.Ignore:
+        case PowerUsage.AlwaysOn:
           powerGainUnnormalized = 1;
           break;
         case PowerUsage.Add:
