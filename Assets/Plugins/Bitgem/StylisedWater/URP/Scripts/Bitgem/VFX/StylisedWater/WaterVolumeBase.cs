@@ -41,7 +41,7 @@ namespace Bitgem.VFX.StylisedWater
         private UnityEngine.Mesh mesh = null;
         private MeshFilter meshFilter = null;
 
-        private bool[,,] tiles = null;
+        private bool[][][] tiles = null;
 
         #endregion
 
@@ -95,8 +95,9 @@ namespace Bitgem.VFX.StylisedWater
 
         #region Public methods
 
-        public float? GetHeight(Vector3 _position)
+        public bool GetHeight(Vector3 _position, out float height)
         {
+            height = 0;
             // convert the position to a tile
             var x = Mathf.FloorToInt((_position.x - transform.position.x + 0.5f) / TileSize);
             var z = Mathf.FloorToInt((_position.z - transform.position.z + 0.5f) / TileSize);
@@ -104,21 +105,22 @@ namespace Bitgem.VFX.StylisedWater
             // check if out of bounds
             if (x < 0 || x >= MAX_TILES_X || z < 0 || z >= MAX_TILES_Z)
             {
-                return null;
+                return false;
             }
 
             // find the highest active water block in the column
             // TODO : could be reworked to cater for gaps
             for (var y = MAX_TILES_Y - 1; y >= 0; y--)
             {
-                if (tiles[x, y, z])
+                if (tiles[x][y][z])
                 {
-                    return transform.position.y + y * TileSize;
+                    height = transform.position.y + y * TileSize;
+                    return true;
                 }
             }
 
             // no water in the column
-            return null;
+            return false;
         }
 
         public void Rebuild()
@@ -132,7 +134,15 @@ namespace Bitgem.VFX.StylisedWater
             mesh.Clear();
 
             // allow any child class to generate the tiles to build from
-            tiles = new bool[MAX_TILES_X, MAX_TILES_Y, MAX_TILES_Z];
+            tiles = new bool[MAX_TILES_X][][];
+            for (int x = 0; x < MAX_TILES_X; x++)
+            {
+                tiles[x] = new bool[MAX_TILES_Y][];
+                for (int y = 0; y < MAX_TILES_Y; y++)
+                {
+                    tiles[x][y] = new bool[MAX_TILES_Z];
+                }
+            }
             GenerateTiles(ref tiles);
 
             // prepare buffers for the mesh data
@@ -150,7 +160,7 @@ namespace Bitgem.VFX.StylisedWater
                     for (var z = 0; z < MAX_TILES_Z; z++)
                     {
                         // check there is water here
-                        if (!tiles[x, y, z])
+                        if (!tiles[x][y][z])
                         {
                             continue;
                         }
@@ -170,16 +180,16 @@ namespace Bitgem.VFX.StylisedWater
                         var uz1 = z1 + transform.position.z;
 
                         // check for edges
-                        var negX = x == 0 || !tiles[x - 1, y, z];
-                        var posX = x == MAX_TILES_X - 1 || !tiles[x + 1, y, z];
-                        var negY = y == 0 || !tiles[x, y - 1, z];
-                        var posY = y == MAX_TILES_Y - 1 || !tiles[x, y + 1, z];
-                        var negZ = z == 0 || !tiles[x, y, z - 1];
-                        var posZ = z == MAX_TILES_Z - 1 || !tiles[x, y, z + 1];
-                        var negXnegZ = !negX && !negZ && x > 0 && z > 0 && !tiles[x - 1, y, z - 1];
-                        var negXposZ = !negX && !posZ && x > 0 && z < MAX_TILES_Z && !tiles[x - 1, y, z + 1];
-                        var posXposZ = !posX && !posZ && x < MAX_TILES_X && z < MAX_TILES_Z && !tiles[x + 1, y, z + 1];
-                        var posXnegZ = !posX && !negZ && x < MAX_TILES_X && z > 0 && !tiles[x + 1, y, z - 1];
+                        var negX = x == 0 || !tiles[x - 1][y][z];
+                        var posX = x == MAX_TILES_X - 1 || !tiles[x + 1][y][z];
+                        var negY = y == 0 || !tiles[x][y - 1][z];
+                        var posY = y == MAX_TILES_Y - 1 || !tiles[x][y + 1][z];
+                        var negZ = z == 0 || !tiles[x][y][z - 1];
+                        var posZ = z == MAX_TILES_Z - 1 || !tiles[x][y][z + 1];
+                        var negXnegZ = !negX && !negZ && x > 0 && z > 0 && !tiles[x - 1][y][z - 1];
+                        var negXposZ = !negX && !posZ && x > 0 && z < MAX_TILES_Z && !tiles[x - 1][y][z + 1];
+                        var posXposZ = !posX && !posZ && x < MAX_TILES_X && z < MAX_TILES_Z && !tiles[x + 1][y][z + 1];
+                        var posXnegZ = !posX && !negZ && x < MAX_TILES_X && z > 0 && !tiles[x + 1][y][z - 1];
                         var faceNegX = negX && (IncludeFaces & TileFace.NegX) == TileFace.NegX;
                         var facePosX = posX && (IncludeFaces & TileFace.PosX) == TileFace.PosX;
                         var faceNegZ = negZ && (IncludeFaces & TileFace.NegZ) == TileFace.NegZ;
@@ -194,7 +204,7 @@ namespace Bitgem.VFX.StylisedWater
                         var foamPosXnegZ = posXnegZ && ((IncludeFoam & TileFace.PosZ) == TileFace.PosZ || (IncludeFoam & TileFace.NegZ) == TileFace.NegZ);
 
                         // create the top face
-                        if (y == MAX_TILES_Y - 1 || !tiles[x, y + 1, z])
+                        if (y == MAX_TILES_Y - 1 || !tiles[x][y + 1][z])
                         {
                             vertices.Add(new Vector3(x0, y1, z0));
                             vertices.Add(new Vector3(x0, y1, z1));
@@ -364,7 +374,7 @@ namespace Bitgem.VFX.StylisedWater
 
         #region Virtual methods
 
-        protected virtual void GenerateTiles(ref bool[,,] _tiles) { }
+        protected virtual void GenerateTiles(ref bool[][][] _tiles) { }
         public virtual void Validate() { }
 
         #endregion

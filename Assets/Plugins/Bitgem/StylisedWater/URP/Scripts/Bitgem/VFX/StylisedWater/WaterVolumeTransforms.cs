@@ -52,7 +52,7 @@ namespace Bitgem.VFX.StylisedWater
 
         #region Public methods
 
-        protected override void GenerateTiles(ref bool[,,] _tiles)
+        protected override void GenerateTiles(ref bool[][][] _tiles)
         {
             // iterate the chldren
             for (var i = 0; i < transform.childCount; i++)
@@ -80,7 +80,7 @@ namespace Bitgem.VFX.StylisedWater
                             }
 
                             // add the tile
-                            _tiles[ix, iy, iz] = true;
+                            _tiles[ix][iy][iz] = true;
                         }
                     }
                 }

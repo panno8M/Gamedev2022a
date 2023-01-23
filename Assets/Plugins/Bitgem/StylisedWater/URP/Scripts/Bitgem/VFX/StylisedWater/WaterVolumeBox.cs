@@ -19,7 +19,7 @@ namespace Bitgem.VFX.StylisedWater
 
         #region Public methods
 
-        protected override void GenerateTiles(ref bool[,,] _tiles)
+        protected override void GenerateTiles(ref bool[][][] _tiles)
         {
             // calculate volume in tiles
             var maxX = Mathf.Clamp(Mathf.RoundToInt(Dimensions.x / TileSize), 1, MAX_TILES_X);
@@ -33,7 +33,7 @@ namespace Bitgem.VFX.StylisedWater
                 {
                     for (var z = 0; z < maxZ; z++)
                     {
-                        _tiles[x, y, z] = true;
+                        _tiles[x][y][z] = true;
                     }
                 }
             }

@@ -56,18 +56,18 @@ namespace Bitgem.VFX.StylisedWater
             }
 
             // replicate the shader logic, using parameters pulled from the specific material, to return the height at the specified position
-            var waterHeight = WaterVolume.GetHeight(_position);
-            if (!waterHeight.HasValue)
+            if (WaterVolume.GetHeight(_position, out height))
             {
-                return false;
+                var _WaveFrequency = renderer.sharedMaterial.GetFloat(idWaveFrequency);
+                var _WaveScale = renderer.sharedMaterial.GetFloat(idWaveScale);
+                var _WaveSpeed = renderer.sharedMaterial.GetFloat(idWaveSpeed);
+                var time = Time.time * _WaveSpeed;
+                var shaderOffset = (Mathf.Sin(_position.x * _WaveFrequency + time) + Mathf.Cos(_position.z * _WaveFrequency + time)) * _WaveScale;
+                height += shaderOffset;
+                return true;
             }
-            var _WaveFrequency = renderer.sharedMaterial.GetFloat(idWaveFrequency);
-            var _WaveScale = renderer.sharedMaterial.GetFloat(idWaveScale);
-            var _WaveSpeed = renderer.sharedMaterial.GetFloat(idWaveSpeed);
-            var time = Time.time * _WaveSpeed;
-            var shaderOffset = (Mathf.Sin(_position.x * _WaveFrequency + time) + Mathf.Cos(_position.z * _WaveFrequency + time)) * _WaveScale;
-            height = waterHeight.Value + shaderOffset;
-            return true;
+
+            return false;
         }
 
         #endregion
