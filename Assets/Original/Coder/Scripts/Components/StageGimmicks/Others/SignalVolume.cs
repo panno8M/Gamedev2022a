@@ -52,9 +52,11 @@ namespace Assembly.Components.StageGimmicks
         });
     }
 
-    void Update()
+#if UNITY_EDITOR
+    void OnDrawGizmos()
     {
-
+      _OnEnter.DrawArrow(transform, nameof(_OnEnter));
     }
+#endif
   }
 }

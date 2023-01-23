@@ -76,7 +76,7 @@ namespace Assembly.GameSystem.Message
       {
         if (!receiver) { continue; }
         GizmosEx.DrawArrow(transform.position, receiver.transform.position);
-        UnityEditor.Handles.Label((transform.position + receiver.transform.position) / 2, label);
+        // UnityEditor.Handles.Label((transform.position + receiver.transform.position) / 2, label);
       }
     }
 #endif
