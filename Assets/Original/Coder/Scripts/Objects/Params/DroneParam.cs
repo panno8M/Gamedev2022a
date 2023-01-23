@@ -59,7 +59,7 @@ namespace Assembly.Params
           Vector3.down,
           out hit,
           relativeHeightFromGround,
-          new Layers(Layer.Stage));
+          new Layers(Layer.PhsStage));
       }
     }
   }

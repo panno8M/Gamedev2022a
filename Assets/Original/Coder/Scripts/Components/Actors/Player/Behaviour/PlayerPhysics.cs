@@ -57,7 +57,7 @@ namespace Assembly.Components.Actors.Player
     public Vector3 obstacleTangent;
     public Vector3 groundedForward;
 
-    LayerMask __collisionLayer = new Layers(Layer.Stage, Layer.Dynamics);
+    LayerMask __collisionLayer = new Layers(Layer.PhsStage, Layer.PhsDynamics);
 
     protected override void OnAssemble()
     {
