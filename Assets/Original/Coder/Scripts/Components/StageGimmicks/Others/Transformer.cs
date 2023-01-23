@@ -34,6 +34,7 @@ namespace Assembly.Components.StageGimmicks
 
     [SerializeField][Range(0, 0.99f)] float signalThrethold = .5f;
     [SerializeField][Range(0, 0.99f)] float powerThrethold = .5f;
+    [SerializeField] bool goBackOnPowerStopped = true;
 
     bool hasEnoughSignal = false;
     bool hasEnoughPower = true;
@@ -118,7 +119,7 @@ namespace Assembly.Components.StageGimmicks
       switch (mode)
       {
         case OperationMode.Invoke:
-          hasEnoughPower = powerGain.PeekFactor() >= powerThrethold;
+          hasEnoughPower = powerGain.PeekFactor() >= powerThrethold || !goBackOnPowerStopped;
           animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
           break;
         case OperationMode.PingPong:
