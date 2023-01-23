@@ -8,7 +8,7 @@ namespace Assembly.Params
   {
     [Header("Behavior")]
     public float angle = 15.5f;
-    public Layer obstacleLayer = Layer.Stage;
+    public Layer obstacleLayer = Layer.PhsStage;
     public bool noticeImmediately;
     [Tooltip("NoticeImmediatelyがtrueの場合無視される")]
     public float secondsToNotice = 1;

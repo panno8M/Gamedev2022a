@@ -1,3 +1,7 @@
+#if UNITY_EDITOR
+// #define DEBUG_HOLDABLE
+#endif
+
 using System;
 using UnityEngine;
 using UniRx;
@@ -8,6 +12,12 @@ namespace Assembly.Components
   public class Holdable : MonoBehaviour
   {
     [SerializeField] Rigidbody _rigidbodyObjectPhysics;
+#if DEBUG_HOLDABLE
+    [Header("Debug")]
+#endif
+#if DEBUG_HOLDABLE
+    [SerializeField]
+#endif
     Holder _owner;
     Subject<Holder> _OnHold = new Subject<Holder>();
     Subject<Holder> _OnRelease = new Subject<Holder>();

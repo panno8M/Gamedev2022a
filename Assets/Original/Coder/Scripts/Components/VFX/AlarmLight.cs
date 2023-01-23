@@ -15,7 +15,6 @@ public class AlarmLight : DiBehavior
   [SerializeField] new Light light;
 
   [SerializeField] Gradient gradient;
-  [SerializeField] float temperature;
   [SerializeField] float intensity;
 
   [SerializeField] float scrollSpeed = 1;
@@ -30,7 +29,6 @@ public class AlarmLight : DiBehavior
   protected override void Blueprint()
   {
     if (!light) light = GetComponent<Light>();
-    light.useColorTemperature = true;
 
     alarmMgr.IsOnAlert.Subscribe(b =>
     {
@@ -44,7 +42,6 @@ public class AlarmLight : DiBehavior
 
     transProgress.UpdFactor();
     light.intensity = transProgress.Add(0, intensity);
-    light.colorTemperature = temperature;
     light.color = gradient.Evaluate(alarmGradProgress);
   }
 }

@@ -8,7 +8,7 @@ namespace Assembly.GameSystem.Damage
 {
   public class Damager : MonoBehaviour
   {
-    [SerializeField] LayerMask lmDamagable = new Layers(Layer.Damagable, Layer.DamagableFromPlayer);
+    [SerializeField] LayerMask lmDamagable = new Layers(Layer.SnsDamagable, Layer.SnsPlayerDamagable);
     [SerializeField] DamageUnit _damageUnit;
     ParticleSystem ps;
     List<ParticleCollisionEvent> ev;

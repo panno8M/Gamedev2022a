@@ -27,6 +27,8 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] CinemachineImpulseSource impulseSource;
     public KandelaarSupply supply;
 
+    public Holdable holdable => _holdable;
+
     protected override void Blueprint()
     {
       throw new NotImplementedException();
@@ -51,6 +53,7 @@ namespace Assembly.Components.StageGimmicks
           {
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
+            transform.rotation = Quaternion.identity;
             supply.enabled = true;
             Observable.Timer(TimeSpan.FromMilliseconds(100))
               .Subscribe(_ =>
