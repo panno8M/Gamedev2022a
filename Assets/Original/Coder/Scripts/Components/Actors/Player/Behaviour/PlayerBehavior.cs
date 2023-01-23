@@ -40,18 +40,38 @@ namespace Assembly.Components.Actors.Player
           .Subscribe(MoveHorizontal);
     }
 
+    bool isTryingToJump;
+    float jumpStartTime;
     void Jump()
     {
       rigidbody.velocity = rigidbody.velocity.x_z();
       rigidbody.AddForce(jumpHeight._v_(), ForceMode.Impulse);
+      isTryingToJump = true;
+      jumpStartTime = Time.time;
     }
 
 
     void MoveHorizontal(Unit _)
     {
+      if (isTryingToJump)
+      {
+        if (!_actor.physics.isOnGround || isTryingToJump && _actor.physics.isOnGround && Time.time - jumpStartTime > 0.3)
+        {
+          isTryingToJump = false;
+          jumpStartTime = 0;
+        }
+      }
+
       if (_actor.ctl.horizontal == 0)
       {
-        rigidbody.velocity = rigidbody.velocity._yz();
+        if (!isTryingToJump && _actor.physics.isOnGround)
+        {
+          rigidbody.velocity = Vector3.zero;
+        }
+        else
+        {
+          rigidbody.velocity = rigidbody.velocity._y_();
+        }
         return;
       }
 
@@ -63,8 +83,14 @@ namespace Assembly.Components.Actors.Player
         }
         else
         {
-          rigidbody.velocity = rigidbody.velocity._yz();
+          rigidbody.velocity = rigidbody.velocity._y_();
         }
+        return;
+      }
+
+      if (!isTryingToJump && _actor.physics.isOnGround)
+      {
+        rigidbody.velocity = _actor.physics.groundedForward * MoveSpeed;
       }
       else
       {
