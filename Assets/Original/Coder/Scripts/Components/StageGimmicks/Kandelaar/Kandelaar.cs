@@ -53,6 +53,7 @@ namespace Assembly.Components.StageGimmicks
           {
             rigidbody.useGravity = true;
             rigidbody.isKinematic = false;
+            transform.rotation = Quaternion.identity;
             supply.enabled = true;
             Observable.Timer(TimeSpan.FromMilliseconds(100))
               .Subscribe(_ =>

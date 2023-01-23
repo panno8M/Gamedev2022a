@@ -109,7 +109,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 847327826}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &293357033
 SphereCollider:
@@ -181,13 +181,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 819544957}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.12, y: 1.06, z: 0}
+  m_LocalRotation: {x: -0, y: -0, z: -0.72939634, w: 0.6840914}
+  m_LocalPosition: {x: 0.09, y: -0.92, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 847327826}
-  m_RootOrder: 2
+  m_Father: {fileID: 1775708748045437342}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!135 &819544961
 SphereCollider:
@@ -272,7 +272,6 @@ Transform:
   m_Children:
   - {fileID: 2142224223}
   - {fileID: 85444139}
-  - {fileID: 819544958}
   - {fileID: 293357032}
   m_Father: {fileID: 8353330523506930297}
   m_RootOrder: 3
@@ -5598,6 +5597,7 @@ MonoBehaviour:
   obstacleColliding: 0
   obstacleClimbable: 0
   obstacleTangent: {x: 0, y: 0, z: 0}
+  groundedForward: {x: 0, y: 0, z: 0}
 --- !u!114 &1855202802
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6962,6 +6962,12 @@ PrefabInstance:
 --- !u!4 &1628132770560807817 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -1912701654935877828, guid: 9818b1cc94c58c1478510294823aedf1,
+    type: 3}
+  m_PrefabInstance: {fileID: 8353330523695600821}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1775708748045437342 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -1492828477307445973, guid: 9818b1cc94c58c1478510294823aedf1,
     type: 3}
   m_PrefabInstance: {fileID: 8353330523695600821}
   m_PrefabAsset: {fileID: 0}
