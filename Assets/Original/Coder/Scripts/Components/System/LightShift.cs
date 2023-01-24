@@ -36,6 +36,7 @@ namespace Assembly.Components
     }
     [SerializeField] LightUnit[] lightUnits;
     [SerializeField] ReflectionProbe[] reflectionProbes;
+    public int lastIndex;
 
     void Start()
     {
@@ -58,6 +59,7 @@ namespace Assembly.Components
     {
       if (lightUnits.Length <= index) { return; }
       Set(ref lightUnits[index], reflectionProbes);
+      lastIndex = index;
     }
   }
 }
