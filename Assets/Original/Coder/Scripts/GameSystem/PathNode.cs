@@ -61,6 +61,7 @@ namespace Assembly.GameSystem.PathNetwork
       };
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       Gizmos.DrawIcon(transform.position, "RedFlag", true);
@@ -71,6 +72,7 @@ namespace Assembly.GameSystem.PathNetwork
         GizmosEx.DrawArrow(transform.position, route.dst.transform.position);
       }
     }
+#endif
 
   }
   [Serializable]
