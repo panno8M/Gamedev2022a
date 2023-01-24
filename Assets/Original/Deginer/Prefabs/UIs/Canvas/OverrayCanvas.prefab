@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   progress:
-    secDuration: 1
+    secDuration: 2
     localTimeScale: 1
     useCurve: 1
     curve:

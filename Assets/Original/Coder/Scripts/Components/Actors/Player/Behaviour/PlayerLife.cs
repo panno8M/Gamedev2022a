@@ -52,7 +52,7 @@ namespace Assembly.Components.Actors.Player
 
       await UniTask.Delay(500);
 
-      fader.Fade().Forget();
+      fader.Transition(.5f, 1f).Forget();
 
       await UniTask.Delay(500);
 
