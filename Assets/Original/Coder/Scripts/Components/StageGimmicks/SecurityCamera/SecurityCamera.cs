@@ -76,9 +76,15 @@ namespace Assembly.Components.StageGimmicks
       while (true)
       {
         blinking = false;
+
         await UniTask.Delay(blinkParam.secondsToWait.PickRandomMilliSeconds());
+        if (!this) { return; }
+
         if (signalOn && powerOn) { blinking = true; }
+
         await UniTask.Delay(blinkParam.secondsToBlink.PickRandomMilliSeconds());
+        if (!this) { return; }
+
         blinking = false;
       }
     }

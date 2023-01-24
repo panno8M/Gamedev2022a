@@ -1,13 +1,15 @@
 using System;
 using UnityEngine;
 using UniRx;
+using UniRx.Triggers;
 using Assembly.GameSystem.Input;
 
 namespace Assembly.GameSystem.Internal
 {
   public class InputControlProvider
   {
-    Camera mainCamera;
+    Camera _mainCamera;
+    Camera mainCamera => _mainCamera ? _mainCamera : (_mainCamera = Camera.main);
 
     public InputSystem input;
 
@@ -30,7 +32,6 @@ namespace Assembly.GameSystem.Internal
 
     public InputControlProvider()
     {
-      mainCamera = Camera.main;
       input = new InputSystem();
       input.Enable();
 
@@ -43,8 +44,10 @@ namespace Assembly.GameSystem.Internal
       input.Player.Pause.AsButton(PauseInput, PauseFixed);
 
 
-      mainCamera.transform
-        .ObserveEveryValueChanged(x => x.position)
+      Observable.EveryUpdate()
+        .Where(_ => mainCamera)
+        .Select(_ => mainCamera.transform.position)
+        .DistinctUntilChanged()
         .Subscribe(_ =>
           MousePos_ScreenToGameStage(MousePosInput, MousePosStage));
       MousePosInput.Subscribe(_ =>

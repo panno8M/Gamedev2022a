@@ -22,8 +22,6 @@ namespace Assembly.Components.UI
     {
       trigger = GetComponent<SafetyTrigger>();
 
-      fader.progress.secDuration = 2;
-      fader.progress.SetFactor1();
       titleFadeProgress.SetFactor1();
       titleFadeProgress.SetAsIncrease();
 

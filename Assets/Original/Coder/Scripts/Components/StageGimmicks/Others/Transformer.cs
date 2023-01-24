@@ -13,6 +13,7 @@ namespace Assembly.Components.StageGimmicks
   public class Transformer : MonoBehaviour, IMessageListener
   {
     enum OnPowerNotEnough { StayHere, GoBack }
+    enum OnSignalNotEnough { StayHere, GoBack }
     enum OperationMode
     {
       FollowIntensity = 1 << 0,
@@ -22,7 +23,8 @@ namespace Assembly.Components.StageGimmicks
     [Header("General")]
 
     [SerializeField] OperationMode mode;
-    [SerializeField] OnPowerNotEnough onPowerNotEnough;
+    [SerializeField] OnPowerNotEnough onPowerNotEnough = OnPowerNotEnough.StayHere;
+    [SerializeField] OnSignalNotEnough onSignalNotEnough = OnSignalNotEnough.GoBack;
     [SerializeField] bool inverseSignal;
     [Tooltip("inverseSignalかつprewarmの時、移動先からスタートする")]
     [SerializeField] bool prewarm;
@@ -32,7 +34,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] GameObject _target;
     [SerializeField] EzLerp animateProgress;
 
-    [SerializeField][Range(0f, 0.99f)] float signalThrethold  = 0f;
+    [SerializeField][Range(0f, 0.99f)] float signalThrethold = 0f;
     [SerializeField][Range(0f, 0.99f)] float powerThrethold = .5f;
 
     bool hasEnoughSignal = false;
@@ -122,15 +124,33 @@ namespace Assembly.Components.StageGimmicks
 
     void UpdateAnimateProgress()
     {
-      switch (onPowerNotEnough)
+      switch (onSignalNotEnough)
       {
-        case OnPowerNotEnough.StayHere:
-          animateProgress.localTimeScale = timescalePower;
-          animateProgress.SetMode(hasEnoughSignal);
+        case OnSignalNotEnough.GoBack:
+          switch (onPowerNotEnough)
+          {
+            case OnPowerNotEnough.StayHere:
+              animateProgress.localTimeScale = timescalePower;
+              animateProgress.SetMode(hasEnoughSignal);
+              break;
+            case OnPowerNotEnough.GoBack:
+              animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
+              break;
+          }
           break;
-        case OnPowerNotEnough.GoBack:
-          animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
+        case OnSignalNotEnough.StayHere:
+          switch (onPowerNotEnough)
+          {
+            case OnPowerNotEnough.StayHere:
+              animateProgress.localTimeScale = timescalePower * timescaleSignal;
+              break;
+            case OnPowerNotEnough.GoBack:
+              animateProgress.localTimeScale = timescaleSignal;
+              animateProgress.SetMode(hasEnoughPower);
+              break;
+          }
           break;
+
       }
     }
 

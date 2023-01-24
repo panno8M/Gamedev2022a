@@ -18,9 +18,12 @@ namespace Assembly.GameSystem.ObjectPool
     {
       if (q == null) q = new Queue<T>();
 
-      T instance = (q.Count > 0)
-          ? q.Dequeue()
-          : CreateInstance();
+      T instance = null;
+      while (!instance && q.Count > 0)
+      {
+        instance = q.Dequeue();
+      }
+      if (!instance) { instance = CreateInstance(); }
 
       instance.gameObject.SetActive(true);
       instance.Assemble();
