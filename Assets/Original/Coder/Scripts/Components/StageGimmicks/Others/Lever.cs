@@ -9,11 +9,8 @@ using Utilities;
 namespace Assembly.Components.StageGimmicks
 {
   [RequireComponent(typeof(SafetyTrigger))]
-  [RequireComponent(typeof(SignalLineDrawer))]
   public class Lever : MonoBehaviour, IInteractable
   {
-    SignalLineDrawer signalLineDrawer;
-
     [SerializeField]
     ReactiveProperty<bool> _LeverSwitch = new ReactiveProperty<bool>();
     Interactable interactable;
@@ -34,11 +31,7 @@ namespace Assembly.Components.StageGimmicks
 
     void Start()
     {
-      (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
-      signalLineDrawer.dispatchers.Add(_OnSwitch);
-
       interactable = GetComponent<Interactable>();
-      _OnSwitch.message.intensity = leverProgress;
       if (leverSwitch) { leverProgress.SetAsIncrease(); leverProgress.SetFactor1(); }
       OnLeverSwitch.Subscribe(leverProgress.SetMode);
 
@@ -47,7 +40,7 @@ namespace Assembly.Components.StageGimmicks
         .Subscribe(_ =>
         {
           _leverRoot.localRotation = leverProgress.UpdMix(_leverRotateFrom, _leverRotateTo);
-          _OnSwitch.Dispatch();
+          _OnSwitch.Dispatch(leverProgress);
         });
     }
 
@@ -56,9 +49,11 @@ namespace Assembly.Components.StageGimmicks
       ToggleLever();
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       _OnSwitch.DrawArrow(transform, nameof(_OnSwitch));
     }
+#endif
   }
 }

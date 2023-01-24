@@ -14,9 +14,9 @@ public class Sprinkler : MonoBehaviour, IMessageListener
     defaultRate = emission.rateOverTime.constant;
   }
 
-  public void ReceiveMessage(MessageUnit message)
+  public void ReceiveSignal(MixFactor signal)
   {
-    emission.rateOverTime = message.intensity.UpdMix(defaultRate, 0);
+    emission.rateOverTime = signal.Mix(defaultRate, 0);
   }
   public void Powered(MixFactor powerGain) { }
 }

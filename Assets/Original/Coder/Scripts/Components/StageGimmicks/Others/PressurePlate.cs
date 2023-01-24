@@ -7,7 +7,6 @@ using Assembly.GameSystem.Message;
 namespace Assembly.Components.StageGimmicks
 {
   [RequireComponent(typeof(SafetyTrigger))]
-  [RequireComponent(typeof(SignalLineDrawer))]
   public class PressurePlate : MonoBehaviour
   {
     bool isPressed;
@@ -15,7 +14,6 @@ namespace Assembly.Components.StageGimmicks
     int presscount;
     bool isToggleFlipped;
     SafetyTrigger _trigger;
-    SignalLineDrawer signalLineDrawer;
 
     enum Mode { Relax = -1, Press = 1 }
     [SerializeField] MessageDispatcher _OnPress = new MessageDispatcher();
@@ -40,14 +38,9 @@ namespace Assembly.Components.StageGimmicks
     void Start()
     {
       _trigger = GetComponent<SafetyTrigger>();
-      (signalLineDrawer = GetComponent<SignalLineDrawer>()).Initialize();
-      signalLineDrawer.dispatchers.Add(_OnPress);
       _positionDefault = _plateObject.transform.localPosition;
       _plateMaterial = _plateObject.GetComponent<Renderer>().material;
       _relaxColor = _plateMaterial.color;
-
-      _OnPress.message.intensity = animateProgress;
-      _OnSwitch.message.intensity = switchProgress;
 
       AnimatePress().Forget();
 
@@ -69,7 +62,7 @@ namespace Assembly.Components.StageGimmicks
     {
       if (_plateMaterial) { Destroy(_plateMaterial); }
     }
-
+    MixFactor __inv = new MixFactor();
     void CalcFrame()
     {
       animateProgress.mode = (EzLerp.Mode)targetMode;
@@ -88,14 +81,15 @@ namespace Assembly.Components.StageGimmicks
           presscount++;
           switchProgress.SetMode(presscount % 2 == 1);
         }
-        _OnPress.Dispatch();
+        _OnPress.Dispatch(animateProgress);
       }
       if (switchProgress.needsCalc)
       {
         switchProgress.UpdFactor();
-        _OnSwitchInv.message.intensity.SetFactor(switchProgress.Invpeek());
-        _OnSwitch.Dispatch();
-        _OnSwitchInv.Dispatch();
+        __inv.SetFactor(switchProgress.Invpeek());
+
+        _OnSwitch.Dispatch(switchProgress);
+        _OnSwitchInv.Dispatch(__inv);
       }
 
     }
@@ -109,11 +103,13 @@ namespace Assembly.Components.StageGimmicks
       _plateObject.transform.localPosition = _positionDefault;
     }
 
+#if UNITY_EDITOR
     void OnDrawGizmos()
     {
       _OnPress.DrawArrow(transform, nameof(_OnPress));
       _OnSwitch.DrawArrow(transform, nameof(_OnSwitch));
       _OnSwitchInv.DrawArrow(transform, nameof(_OnSwitchInv));
     }
+#endif
   }
 }

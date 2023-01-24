@@ -42,7 +42,7 @@ namespace Assembly.Components.Actors.Player
     Vector3 steppableBoxExtents = new Vector3(0.1f, 0.4f, 0.2f);
     #endregion //params
 
-    [SerializeField] Subject<Unit> _BehaviorUpdate = new Subject<Unit>();
+    Subject<Unit> _BehaviorUpdate = new Subject<Unit>();
     public IObservable<Unit> BehaviorUpdate => _BehaviorUpdate;
 
     [SerializeField] Subject<Unit> _OnLand = new Subject<Unit>();
@@ -55,12 +55,16 @@ namespace Assembly.Components.Actors.Player
     public bool obstacleColliding;
     public bool obstacleClimbable;
     public Vector3 obstacleTangent;
+    public Vector3 groundedForward;
+
+    LayerMask __collisionLayer = new Layers(Layer.PhsStage, Layer.PhsDynamics);
 
     protected override void OnAssemble()
     {
       obstacleColliding = false;
       obstacleClimbable = false;
       obstacleTangent = Vector3.zero;
+      groundedForward = Vector3.zero;
     }
     protected override void Blueprint()
     {
@@ -72,13 +76,16 @@ namespace Assembly.Components.Actors.Player
               if (Vector3.Angle(contact.normal, Vector3.up) < degreeClimbableObstacle)
               {
                 _isOnGround = true;
+                groundedForward = CrossZ(contact.normal, _actor.ctl.lookDirection);
               }
               else if (Vector3.Angle(contact.normal, -_actor.ctl.lookDirection.v__()) < degreeUnclimbableObstacle)
               {
                 obstacleColliding = true;
-                obstacleTangent = Quaternion.FromToRotation(Vector3.up, contact.normal) * _actor.ctl.lookDirection.v__();
+                obstacleTangent = CrossZ(contact.normal, _actor.ctl.lookDirection);
               }
             }
+
+            Vector3 CrossZ(Vector3 vec, float v) => new Vector3( vec.y * v, -vec.x * v, 0);
           });
 
       _actor.FixedUpdateAsObservable()
@@ -95,13 +102,14 @@ namespace Assembly.Components.Actors.Player
           obstacleClimbable = obstacleColliding && !Physics.CheckBox(
             transform.position + steppableBoxCenter.SignX(_actor.ctl.lookDirection),
             steppableBoxExtents,
-            Quaternion.identity, new Layers(Layer.Stage, Layer.Dynamics));
+            Quaternion.identity, __collisionLayer);
 
           _isOnGroundAtLast = _isOnGround;
           _isOnGround = false;
           obstacleColliding = false;
         });
     }
+
     void OnDrawGizmos()
     {
       Gizmos.color = Color.cyan;

@@ -76,7 +76,6 @@ MonoBehaviour:
     m_Mode: 0
     m_NumColorKeys: 3
     m_NumAlphaKeys: 2
-  temperature: 2000
   intensity: 200
   scrollSpeed: 0.56
   transProgress:
@@ -100,8 +99,8 @@ Light:
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
-  m_Color: {r: 0.6627451, g: 0.9490196, b: 1, a: 1}
-  m_Intensity: 10
+  m_Color: {r: 1, g: 0, b: 0.07450981, a: 1}
+  m_Intensity: 200
   m_Range: 10
   m_SpotAngle: 60.86206
   m_InnerSpotAngle: 21.80208
@@ -145,7 +144,7 @@ Light:
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 0
   m_ColorTemperature: 6000
-  m_UseColorTemperature: 1
+  m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
   m_UseViewFrustumForShadowCasterCull: 1

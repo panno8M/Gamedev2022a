@@ -13,28 +13,23 @@ namespace Assembly.Components.StageGimmicks
       ps = GetComponent<ParticleSystem>();
       ps.Stop();
     }
-    public void ReceiveMessage(MessageUnit message)
+    public void ReceiveSignal(MixFactor signal)
     {
-      switch (message.kind)
+      if (signal.PeekFactor() == 0)
       {
-        case MessageKind.Signal:
-          if (message.intensity.UpdFactor() == 0)
-          {
-            if (active)
-            {
-              active = false;
-              ps.Stop();
-            }
-          }
-          else
-          {
-            if (!active)
-            {
-              active = true;
-              ps.Play();
-            }
-          }
-          break;
+        if (active)
+        {
+          active = false;
+          ps.Stop();
+        }
+      }
+      else
+      {
+        if (!active)
+        {
+          active = true;
+          ps.Play();
+        }
       }
     }
     public void Powered(MixFactor powerGain) { }

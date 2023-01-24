@@ -12,6 +12,7 @@ namespace Assembly.Components.StageGimmicks
 {
   public class Transformer : MonoBehaviour, IMessageListener
   {
+    enum OnPowerNotEnough { StayHere, GoBack }
     enum OperationMode
     {
       FollowIntensity = 1 << 0,
@@ -21,16 +22,22 @@ namespace Assembly.Components.StageGimmicks
     [Header("General")]
 
     [SerializeField] OperationMode mode;
+    [SerializeField] OnPowerNotEnough onPowerNotEnough;
     [SerializeField] bool inverseSignal;
+    [Tooltip("inverseSignalかつprewarmの時、移動先からスタートする")]
+    [SerializeField] bool prewarm;
     [SerializeField] Vector3 _positionDelta;
     Vector3 positionDelta => transform.localRotation * _positionDelta;
 
     [SerializeField] GameObject _target;
     [SerializeField] EzLerp animateProgress;
 
-    [Header("For Invoke Mode")]
+    [SerializeField][Range(0f, 0.99f)] float signalThrethold  = 0f;
+    [SerializeField][Range(0f, 0.99f)] float powerThrethold = .5f;
 
-    [SerializeField][Range(0, 0.99f)] float signalThrethold = .5f;
+    bool hasEnoughSignal = false;
+    bool hasEnoughPower = true;
+
 
 #if DEBUG_TRANSFORMER
     [Header("Debug")]
@@ -42,12 +49,9 @@ namespace Assembly.Components.StageGimmicks
 #if DEBUG_TRANSFORMER
     [SerializeField]
 #endif
-    float timescalePingPong = 1;
+    float timescaleSignal = 1;
 
     Vector3 _positionDefault;
-
-    void UpdateTimeScale()
-      => animateProgress.localTimeScale = timescalePower * timescalePingPong;
 
     void Start()
     {
@@ -55,62 +59,79 @@ namespace Assembly.Components.StageGimmicks
 
       switch (mode)
       {
-        case OperationMode.Invoke:
         case OperationMode.FollowIntensity:
           if (inverseSignal)
           {
-            animateProgress.SetFactor1();
+            if (prewarm) animateProgress.SetFactor1();
             animateProgress.SetAsIncrease();
           }
           break;
+        case OperationMode.Invoke:
         case OperationMode.PingPong:
-          if (inverseSignal)
-          { animateProgress.SetAsIncrease(); }
+          hasEnoughSignal = inverseSignal;
+          if (hasEnoughSignal)
+          {
+            if (prewarm) animateProgress.SetFactor1();
+            animateProgress.SetAsIncrease();
+          }
           else
-          { timescalePingPong = 0; }
+          { timescaleSignal = 0; }
+          UpdateAnimateProgress();
+
           break;
       }
-      UpdateTimeScale();
 
       this.FixedUpdateAsObservable()
-        .Where(animateProgress.isNeedsCalc)
         .Subscribe(_ =>
         {
-          _target.transform.localPosition = animateProgress.UpdAdd(_positionDefault, positionDelta);
+          if (animateProgress.needsCalc)
+          {
+            _target.transform.localPosition = animateProgress.UpdAdd(_positionDefault, positionDelta);
+          }
+          else
+          {
+            if (mode == OperationMode.PingPong)
+            {
+              if (hasEnoughPower && hasEnoughSignal)
+                animateProgress.FlipMode();
+            }
+          }
         });
-
-      animateProgress.NeedsCalc
-        .Where(x => mode == OperationMode.PingPong && !x)
-        .Subscribe(animateProgress.FlipMode);
     }
 
-    public void ReceiveMessage(MessageUnit message)
+    public void ReceiveSignal(MixFactor signal)
     {
-      switch (message.kind)
+      hasEnoughSignal = signal.PeekFactor() > signalThrethold ^ inverseSignal;
+      timescaleSignal = signal.Invpeek(inverseSignal);
+
+      switch (mode)
       {
-        case MessageKind.Signal:
-          switch (mode)
-          {
-            case OperationMode.FollowIntensity:
-              _target.transform.localPosition =
-                _positionDefault + positionDelta * message.intensity.Invpeek(inverseSignal);
-              break;
-            case OperationMode.PingPong:
-              timescalePingPong = message.intensity.Invpeek(inverseSignal);
-              UpdateTimeScale();
-              break;
-            case OperationMode.Invoke:
-              animateProgress.SetMode(
-                (message.intensity.PeekFactor() >= signalThrethold) ^ inverseSignal);
-              break;
-          }
-          break;
+        case OperationMode.FollowIntensity:
+          _target.transform.localPosition =
+            _positionDefault + positionDelta * signal.Invpeek(inverseSignal);
+          return;
       }
+      UpdateAnimateProgress();
     }
     public void Powered(MixFactor powerGain)
     {
+      hasEnoughPower = powerGain.PeekFactor() > powerThrethold;
       timescalePower = powerGain.PeekFactor();
-      UpdateTimeScale();
+      UpdateAnimateProgress();
+    }
+
+    void UpdateAnimateProgress()
+    {
+      switch (onPowerNotEnough)
+      {
+        case OnPowerNotEnough.StayHere:
+          animateProgress.localTimeScale = timescalePower;
+          animateProgress.SetMode(hasEnoughSignal);
+          break;
+        case OnPowerNotEnough.GoBack:
+          animateProgress.SetMode(hasEnoughPower && hasEnoughSignal);
+          break;
+      }
     }
 
 #if UNITY_EDITOR
