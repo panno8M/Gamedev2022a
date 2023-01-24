@@ -51,15 +51,6 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Respawn",
-                    "type": "Button",
-                    "id": "96e22700-0f42-43f6-8c0f-8e5f61d2d172",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press(behavior=2)",
-                    "initialStateCheck": false
-                },
-                {
                     "name": "Pause",
                     "type": "Button",
                     "id": "4825542f-5de7-44b5-88d6-e28128e64561",

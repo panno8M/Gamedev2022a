@@ -40,7 +40,6 @@ namespace Assembly.GameSystem.Internal
       input.Player.GoUp.AsButton(GoUpInput, GoUpFixed);
       input.Player.Breath.AsButton(BreathInput, BreathPressFixed);
       input.Player.Interact.AsButton(InteractInput, InteractFixed);
-      input.Player.Respawn.AsButton(RespawnInput, RespawnFixed);
       input.Player.Pause.AsButton(PauseInput, PauseFixed);
 
 
