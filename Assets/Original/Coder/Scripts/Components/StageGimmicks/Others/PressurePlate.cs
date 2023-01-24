@@ -95,12 +95,12 @@ namespace Assembly.Components.StageGimmicks
     }
     async UniTask AnimatePress()
     {
-      while (Application.isPlaying)
+      while (true)
       {
+        if (!this || !_plateObject) { return; }
         CalcFrame();
         await UniTask.Yield(PlayerLoopTiming.FixedUpdate);
       }
-      _plateObject.transform.localPosition = _positionDefault;
     }
 
 #if UNITY_EDITOR

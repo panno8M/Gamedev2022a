@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Original/Deginer/Scenes/Stage01.unity
+    guid: 7ad099a08b4c8e349b998f9ce5dd9689
+  - enabled: 1
+    path: Assets/Original/Deginer/Scenes/Stage02.unity
+    guid: 1d19a7c1f4a0de744a248d408bcf1266
+  - enabled: 1
+    path: Assets/Original/Deginer/Scenes/Stage03.unity
+    guid: fd16e53566584084684bcd067521a438
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 1a04399951239354588c5d2df014735b,
       type: 2}

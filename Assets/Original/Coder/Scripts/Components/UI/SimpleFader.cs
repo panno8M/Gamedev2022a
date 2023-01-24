@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UniRx;
 using Cysharp.Threading.Tasks;
@@ -8,16 +9,15 @@ namespace Assembly.Components.UI
 {
   public class SimpleFader : DiBehavior
   {
-    public EzLerp progress = new EzLerp(1);
+    [SerializeField] EzLerp progress = new EzLerp(2);
     public CanvasGroup canvasGroup;
+
+    void Start() => Initialize();
 
     protected override void Blueprint()
     {
-      throw new System.NotImplementedException();
-    }
+      progress.SetFactor1();
 
-    void Start()
-    {
       Observable.EveryUpdate()
         .Subscribe(_ =>
         {
@@ -28,35 +28,32 @@ namespace Assembly.Components.UI
         }).AddTo(this);
     }
 
-    public async UniTask Rollback()
+    public async UniTask Fade(float secDuration)
     {
-      progress.secDuration = 1f;
+      progress.secDuration = secDuration;
       progress.SetAsIncrease();
-
-      await UniTask.Delay(2000);
-
+      await UniTask.Delay(TimeSpan.FromSeconds(secDuration));
+    }
+    public async UniTask Unfade(float secDuration)
+    {
+      progress.secDuration = secDuration;
       progress.SetAsDecrease();
-
-      await UniTask.Delay(1000);
-
-      progress.secDuration = .3f;
-      progress.SetAsIncrease();
-
-      await UniTask.Delay(300);
-
-      progress.SetAsDecrease();
-
-      await UniTask.Delay(300);
+      await UniTask.Delay(TimeSpan.FromSeconds(secDuration));
     }
 
-    public async UniTask Fade()
+    public async UniTask Rollback()
     {
-      progress.secDuration = 0.5f;
-      progress.SetAsIncrease();
+      await Fade(1);
+      await UniTask.Delay(1000);
+      await Fade(.3f);
+      await Unfade(.3f);
+    }
 
-      await UniTask.Delay(1500);
-
-      progress.SetAsDecrease();
+    public async UniTask Transition(float secFade, float secWait)
+    {
+      await Fade(secFade);
+      await UniTask.Delay(TimeSpan.FromSeconds(secWait));
+      await Unfade(secFade);
     }
   }
 }
