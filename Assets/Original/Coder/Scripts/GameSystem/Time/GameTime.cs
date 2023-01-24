@@ -10,11 +10,12 @@ namespace Assembly.GameSystem
     public static bool paused => _paused;
     public static void Pause(bool b = true)
     {
-      timeScale = b ? 0 : timeScaleOVerride;
+      Time.timeScale = b ? 0 : timeScaleOVerride;
+      Debug.Log(b);
       _paused = b;
 
     }
-    static float timeScaleOVerride;
+    static float timeScaleOVerride = 1;
     public static float timeScale
     {
       get => timeScaleOVerride;
@@ -29,6 +30,7 @@ namespace Assembly.GameSystem
     {
       timeScale = 0;
       await UniTask.Delay(duration.Milliseconds, true);
+      Debug.Log("aaa");
       timeScale = 1;
     }
   }
