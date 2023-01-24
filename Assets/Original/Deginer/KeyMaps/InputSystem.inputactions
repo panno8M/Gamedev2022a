@@ -149,17 +149,6 @@
                 },
                 {
                     "name": "",
-                    "id": "80da3d6c-e3df-4416-841d-4787d0dff2d4",
-                    "path": "<Keyboard>/r",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "Respawn",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "7457f459-5bd1-4e6c-8b6c-1eac22728e61",
                     "path": "<Keyboard>/escape",
                     "interactions": "",
