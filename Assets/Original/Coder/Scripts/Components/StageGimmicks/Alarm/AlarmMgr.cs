@@ -69,22 +69,6 @@ namespace Assembly.Components.StageGimmicks
           alarmProgress.SetFactor0();
           alarmProgress.SetAsDecrease();
         });
-      IsOnAlert.Subscribe(alert =>
-        {
-          if (alert)
-          {
-            lightShift.Set((int)LightShiftKind.Alert);
-            alarmSpeaker.Play();
-          }
-          else
-          {
-            lightShift.Set((int)LightShiftKind.Normal);
-            alarmSpeaker.Stop();
-          }
-        });
     }
-
-    enum LightShiftKind
-    { Normal, Alert }
   }
 }
