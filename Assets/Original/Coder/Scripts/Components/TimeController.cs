@@ -5,6 +5,7 @@ using Assembly.GameSystem.Input;
 
 public class TimeController : MonoBehaviour
 {
+  [SerializeField] GameObject pauseObj;
   InputControl control;
   [Zenject.Inject]
   public void DepsInject(InputControl control)
