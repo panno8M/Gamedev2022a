@@ -4722,7 +4722,7 @@ PrefabInstance:
     - target: {fileID: 4115806181233187195, guid: bfa2d3e12af560c499be5b5ed0501c12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.5
+      value: -2.64
       objectReference: {fileID: 0}
     - target: {fileID: 4115806181233187195, guid: bfa2d3e12af560c499be5b5ed0501c12,
         type: 3}
@@ -46252,7 +46252,7 @@ PrefabInstance:
     - target: {fileID: 4615590926352854349, guid: bfa2d3e12af560c499be5b5ed0501c12,
         type: 3}
       propertyPath: schedule.Array.data[1].msecDelay
-      value: 4000
+      value: 10000
       objectReference: {fileID: 0}
     - target: {fileID: 4615590926352854349, guid: bfa2d3e12af560c499be5b5ed0501c12,
         type: 3}
@@ -64604,7 +64604,7 @@ PrefabInstance:
     - target: {fileID: 4115806181233187195, guid: bfa2d3e12af560c499be5b5ed0501c12,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -3.5
+      value: -2.64
       objectReference: {fileID: 0}
     - target: {fileID: 4115806181233187195, guid: bfa2d3e12af560c499be5b5ed0501c12,
         type: 3}
