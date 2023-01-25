@@ -135,7 +135,8 @@ MonoBehaviour:
   _Switch:
     value: 0
   _OnLever:
-    receivers: []
+    receivers:
+    - {fileID: 0}
   DispatchProgress:
     secDuration: 0.5
     localTimeScale: 1
@@ -147,8 +148,8 @@ MonoBehaviour:
       m_PostInfinity: 2
       m_RotationOrder: 4
   _leverRoot: {fileID: 2836891583294650249}
-  _leverRotateFrom: {x: 0, y: 0, z: 0, w: 0}
-  _leverRotateTo: {x: 0, y: 0, z: 0, w: 0}
+  _leverRotateFrom: {x: 0, y: 0, z: 0.25881913, w: -0.9659258}
+  _leverRotateTo: {x: 0, y: 0, z: 0.25881904, w: 0.9659258}
 --- !u!114 &2836891582973844908
 MonoBehaviour:
   m_ObjectHideFlags: 0
