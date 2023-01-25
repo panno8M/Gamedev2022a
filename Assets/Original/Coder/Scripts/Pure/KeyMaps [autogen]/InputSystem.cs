@@ -73,6 +73,15 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Respawn"",
+                    ""type"": ""Button"",
+                    ""id"": ""96e22700-0f42-43f6-8c0f-8e5f61d2d172"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Press(behavior=2)"",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Pause"",
                     ""type"": ""Button"",
                     ""id"": ""4825542f-5de7-44b5-88d6-e28128e64561"",
@@ -183,6 +192,7 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
         m_Player_Breath = m_Player.FindAction("Breath", throwIfNotFound: true);
         m_Player_MousePos = m_Player.FindAction("MousePos", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Respawn = m_Player.FindAction("Respawn", throwIfNotFound: true);
         m_Player_Pause = m_Player.FindAction("Pause", throwIfNotFound: true);
     }
 
@@ -248,6 +258,7 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Breath;
     private readonly InputAction m_Player_MousePos;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Respawn;
     private readonly InputAction m_Player_Pause;
     public struct PlayerActions
     {
@@ -258,6 +269,7 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
         public InputAction @Breath => m_Wrapper.m_Player_Breath;
         public InputAction @MousePos => m_Wrapper.m_Player_MousePos;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Respawn => m_Wrapper.m_Player_Respawn;
         public InputAction @Pause => m_Wrapper.m_Player_Pause;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
@@ -283,6 +295,9 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
                 @Interact.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
                 @Interact.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnInteract;
+                @Respawn.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRespawn;
+                @Respawn.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRespawn;
+                @Respawn.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRespawn;
                 @Pause.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
                 @Pause.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPause;
@@ -305,6 +320,9 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
                 @Interact.started += instance.OnInteract;
                 @Interact.performed += instance.OnInteract;
                 @Interact.canceled += instance.OnInteract;
+                @Respawn.started += instance.OnRespawn;
+                @Respawn.performed += instance.OnRespawn;
+                @Respawn.canceled += instance.OnRespawn;
                 @Pause.started += instance.OnPause;
                 @Pause.performed += instance.OnPause;
                 @Pause.canceled += instance.OnPause;
@@ -319,6 +337,7 @@ public partial class @InputSystem : IInputActionCollection2, IDisposable
         void OnBreath(InputAction.CallbackContext context);
         void OnMousePos(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnRespawn(InputAction.CallbackContext context);
         void OnPause(InputAction.CallbackContext context);
     }
 }

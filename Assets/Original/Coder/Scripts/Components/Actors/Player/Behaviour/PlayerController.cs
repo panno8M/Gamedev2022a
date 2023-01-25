@@ -93,12 +93,6 @@ namespace Assembly.Components.Actors.Player
         .Connect()
         .AddTo(this);
 
-      control.RespawnFixed
-        .Where(_ => isAllOperable)
-        .Multicast(_Respawn)
-        .Connect()
-        .AddTo(this);
-
       control.BreathPressFixed
         .Where(_ => isAllOperable)
         .Multicast(_BreathPress)

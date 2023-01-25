@@ -13,7 +13,6 @@ namespace Assembly.GameSystem.Input
     public IObservable<float> HorizontalMoveInput => provider.HorizontalMoveInput;
     public IObservable<bool> GoUpInput => provider.GoUpInput;
     public IObservable<bool> BreathInput => provider.BreathInput;
-    public IObservable<bool> RespawnInput => provider.RespawnInput;
     public IObservable<bool> PauseInput => provider.PauseInput;
     public IObservable<bool> InteractInput => provider.InteractInput;
     public IObservable<Vector2> MousePosInput => provider.MousePosInput;
@@ -22,7 +21,6 @@ namespace Assembly.GameSystem.Input
     public float horizontalMoveInput => provider.HorizontalMoveInput.Value;
     public bool goUpInput => provider.GoUpInput.Value;
     public bool breathInput => provider.BreathInput.Value;
-    public bool respawnInput => provider.RespawnInput.Value;
     public bool pauseInput => provider.PauseInput.Value;
     public bool interactInput => provider.InteractInput.Value;
     public Vector2 mousePosInput => provider.MousePosInput.Value;
@@ -32,7 +30,6 @@ namespace Assembly.GameSystem.Input
     public IObservable<Unit> GoUpFixed => provider.GoUpFixed.BatchFrame(0, FrameCountType.FixedUpdate);
     public IObservable<Unit> BreathPressFixed => provider.BreathPressFixed.BatchFrame(0, FrameCountType.FixedUpdate);
     public IObservable<Unit> BreathReleaseFixed => provider.BreathReleaseFixed.BatchFrame(0, FrameCountType.FixedUpdate);
-    public IObservable<Unit> RespawnFixed => provider.RespawnFixed.BatchFrame(0, FrameCountType.FixedUpdate);
     public IObservable<Unit> PauseFixed => provider.PauseFixed.BatchFrame(0, FrameCountType.FixedUpdate);
     public IObservable<Unit> InteractFixed => provider.InteractFixed.BatchFrame(0, FrameCountType.FixedUpdate);
 
@@ -53,7 +50,6 @@ namespace Assembly.GameSystem.Input
       public float horizontalMove;
       public bool goUp;
       public bool breath;
-      public bool respawn;
       public bool pause;
       public bool interact;
       public Vector2 mousePos;
@@ -70,7 +66,6 @@ namespace Assembly.GameSystem.Input
       InteractInput.Subscribe(x => inspector.interact = x).AddTo(this);
       MousePosInput.Subscribe(x => inspector.mousePos = x).AddTo(this);
       MousePosStage.Subscribe(x => inspector.mousePosStage = x).AddTo(this);
-      RespawnInput.Subscribe(x => inspector.respawn = x).AddTo(this);
       PauseInput.Subscribe(x => inspector.pause = x).AddTo(this);
 
     }
