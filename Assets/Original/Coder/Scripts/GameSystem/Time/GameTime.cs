@@ -11,7 +11,6 @@ namespace Assembly.GameSystem
     public static void Pause(bool b = true)
     {
       Time.timeScale = b ? 0 : timeScaleOVerride;
-      Debug.Log(b);
       _paused = b;
 
     }
