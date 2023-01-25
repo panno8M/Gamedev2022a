@@ -1,12 +1,21 @@
+#if UNITY_EDITOR
+// #define DEBUG_CHECKPOINT
+#endif
+
 using UnityEngine;
-using UniRx;
 using Assembly.Components.Actors.Player;
 
 namespace Assembly.Components.StageGimmicks
 {
   public class CheckPoint : MonoBehaviour, ISpawnSpot, ITransactionDispatcher
   {
+#if DEBUG_CHECKPOINT
+    [SerializeField]
+#endif
     PlayerAct player;
+#if DEBUG_CHECKPOINT
+    [SerializeField]
+#endif
     Rollback rollback;
     [Zenject.Inject]
     public void DepsInject(PlayerAct player, Rollback rollback)
@@ -18,7 +27,7 @@ namespace Assembly.Components.StageGimmicks
     [SerializeField] bool activateOnAwake;
     public Vector3 spawnPosition => transform.position;
 
-    void Awake()
+    void Start()
     {
       if (activateOnAwake)
       {

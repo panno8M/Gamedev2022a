@@ -56,6 +56,7 @@ namespace Bitgem.VFX.StylisedWater
         [Range(0.1f, 100f)]
         public float TileSize = 1f;
 
+        public bool ExecuteInEditMode = false;
         public bool ShowDebug = true;
         public bool RealtimeUpdates = false;
 
@@ -396,11 +397,14 @@ namespace Bitgem.VFX.StylisedWater
 
         void Update()
         {
+            if (!ExecuteInEditMode && !Application.isPlaying) { return; }
+
             // rebuild if needed
             if (isDirty || (!Application.isPlaying && RealtimeUpdates))
             {
                 Rebuild();
             }
+
         }
 
         #endregion
