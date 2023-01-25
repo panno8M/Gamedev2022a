@@ -15,6 +15,7 @@ public class TimeController : MonoBehaviour
 
   void Start()
   {
+    pauseObj.SetActive(false);
     control.PauseInput.Where(x => x).Subscribe(_ =>
     {
       GameTime.Pause(!GameTime.paused);

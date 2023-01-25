@@ -15,7 +15,7 @@ namespace Assembly.Components.Actors.Player
     }
 
     public enum Methods { AllOperable, IgnoreAll }
-    ReactiveProperty<Methods> ControlMethod = new ReactiveProperty<Methods>();
+    public ReactiveProperty<Methods> ControlMethod = new ReactiveProperty<Methods>();
     public bool isAllOperable => ControlMethod.Value == Methods.AllOperable && isActiveAndEnabled;
     public bool isIgnoreAll => ControlMethod.Value == Methods.IgnoreAll || !isActiveAndEnabled;
 

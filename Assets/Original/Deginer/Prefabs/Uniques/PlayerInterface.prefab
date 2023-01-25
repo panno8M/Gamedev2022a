@@ -50,6 +50,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37f822990f4ec804fa661b68b1efb69f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pauseObj: {fileID: 9042863838834510516}
 --- !u!114 &6092166074414875935
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -238,6 +239,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 333109833103839658}
     m_Modifications:
+    - target: {fileID: 2009346337260601217, guid: e4fa4e9804642d04ca14de0621477ed8,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8436771078950294328, guid: e4fa4e9804642d04ca14de0621477ed8,
         type: 3}
       propertyPath: m_Pivot.x
@@ -478,6 +484,12 @@ PrefabInstance:
 --- !u!224 &1256143564046723299 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8004240309321243112, guid: a21c781b983dc03478d15cdd0b7b5774,
+    type: 3}
+  m_PrefabInstance: {fileID: 9113721923972460811}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &9042863838834510516 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 217515344697605055, guid: a21c781b983dc03478d15cdd0b7b5774,
     type: 3}
   m_PrefabInstance: {fileID: 9113721923972460811}
   m_PrefabAsset: {fileID: 0}
