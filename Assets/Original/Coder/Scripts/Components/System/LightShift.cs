@@ -36,6 +36,7 @@ namespace Assembly.Components
     }
     [SerializeField] LightUnit[] lightUnits;
     [SerializeField] ReflectionProbe[] reflectionProbes;
+    [SerializeField]
     int _currentIndex;
     public int currentIndex
     {
