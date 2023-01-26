@@ -6,24 +6,27 @@ using Utilities;
 
 namespace Assembly.Components.StageGimmicks
 {
-    public class LightMapChange : MonoBehaviour, IMessageListener
+  public class LightMapChange : MonoBehaviour, IMessageListener
+  {
+    [SerializeField] LightShift lightShift;
+    [SerializeField] int indexWhenOff = 0;
+    [SerializeField] int indexWhenOn = 1;
+
+    public void Powered(MixFactor powerGain)
     {
-        [SerializeField] LightShift lightShift;
-
-        public void Powered(MixFactor powerGain)
-        {
-            if(powerGain.PeekFactor() == 0 && lightShift.lastIndex != powerGain.PeekFactor()){
-                lightShift.Set(0);
-            }else{
-                if(powerGain.PeekFactor() == 1 && lightShift.lastIndex != powerGain.PeekFactor()){
-                    lightShift.Set(1);
-                }
-            }
-        }
-
-        public void ReceiveSignal(MixFactor message)
-        {
-            
-        }
+      if (powerGain.PeekFactor() == 0)
+      {
+        lightShift.Set(indexWhenOff);
+      }
+      else if (powerGain.PeekFactor() == 1)
+      {
+        lightShift.Set(indexWhenOn);
+      }
     }
+
+    public void ReceiveSignal(MixFactor message)
+    {
+
+    }
+  }
 }

@@ -36,13 +36,18 @@ namespace Assembly.Components
     }
     [SerializeField] LightUnit[] lightUnits;
     [SerializeField] ReflectionProbe[] reflectionProbes;
-    public int lastIndex;
+    int _currentIndex;
+    public int currentIndex
+    {
+      get => _currentIndex;
+      private set => _currentIndex = value;
+    }
 
     void Start()
     {
       for (int i = 0; i < lightUnits.Length; i++)
       { lightUnits[i].MakeData(); }
-      Set(0);
+      _Set(0);
     }
 
     void Set(ref LightUnit lightUnit, in ReflectionProbe[] reflectionProbes)
@@ -55,11 +60,16 @@ namespace Assembly.Components
         reflectionProbes[i].customBakedTexture = lightUnit.reflectionProbeCubemaps[i];
       }
     }
-    public void Set(int index)
+    void _Set(int index)
     {
       if (lightUnits.Length <= index) { return; }
       Set(ref lightUnits[index], reflectionProbes);
-      lastIndex = index;
+      currentIndex = index;
+    }
+    public void Set(int index)
+    {
+      if (index == currentIndex) { return; }
+      _Set(index);
     }
   }
 }
