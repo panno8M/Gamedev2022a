@@ -4,8 +4,10 @@ namespace Assembly.Components.Actors.Player
 {
   public class PlayerFlameReceptor : ActorBehavior<PlayerAct>
   {
-    [SerializeField] Renderer _flame;
-    Vector3 flameDefaultScale;
+    [SerializeField] ParticleSystem _flame;
+    [SerializeField] FlickerFlame _flicker;
+    ParticleSystem.EmissionModule emission;
+    float defaultRate;
 
     [SerializeField][Range(0, 1)] float _flameQuantity;
 
@@ -15,18 +17,15 @@ namespace Assembly.Components.Actors.Player
       set
       {
         _flameQuantity = value;
-        _flame.enabled = value != 0;
-        if (flameDefaultScale == Vector3.zero)
-        {
-          flameDefaultScale = _flame.transform.localScale;
-        }
-        _flame.transform.localScale = flameDefaultScale * value;
+        emission.rateOverTime = defaultRate * value;
+        _flicker.weight = value;
       }
     }
 
     protected override void Blueprint()
     {
-      _flame.enabled = false;
+      emission = _flame.emission;
+      defaultRate = emission.rateOverTime.constant;
     }
   }
 }

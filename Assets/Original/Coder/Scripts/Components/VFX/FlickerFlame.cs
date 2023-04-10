@@ -3,6 +3,7 @@ using UniRx;
 
 public class FlickerFlame : MonoBehaviour
 {
+  public float weight = 1;
   Light _light;
   float _defaultIntensity;
   [SerializeField] float yShift;
@@ -16,7 +17,7 @@ public class FlickerFlame : MonoBehaviour
     Observable.EveryUpdate()
     .Subscribe(_ =>
     {
-      _light.intensity = _defaultIntensity * curve.Evaluate(Mathf.PerlinNoise(shiftSpeed * Time.time, yShift));
+      _light.intensity = _defaultIntensity * weight * curve.Evaluate(Mathf.PerlinNoise(shiftSpeed * Time.time, yShift));
     }).AddTo(this);
   }
 }

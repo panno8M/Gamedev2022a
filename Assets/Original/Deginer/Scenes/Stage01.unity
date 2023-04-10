@@ -8869,7 +8869,7 @@ MonoBehaviour:
   reflectionProbes:
   - {fileID: 1293504516}
   - {fileID: 2051947580}
-  lastIndex: 0
+  _currentIndex: 0
 --- !u!4 &1647950381
 Transform:
   m_ObjectHideFlags: 0

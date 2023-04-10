@@ -69,6 +69,11 @@ namespace Assembly.Components.StageGimmicks
           alarmProgress.SetFactor0();
           alarmProgress.SetAsDecrease();
         });
+      IsOnAlert.Subscribe(b =>
+      {
+        if (b) { alarmSpeaker.Play(); }
+        else { alarmSpeaker.Stop(); }
+      });
     }
   }
 }
